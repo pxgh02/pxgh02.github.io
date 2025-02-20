@@ -87,13 +87,13 @@ ML 用于预测传统方法的最佳配置。其次，ML 学习模型的特征�
 &lt;p>**典型的芯片设计流程是先做前端、后端设计，再去验证性能、功耗和面积。**但由于流程太长，在前端设计的时候，无法保证后端设计的效果，所以很多时候需要进行跨环节建模，在早期设计环节预测后续环节的求解质量，这当中就很适合AI算法来进行辅助。&lt;/p>
 &lt;p>除了建模之外，另外一个关键问题是优化。EDA中经常要求解各种各样的组合优化问题。这些问题往往是 NP难题，比如经典的旅行商问题。传统上，我们会通过一些启发探索的方法来求解。但随着规模不断增大、设计约束越来越多，这种探索往往遇到效率瓶颈，所以我们需要通过机器学习技术进行辅助，寻找有效策略，提高效率。&lt;/p>
 &lt;p>
- &lt;img src="./assets/image-20250105141458960.png" alt="image-20250105141458960" />&lt;/p>
+ &lt;img src="https://pxgh02.github.io/image-20250105141458960.png" alt="image-20250105141458960" />&lt;/p>
 &lt;h1 id="难点">
  难点
  &lt;a class="anchor" href="#%e9%9a%be%e7%82%b9">#&lt;/a>
 &lt;/h1>
 &lt;p>
- &lt;img src="./assets/image-20241013184936794.png" alt="image-20241013184936794" />&lt;/p>
+ &lt;img src="https://pxgh02.github.io/image-20241013184936794.png" alt="image-20241013184936794" />&lt;/p>
 &lt;ol>
 &lt;li>大图&amp;ndash;&amp;gt;&lt;/li>
 &lt;li>数据集&amp;ndash;&amp;gt;&lt;/li>
@@ -132,31 +132,31 @@ ML 用于预测传统方法的最佳配置。其次，ML 学习模型的特征�
  &lt;a class="anchor" href="#ai-4-science">#&lt;/a>
 &lt;/h1>
 &lt;p>
- &lt;img src="assets/image-20241213120306409.png" alt="image-20241213120306409" />&lt;/p>
+ &lt;img src="https://pxgh02.github.io/image-20241213120306409.png" alt="image-20241213120306409" />&lt;/p>
 &lt;p>
- &lt;img src="assets/image-20241213120350716.png" alt="image-20241213120350716" />&lt;/p>
+ &lt;img src="https://pxgh02.github.io/image-20241213120350716.png" alt="image-20241213120350716" />&lt;/p>
 &lt;p>
- &lt;img src="assets/image-20241213120425645.png" alt="image-20241213120425645" />&lt;/p>
+ &lt;img src="https://pxgh02.github.io/image-20241213120425645.png" alt="image-20241213120425645" />&lt;/p>
 &lt;h1 id="数字集成电路后端设计整体流程">
  数字集成电路后端设计整体流程
  &lt;a class="anchor" href="#%e6%95%b0%e5%ad%97%e9%9b%86%e6%88%90%e7%94%b5%e8%b7%af%e5%90%8e%e7%ab%af%e8%ae%be%e8%ae%a1%e6%95%b4%e4%bd%93%e6%b5%81%e7%a8%8b">#&lt;/a>
 &lt;/h1>
 &lt;p>在完成前端设计、逻辑综合和时序分析后，后端设计阶段开始&lt;/p>
 &lt;p>
- &lt;img src="assets/image-20241210110751568.png" alt="image-20241210110751568" />&lt;/p>
+ &lt;img src="https://pxgh02.github.io/image-20241210110751568.png" alt="image-20241210110751568" />&lt;/p>
 &lt;p>
- &lt;img src="assets/image-20241210024517847.png" alt="image-20241210024517847" />&lt;/p>
+ &lt;img src="https://pxgh02.github.io/image-20241210024517847.png" alt="image-20241210024517847" />&lt;/p>
 &lt;p>（1）布局规划（Floorplan）： 在布局规划阶段，设计团队确定芯片的大致布局，包括模块位置、互连和电源网络的布局。这个阶段的主要目标是确保设计满足所有功能需求和制造约束，同时优化芯片的性能和成本。&lt;/p>
 &lt;p>（2）宏块和标准单元布局（Placement）： 此阶段中，具体摆放包括宏模块和标准单元。算法将尝试在保持功能和电气性能的前提下，最小化连线长度和延迟，优化布局密度。&lt;/p>
 &lt;p>（3）时钟树合成（Clock Tree Synthesis，CTS）： 布局完成后，进行时钟树合成。CTS 的目的是构建一个时钟网络，以最小化芯片上不同部分之间的时钟偏差，并确保整个芯片的同步运行。&lt;/p>
 &lt;p>（4）布线（Routing）： 在 CTS 之后，进行布线阶段，此阶段建立电子连接，以实现设计中的所有逻辑互联。布线需要解决路径规划和信号完整性问题，确保信号在整个芯片上无干扰地传递。&lt;/p>
 &lt;p>（5）验证和测评： 最后，进行布局与布线后的验证工作，包括电路验证、时序分析和功耗分析等。&lt;/p>
 &lt;p>
- &lt;img src="assets/image-20241116193848706.png" alt="image-20241116193848706" />&lt;/p>
+ &lt;img src="https://pxgh02.github.io/image-20241116193848706.png" alt="image-20241116193848706" />&lt;/p>
 &lt;p>
- &lt;img src="assets/image-20241116142815434.png" alt="image-20241116142815434" />&lt;/p>
+ &lt;img src="https://pxgh02.github.io/image-20241116142815434.png" alt="image-20241116142815434" />&lt;/p>
 &lt;p>
- &lt;img src="assets/image-20241116142826799.png" alt="image-20241116142826799" />&lt;/p>
+ &lt;img src="https://pxgh02.github.io/image-20241116142826799.png" alt="image-20241116142826799" />&lt;/p>
 &lt;h2 id="floorplanning布图">
  Floorplanning（布图)
  &lt;a class="anchor" href="#floorplanning%e5%b8%83%e5%9b%be">#&lt;/a>
@@ -209,11 +209,11 @@ ML 用于预测传统方法的最佳配置。其次，ML 学习模型的特征�
  &lt;a class="anchor" href="#%e4%bb%8b%e7%bb%8d">#&lt;/a>
 &lt;/h1>
 &lt;p>
- &lt;img src="assets/image-20241211164703395.png" alt="image-20241211164703395" />&lt;/p>
+ &lt;img src="https://pxgh02.github.io/image-20241211164703395.png" alt="image-20241211164703395" />&lt;/p>
 &lt;p>
- &lt;img src="assets/image-20241211165044145.png" alt="image-20241211165044145" />&lt;/p>
+ &lt;img src="https://pxgh02.github.io/image-20241211165044145.png" alt="image-20241211165044145" />&lt;/p>
 &lt;p>
- &lt;img src="assets/image-20241211165212711.png" alt="image-20241211165212711" />&lt;/p>
+ &lt;img src="https://pxgh02.github.io/image-20241211165212711.png" alt="image-20241211165212711" />&lt;/p>
 &lt;h1 id="placement">
  Placement
  &lt;a class="anchor" href="#placement">#&lt;/a>
@@ -227,11 +227,11 @@ ML 用于预测传统方法的最佳配置。其次，ML 学习模型的特征�
  &lt;a class="anchor" href="#wl%e4%bc%b0%e8%ae%a1%e6%96%b9%e6%b3%95">#&lt;/a>
 &lt;/h2>
 &lt;p>
- &lt;img src="assets/image-20241211170024405.png" alt="image-20241211170024405" />&lt;/p>
+ &lt;img src="https://pxgh02.github.io/image-20241211170024405.png" alt="image-20241211170024405" />&lt;/p>
 &lt;p>
- &lt;img src="assets/image-20241211170041005.png" alt="image-20241211170041005" />&lt;/p>
+ &lt;img src="https://pxgh02.github.io/image-20241211170041005.png" alt="image-20241211170041005" />&lt;/p>
 &lt;p>
- &lt;img src="assets/image-20241211170300719.png" alt="image-20241211170300719" />&lt;/p>
+ &lt;img src="https://pxgh02.github.io/image-20241211170300719.png" alt="image-20241211170300719" />&lt;/p>
 &lt;h1 id="global-placement">
  Global Placement
  &lt;a class="anchor" href="#global-placement">#&lt;/a>
@@ -240,24 +240,24 @@ ML 用于预测传统方法的最佳配置。其次，ML 学习模型的特征�
 &lt;p>输入:网表&lt;/p>
 &lt;p>优化目标:HPWL线长最小(最基本)…&lt;/p>
 &lt;p>
- &lt;img src="assets/image-20241101174133908.png" alt="image-20241101174133908" />&lt;/p>
+ &lt;img src="https://pxgh02.github.io/image-20241101174133908.png" alt="image-20241101174133908" />&lt;/p>
 &lt;p>
- &lt;img src="assets/image-20241101174410136.png" alt="image-20241101174410136" />&lt;/p>
+ &lt;img src="https://pxgh02.github.io/image-20241101174410136.png" alt="image-20241101174410136" />&lt;/p>
 &lt;h1 id="detail-placement">
  Detail Placement
  &lt;a class="anchor" href="#detail-placement">#&lt;/a>
 &lt;/h1>
 &lt;p>详细布局（Detailed Placement）包括合法化（legalization），线长（wirelength）和可达性的细化（routability refinement）&lt;/p>
 &lt;p>
- &lt;img src="assets/image-20241101174441633.png" alt="image-20241101174441633" />&lt;/p>
+ &lt;img src="https://pxgh02.github.io/image-20241101174441633.png" alt="image-20241101174441633" />&lt;/p>
 &lt;h1 id="history">
  history
  &lt;a class="anchor" href="#history">#&lt;/a>
 &lt;/h1>
 &lt;p>
- &lt;img src="assets/image-20241211165402430.png" alt="image-20241211165402430" />&lt;/p>
+ &lt;img src="https://pxgh02.github.io/image-20241211165402430.png" alt="image-20241211165402430" />&lt;/p>
 &lt;p>
- &lt;img src="assets/image-20241211165447667.png" alt="image-20241211165447667" />&lt;/p>
+ &lt;img src="https://pxgh02.github.io/image-20241211165447667.png" alt="image-20241211165447667" />&lt;/p>
 &lt;h1 id="参考">
  参考
  &lt;a class="anchor" href="#%e5%8f%82%e8%80%83">#&lt;/a>
@@ -367,7 +367,7 @@ A = 与门个数 number of AND gate&lt;/p>
 &lt;li>当导线中电子快速移动时，电子与&lt;strong>金属原子&lt;/strong>间的动量交换会导致金属原子从阴极向阳极迁移。随着时间的推移，这种迁移会导致导线中的&lt;code>空洞（voids）&lt;/code>或&lt;code>突起（hillocks）&lt;/code>，这种金属的&lt;strong>分布不均&lt;/strong>导致了应力的产生。当应力达到一定阈值时，会导致&lt;strong>导线断裂或短路&lt;/strong>，从而影响电路的&lt;strong>可靠性&lt;/strong>，最终引发电路失效。&lt;/li>
 &lt;li>VLSI: 这种现象在&lt;strong>小尺寸&lt;/strong>导线和高电流密度条件下尤为显著，特别是在&lt;strong>纳米尺度的VLSI系统&lt;/strong>中。&lt;/li>
 &lt;li>
- &lt;img src="assets/image-20241220135603117.png" alt="image-20241220135603117" />&lt;/li>
+ &lt;img src="https://pxgh02.github.io/image-20241220135603117.png" alt="image-20241220135603117" />&lt;/li>
 &lt;/ul>
 &lt;h2 id="热迁移thermomigration-tm">
  &lt;strong>热迁移（Thermomigration, TM）&lt;/strong>
@@ -423,24 +423,24 @@ A = 与门个数 number of AND gate&lt;/p>
  &lt;a class="anchor" href="#%e4%b8%be%e4%be%8b">#&lt;/a>
 &lt;/h2>
 &lt;p>
- &lt;img src="assets/image-20241029145234771.png" alt="image-20241029145234771" />&lt;/p>
+ &lt;img src="https://pxgh02.github.io/image-20241029145234771.png" alt="image-20241029145234771" />&lt;/p>
 &lt;p>
- &lt;img src="assets/image-20241029145359528.png" alt="image-20241029145359528" />&lt;/p>
+ &lt;img src="https://pxgh02.github.io/image-20241029145359528.png" alt="image-20241029145359528" />&lt;/p>
 &lt;h1 id="combinatorial-optimization">
  Combinatorial Optimization
  &lt;a class="anchor" href="#combinatorial-optimization">#&lt;/a>
 &lt;/h1>
 &lt;p>组合优化问题(COP)&lt;/p>
 &lt;p>
- &lt;img src="assets/image-20241018112358445.png" alt="image-20241018112358445" />&lt;/p>
+ &lt;img src="https://pxgh02.github.io/image-20241018112358445.png" alt="image-20241018112358445" />&lt;/p>
 &lt;p>
- &lt;img src="assets/image-20241018112605864.png" alt="image-20241018112605864" />&lt;/p>
+ &lt;img src="https://pxgh02.github.io/image-20241018112605864.png" alt="image-20241018112605864" />&lt;/p>
 &lt;h2 id="精确方法和近似方法">
  精确方法和近似方法
  &lt;a class="anchor" href="#%e7%b2%be%e7%a1%ae%e6%96%b9%e6%b3%95%e5%92%8c%e8%bf%91%e4%bc%bc%e6%96%b9%e6%b3%95">#&lt;/a>
 &lt;/h2>
 &lt;p>
- &lt;img src="assets/image-20241018113452893.png" alt="image-20241018113452893" />&lt;/p>
+ &lt;img src="https://pxgh02.github.io/image-20241018113452893.png" alt="image-20241018113452893" />&lt;/p>
 &lt;h2 id="常见相关场景问题">
  常见相关场景/问题
  &lt;a class="anchor" href="#%e5%b8%b8%e8%a7%81%e7%9b%b8%e5%85%b3%e5%9c%ba%e6%99%af%e9%97%ae%e9%a2%98">#&lt;/a>
@@ -463,7 +463,7 @@ A = 与门个数 number of AND gate&lt;/p>
 &lt;li>
 &lt;p>MIS(最大独立集)&lt;/p>
 &lt;p>
- &lt;img src="assets/image-20241018164450384.png" alt="image-20241018164450384" />&lt;/p>
+ &lt;img src="https://pxgh02.github.io/image-20241018164450384.png" alt="image-20241018164450384" />&lt;/p>
 &lt;/li>
 &lt;li>
 &lt;p>背包问题&lt;/p>
@@ -471,7 +471,7 @@ A = 与门个数 number of AND gate&lt;/p>
 &lt;li>&lt;/li>
 &lt;/ul>
 &lt;p>
- &lt;img src="assets/image-20241018132543551.png" alt="image-20241018132543551" />&lt;/p>
+ &lt;img src="https://pxgh02.github.io/image-20241018132543551.png" alt="image-20241018132543551" />&lt;/p>
 &lt;h2 id="heuristic-algorithm">
  Heuristic algorithm
  &lt;a class="anchor" href="#heuristic-algorithm">#&lt;/a>
@@ -500,7 +500,7 @@ A = 与门个数 number of AND gate&lt;/p>
  &lt;a class="anchor" href="#%e5%88%86%e7%b1%bb">#&lt;/a>
 &lt;/h3>
 &lt;p>
- &lt;img src="assets/image-20241018122106575.png" alt="image-20241018122106575" />&lt;/p>
+ &lt;img src="https://pxgh02.github.io/image-20241018122106575.png" alt="image-20241018122106575" />&lt;/p>
 &lt;h3 id="特点">
  特点
  &lt;a class="anchor" href="#%e7%89%b9%e7%82%b9">#&lt;/a>
@@ -510,17 +510,17 @@ A = 与门个数 number of AND gate&lt;/p>
  &lt;a class="anchor" href="#%e4%bc%98%e7%82%b9">#&lt;/a>
 &lt;/h4>
 &lt;p>
- &lt;img src="assets/image-20241018113533415.png" alt="image-20241018113533415" />&lt;/p>
+ &lt;img src="https://pxgh02.github.io/image-20241018113533415.png" alt="image-20241018113533415" />&lt;/p>
 &lt;p>
- &lt;img src="assets/image-20241018113547534.png" alt="image-20241018113547534" />&lt;/p>
+ &lt;img src="https://pxgh02.github.io/image-20241018113547534.png" alt="image-20241018113547534" />&lt;/p>
 &lt;p>
- &lt;img src="assets/image-20241018115539708.png" alt="image-20241018115539708" />&lt;/p>
+ &lt;img src="https://pxgh02.github.io/image-20241018115539708.png" alt="image-20241018115539708" />&lt;/p>
 &lt;h4 id="缺点">
  缺点
  &lt;a class="anchor" href="#%e7%bc%ba%e7%82%b9">#&lt;/a>
 &lt;/h4>
 &lt;p>
- &lt;img src="assets/image-20241018115428936.png" alt="image-20241018115428936" />&lt;/p></description></item><item><title/><link>https://pxgh02.github.io/zh/docs/Other/git/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://pxgh02.github.io/zh/docs/Other/git/</guid><description>&lt;h1 id="基本指令">
+ &lt;img src="https://pxgh02.github.io/image-20241018115428936.png" alt="image-20241018115428936" />&lt;/p></description></item><item><title/><link>https://pxgh02.github.io/zh/docs/Other/git/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://pxgh02.github.io/zh/docs/Other/git/</guid><description>&lt;h1 id="基本指令">
  基本指令
  &lt;a class="anchor" href="#%e5%9f%ba%e6%9c%ac%e6%8c%87%e4%bb%a4">#&lt;/a>
 &lt;/h1>
@@ -594,33 +594,33 @@ A = 与门个数 number of AND gate&lt;/p>
  &lt;a class="anchor" href="#%e7%bb%bc%e8%bf%b0">#&lt;/a>
 &lt;/h1>
 &lt;p>
- &lt;img src="assets/image-20250205232132033.png" alt="image-20250205232132033" />&lt;/p>
+ &lt;img src="https://pxgh02.github.io/image-20250205232132033.png" alt="image-20250205232132033" />&lt;/p>
 &lt;p>
- &lt;img src="assets/image-20250205232142292.png" alt="image-20250205232142292" />&lt;/p>
+ &lt;img src="https://pxgh02.github.io/image-20250205232142292.png" alt="image-20250205232142292" />&lt;/p>
 &lt;p>
- &lt;img src="assets/image-20250205235817697.png" alt="image-20250205235817697" />&lt;/p>
+ &lt;img src="https://pxgh02.github.io/image-20250205235817697.png" alt="image-20250205235817697" />&lt;/p>
 &lt;p>
- &lt;img src="assets/image-20250205235828836.png" alt="image-20250205235828836" />&lt;/p>
+ &lt;img src="https://pxgh02.github.io/image-20250205235828836.png" alt="image-20250205235828836" />&lt;/p>
 &lt;p>
- &lt;img src="assets/image-20250205235842773.png" alt="image-20250205235842773" />&lt;/p>
+ &lt;img src="https://pxgh02.github.io/image-20250205235842773.png" alt="image-20250205235842773" />&lt;/p>
 &lt;p>
- &lt;img src="assets/image-20250205235955485.png" alt="image-20250205235955485" />&lt;/p>
+ &lt;img src="https://pxgh02.github.io/image-20250205235955485.png" alt="image-20250205235955485" />&lt;/p>
 &lt;h1 id="cpu">
  CPU
  &lt;a class="anchor" href="#cpu">#&lt;/a>
 &lt;/h1>
 &lt;p>
- &lt;img src="assets/image-20250205232228476.png" alt="image-20250205232228476" />&lt;/p>
+ &lt;img src="https://pxgh02.github.io/image-20250205232228476.png" alt="image-20250205232228476" />&lt;/p>
 &lt;p>
- &lt;img src="assets/image-20250205232544143.png" alt="image-20250205232544143" />&lt;/p>
+ &lt;img src="https://pxgh02.github.io/image-20250205232544143.png" alt="image-20250205232544143" />&lt;/p>
 &lt;p>
- &lt;img src="assets/image-20241024104223498.png" alt="image-20241024104223498" />&lt;/p>
+ &lt;img src="https://pxgh02.github.io/image-20241024104223498.png" alt="image-20241024104223498" />&lt;/p>
 &lt;h2 id="cpu类型">
  CPU类型
  &lt;a class="anchor" href="#cpu%e7%b1%bb%e5%9e%8b">#&lt;/a>
 &lt;/h2>
 &lt;p>
- &lt;img src="assets/image-20250205232814720.png" alt="image-20250205232814720" />&lt;/p>
+ &lt;img src="https://pxgh02.github.io/image-20250205232814720.png" alt="image-20250205232814720" />&lt;/p>
 &lt;p>&lt;strong>复杂指令集(CISC)&lt;/strong>: x86, Zen&lt;/p>
 &lt;p>&lt;strong>精简指令集(RISC)&lt;/strong>：ARM，MIPS, PowerPC&lt;/p>
 &lt;ul>
@@ -1202,7 +1202,7 @@ A = 与门个数 number of AND gate&lt;/p>
  &lt;a class="anchor" href="#c-only-keywords">#&lt;/a>
 &lt;/h3>
 &lt;p>
- &lt;img src="assets/image-20240918090732446.png" alt="image-20240918090732446" />&lt;/p>
+ &lt;img src="https://pxgh02.github.io/image-20240918090732446.png" alt="image-20240918090732446" />&lt;/p>
 &lt;h2 id="class">
  class
  &lt;a class="anchor" href="#class">#&lt;/a>
@@ -1355,9 +1355,9 @@ A = 与门个数 number of AND gate&lt;/p>
 &lt;li>windows 设置打开： &lt;strong>适用于 Linux 的 Windows 子系统&lt;/strong> 和 &lt;strong>虚拟机平台&lt;/strong>&lt;/li>
 &lt;/ul>
 &lt;p>
- &lt;img src="assets/image-20240915093843416.png" alt="image-20240915093843416" />&lt;/p>
+ &lt;img src="https://pxgh02.github.io/image-20240915093843416.png" alt="image-20240915093843416" />&lt;/p>
 &lt;p>
- &lt;img src="assets/image-20240915093856560.png" alt="image-20240915093856560" />&lt;/p>
+ &lt;img src="https://pxgh02.github.io/image-20240915093856560.png" alt="image-20240915093856560" />&lt;/p>
 &lt;ul>
 &lt;li>
 &lt;p>Linux 内核更新包：https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi&lt;/p>
