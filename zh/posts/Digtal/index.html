@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="zh" dir="ltr">
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Notes of Physical Design">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#343a40">
+<meta name="color-scheme" content="light dark"><meta property="og:url" content="http://localhost:1313/zh/posts/Digtal/">
+  <meta property="og:site_name" content="Pxmmmm">
+  <meta property="og:title" content="Physical Design">
+  <meta property="og:description" content="Notes of Physical Design">
+  <meta property="og:locale" content="zh">
+  <meta property="og:type" content="website">
+<title>Physical Design | Pxmmmm</title>
+<link rel="icon" href="/favicon.png" >
+<link rel="manifest" href="/manifest.json">
+<link rel="canonical" href="http://localhost:1313/zh/posts/Digtal/">
+<link rel="stylesheet" href="/book.min.6c8b9d2a1fc95075ed7da46ca81060b39add8fff6741ac51259f768929281e2c.css" integrity="sha256-bIudKh/JUHXtfaRsqBBgs5rdj/9nQaxRJZ92iSkoHiw=" crossorigin="anonymous">
+  <script defer src="/fuse.min.js"></script>
+  <script defer src="/zh.search.min.0a35798c78c016e2b218365660d9a17cabc3941c772e735cffb8ebd0a1bcbd84.js" integrity="sha256-CjV5jHjAFuKyGDZWYNmhfKvDlBx3LnNc/7jr0KG8vYQ=" crossorigin="anonymous"></script>
+
+  <script defer src="/sw.min.6f6f90fcb8eb1c49ec389838e6b801d0de19430b8e516902f8d75c3c8bd98739.js" integrity="sha256-b2&#43;Q/LjrHEnsOJg45rgB0N4ZQwuOUWkC&#43;NdcPIvZhzk=" crossorigin="anonymous"></script>
+<link rel="alternate" type="application/rss+xml" href="http://localhost:1313/zh/posts/Digtal/index.xml" title="Pxmmmm" />
+<!--
+Made with Book Theme
+https://github.com/alex-shpak/hugo-book
+-->
+  
+</head>
+<body dir="ltr">
+  <input type="checkbox" class="hidden toggle" id="menu-control" />
+  <input type="checkbox" class="hidden toggle" id="toc-control" />
+  <main class="container flex">
+    <aside class="book-menu">
+      <div class="book-menu-content">
+        
+  <nav>
+<h2 class="book-brand">
+  <a class="flex align-center" href="/zh/"><span>Pxmmmm</span>
+  </a>
+</h2>
+
+
+<div class="book-search hidden">
+  <input type="text" id="book-search-input" placeholder="搜索" aria-label="搜索" maxlength="64" data-hotkeys="s/" />
+  <div class="book-search-spinner hidden"></div>
+  <ul id="book-search-results"></ul>
+</div>
+<script>document.querySelector(".book-search").classList.remove("hidden")</script>
+
+
+
+  
+
+
+
+  
+    
+  
+
+
+
+<ul class="book-languages">
+  <li>
+    <input type="checkbox" id="languages" class="toggle" />
+    <label for="languages" class="flex justify-between">
+      <a role="button" class="flex align-center">
+        <img src="/svg/translate.svg" class="book-icon" alt="Languages" />
+        Chinese
+      </a>
+    </label>
+
+    <ul>
+      
+      <li>
+        <a href="/">
+          English
+        </a>
+      </li>
+      
+    </ul>
+  </li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <ul>
+    
+  </ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</nav>
+
+
+
+
+  <script>(function(){var e=document.querySelector("aside .book-menu-content");addEventListener("beforeunload",function(){localStorage.setItem("menu.scrollTop",e.scrollTop)}),e.scrollTop=localStorage.getItem("menu.scrollTop")})()</script>
+
+
+ 
+      </div>
+    </aside>
+
+    <div class="book-page">
+      <header class="book-header">
+        
+  <div class="flex align-center justify-between">
+  <label for="menu-control">
+    <img src="/svg/menu.svg" class="book-icon" alt="Menu" />
+  </label>
+
+  <h3>Physical Design</h3>
+
+  <label for="toc-control">
+    
+    <img src="/svg/toc.svg" class="book-icon" alt="Table of Contents" />
+    
+  </label>
+</div>
+
+
+  
+  <aside class="hidden clearfix">
+    
+  <nav>
+  <ul>
+  
+    
+    <li class="book-section-flat">
+      <strong>Categories</strong>
+      <ul>
+      
+      </ul>
+    </li>
+    
+  
+    
+    <li class="book-section-flat">
+      <strong>Tags</strong>
+      <ul>
+      
+      </ul>
+    </li>
+    
+  
+  </ul>
+</nav>
+
+
+  </aside>
+  
+ 
+      </header>
+
+      
+      
+  
+  <article class="markdown book-post">
+    <h2>
+      <a href="/zh/posts/Digtal/flow/notebak/EDA&#43;GNN/">eda&#43;gnn</a>
+    </h2>
+    
+
+
+  
+
+  
+
+
+    <div class="book-post-content"><h1 id="survey">
+  Survey
+  <a class="anchor" href="#survey">#</a>
+</h1>
+<h2 id="background--intro">
+  Background &amp; Intro
+  <a class="anchor" href="#background--intro">#</a>
+</h2>
+<p>只有在物理验证和签名(sign off)以及测试期间，才能衡量设计在功率、性能和面积 (PPA) 方面的质量。通常需要在中间步骤中进行纠正修改，这会导致设计的多次迭代。因此，在设计的早期阶段对 PPA 的估计将减少所需的迭代次数，增加设计的可靠性，同时深入研究flow，并最终提高结果质量 (QoR)</p>
+<h3 id="np-complete">
+  NP-complete
+  <a class="anchor" href="#np-complete">#</a>
+</h3>
+<p>EDA 工具通常面临 <strong>NP-complete</strong> 问题，机器学习 (ML) 方法可以更好更快地解决这些问题</p>
+<p><strong>NP问题</strong>是一类可以通过非确定性图灵机( Non-deterministic Turing Machine)在多项式时间(Polynomial time)内解决的决策问题集合。</p>
+<p>NP问题中最困难的问题称之为NP完全问题(NP-complete)</p>
+<h3 id="ml">
+  ML
+  <a class="anchor" href="#ml">#</a>
+</h3>
+<p><strong>ML 已集成到 EDA 中，尤其是逻辑综合、布局、布线、测试和验证 [23]</strong>
+ML 用于预测传统方法的最佳配置。其次，ML 学习模型的特征及其性能来预测看不见的设计的行为，而无需运行昂贵的综合步骤。此外，在优化 PPA 的同时，可以通过 ML 进行设计空间探索。最后，<strong>强化学习 (RL)</strong> 探索设计空间、学习策略并执行转换，以通过“人工智能辅助设计流程”获得展望未来的最佳设计。
+在 EDA 中使用 ML 的一个促成因素是 <strong>EDA 工具在设计过程中生成的大量数据</strong>。
+<strong>欧几里得数据</strong></p>
+        <a href="/zh/posts/Digtal/flow/notebak/EDA&#43;GNN/">...</a>
+      
+    </div>
+  </article>
+  
+
+  
+ 
+      
+
+      <footer class="book-footer">
+        
+  <div class="flex flex-wrap justify-between">
+
+
+
+
+  <div>
+    <a class="flex align-center" href="https://github.com/alex-shpak/hugo-book/edit/main/exampleSite/content.zh/posts/Digtal/_index.md" target="_blank" rel="noopener">
+      <img src="/svg/edit.svg" class="book-icon" alt="" />
+      <span>编辑本页</span>
+    </a>
+  </div>
+
+
+</div>
+
+
+
+  <script>(function(){function e(e){const t=window.getSelection(),n=document.createRange();n.selectNodeContents(e),t.removeAllRanges(),t.addRange(n)}document.querySelectorAll("pre code").forEach(t=>{t.addEventListener("click",function(){if(window.getSelection().toString())return;e(t.parentElement),navigator.clipboard&&navigator.clipboard.writeText(t.parentElement.textContent)})})})()</script>
+
+
+ 
+        
+      </footer>
+
+      
+  
+  <div class="book-comments">
+
+</div>
+  
+ 
+
+      <label for="menu-control" class="hidden book-menu-overlay"></label>
+    </div>
+
+    
+    <aside class="book-toc">
+      <div class="book-toc-content">
+        
+  <nav>
+  <ul>
+  
+    
+    <li class="book-section-flat">
+      <strong>Categories</strong>
+      <ul>
+      
+      </ul>
+    </li>
+    
+  
+    
+    <li class="book-section-flat">
+      <strong>Tags</strong>
+      <ul>
+      
+      </ul>
+    </li>
+    
+  
+  </ul>
+</nav>
+
+ 
+      </div>
+    </aside>
+    
+  </main>
+
+  
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

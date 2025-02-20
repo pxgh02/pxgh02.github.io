@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Physical Design on Pxmmmm</title>
+    <link>http://localhost:1313/zh/posts/Digtal/</link>
+    <description>Recent content in Physical Design on Pxmmmm</description>
+    <generator>Hugo</generator>
+    <language>zh</language>
+    <atom:link href="http://localhost:1313/zh/posts/Digtal/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>eda&#43;gnn</title>
+      <link>http://localhost:1313/zh/posts/Digtal/flow/notebak/EDA&#43;GNN/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/zh/posts/Digtal/flow/notebak/EDA&#43;GNN/</guid>
+      <description>&lt;h1 id=&#34;survey&#34;&gt;&#xA;  Survey&#xA;  &lt;a class=&#34;anchor&#34; href=&#34;#survey&#34;&gt;#&lt;/a&gt;&#xA;&lt;/h1&gt;&#xA;&lt;h2 id=&#34;background--intro&#34;&gt;&#xA;  Background &amp;amp; Intro&#xA;  &lt;a class=&#34;anchor&#34; href=&#34;#background--intro&#34;&gt;#&lt;/a&gt;&#xA;&lt;/h2&gt;&#xA;&lt;p&gt;只有在物理验证和签名(sign off)以及测试期间，才能衡量设计在功率、性能和面积 (PPA) 方面的质量。通常需要在中间步骤中进行纠正修改，这会导致设计的多次迭代。因此，在设计的早期阶段对 PPA 的估计将减少所需的迭代次数，增加设计的可靠性，同时深入研究flow，并最终提高结果质量 (QoR)&lt;/p&gt;&#xA;&lt;h3 id=&#34;np-complete&#34;&gt;&#xA;  NP-complete&#xA;  &lt;a class=&#34;anchor&#34; href=&#34;#np-complete&#34;&gt;#&lt;/a&gt;&#xA;&lt;/h3&gt;&#xA;&lt;p&gt;EDA 工具通常面临 &lt;strong&gt;NP-complete&lt;/strong&gt; 问题，机器学习 (ML) 方法可以更好更快地解决这些问题&lt;/p&gt;&#xA;&lt;p&gt;&lt;strong&gt;NP问题&lt;/strong&gt;是一类可以通过非确定性图灵机( Non-deterministic Turing Machine)在多项式时间(Polynomial time)内解决的决策问题集合。&lt;/p&gt;&#xA;&lt;p&gt;NP问题中最困难的问题称之为NP完全问题(NP-complete)&lt;/p&gt;&#xA;&lt;h3 id=&#34;ml&#34;&gt;&#xA;  ML&#xA;  &lt;a class=&#34;anchor&#34; href=&#34;#ml&#34;&gt;#&lt;/a&gt;&#xA;&lt;/h3&gt;&#xA;&lt;p&gt;&lt;strong&gt;ML 已集成到 EDA 中，尤其是逻辑综合、布局、布线、测试和验证 [23]&lt;/strong&gt;&#xA;ML 用于预测传统方法的最佳配置。其次，ML 学习模型的特征及其性能来预测看不见的设计的行为，而无需运行昂贵的综合步骤。此外，在优化 PPA 的同时，可以通过 ML 进行设计空间探索。最后，&lt;strong&gt;强化学习 (RL)&lt;/strong&gt; 探索设计空间、学习策略并执行转换，以通过“人工智能辅助设计流程”获得展望未来的最佳设计。&#xA;在 EDA 中使用 ML 的一个促成因素是 &lt;strong&gt;EDA 工具在设计过程中生成的大量数据&lt;/strong&gt;。&#xA;&lt;strong&gt;欧几里得数据&lt;/strong&gt;&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

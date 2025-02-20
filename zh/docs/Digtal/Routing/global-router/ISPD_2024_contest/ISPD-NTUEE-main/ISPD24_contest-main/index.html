@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<html lang="zh" dir="ltr">
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="
+  ISPD24 Contest: GPU/ML-Enhanced Large Scale Global Routing
+  #
+
+
+
+  Contest Introduction
+  #
+
+Global routing is a critical component of the VLSI design process, exerting a substantial influence on circuit timing, power consumption, and overall routability. The efficiency of global routing is of paramount importance, as a swift and scalable approach can guide optimizations in early design stages like floor-planning and placement.">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#343a40">
+<meta name="color-scheme" content="light dark"><meta property="og:url" content="http://localhost:1313/zh/docs/Digtal/Routing/global-router/ISPD_2024_contest/ISPD-NTUEE-main/ISPD24_contest-main/">
+  <meta property="og:site_name" content="Pxmmmm">
+  <meta property="og:title" content="Pxmmmm">
+  <meta property="og:description" content=" ISPD24 Contest: GPU/ML-Enhanced Large Scale Global Routing # Contest Introduction # Global routing is a critical component of the VLSI design process, exerting a substantial influence on circuit timing, power consumption, and overall routability. The efficiency of global routing is of paramount importance, as a swift and scalable approach can guide optimizations in early design stages like floor-planning and placement.">
+  <meta property="og:locale" content="zh">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="docs">
+<title>Index | Pxmmmm</title>
+<link rel="icon" href="/favicon.png" >
+<link rel="manifest" href="/manifest.json">
+<link rel="canonical" href="http://localhost:1313/zh/docs/Digtal/Routing/global-router/ISPD_2024_contest/ISPD-NTUEE-main/ISPD24_contest-main/">
+<link rel="stylesheet" href="/book.min.6c8b9d2a1fc95075ed7da46ca81060b39add8fff6741ac51259f768929281e2c.css" integrity="sha256-bIudKh/JUHXtfaRsqBBgs5rdj/9nQaxRJZ92iSkoHiw=" crossorigin="anonymous">
+  <script defer src="/fuse.min.js"></script>
+  <script defer src="/zh.search.min.bb631cbafe048394fc00ef6239a67c6d001d5a82b24dee2d21f4a21c2913527d.js" integrity="sha256-u2Mcuv4Eg5T8AO9iOaZ8bQAdWoKyTe4tIfSiHCkTUn0=" crossorigin="anonymous"></script>
+
+  <script defer src="/sw.min.6f6f90fcb8eb1c49ec389838e6b801d0de19430b8e516902f8d75c3c8bd98739.js" integrity="sha256-b2&#43;Q/LjrHEnsOJg45rgB0N4ZQwuOUWkC&#43;NdcPIvZhzk=" crossorigin="anonymous"></script>
+<!--
+Made with Book Theme
+https://github.com/alex-shpak/hugo-book
+-->
+  
+</head>
+<body dir="ltr">
+  <input type="checkbox" class="hidden toggle" id="menu-control" />
+  <input type="checkbox" class="hidden toggle" id="toc-control" />
+  <main class="container flex">
+    <aside class="book-menu">
+      <div class="book-menu-content">
+        
+  <nav>
+<h2 class="book-brand">
+  <a class="flex align-center" href="/zh/"><span>Pxmmmm</span>
+  </a>
+</h2>
+
+
+<div class="book-search hidden">
+  <input type="text" id="book-search-input" placeholder="搜索" aria-label="搜索" maxlength="64" data-hotkeys="s/" />
+  <div class="book-search-spinner hidden"></div>
+  <ul id="book-search-results"></ul>
+</div>
+<script>document.querySelector(".book-search").classList.remove("hidden")</script>
+
+
+
+  
+
+
+
+  
+    
+  
+
+
+
+<ul class="book-languages">
+  <li>
+    <input type="checkbox" id="languages" class="toggle" />
+    <label for="languages" class="flex justify-between">
+      <a role="button" class="flex align-center">
+        <img src="/svg/translate.svg" class="book-icon" alt="Languages" />
+        Chinese
+      </a>
+    </label>
+
+    <ul>
+      
+      <li>
+        <a href="/">
+          English
+        </a>
+      </li>
+      
+    </ul>
+  </li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <ul>
+    
+      
+        <li class="book-section-flat" >
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-fd2a4e7f9ddea45452efb530b97de696" class="toggle"  />
+    <label for="section-fd2a4e7f9ddea45452efb530b97de696" class="flex justify-between">
+      <a role="button" class="">Other</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/zh/docs/Other/Algorithms/" class="">Algorithms</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/zh/docs/Other/git/" class="">Git</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/zh/docs/Other/Hardware/" class="">Hardware</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/zh/docs/Other/linux/" class="">Linux</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/zh/docs/Other/Literature/" class="">Literature</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/zh/docs/Other/makefile/" class="">Makefile</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/zh/docs/Other/network/" class="">Network</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/zh/docs/Other/Program/" class="">Program</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/zh/docs/Other/ReadtheDocs/" class="">Readthe Docs</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/zh/docs/Other/Tools/" class="">Tools</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/zh/docs/Other/window/" class="">Window</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/zh/docs/Other/Writing-PPT-Presentation/" class="">Writing Ppt Presentation</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li class="book-section-flat" >
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-5c9bbe01562ea8ab1481c8c76c47bf8c" class="toggle" checked />
+    <label for="section-5c9bbe01562ea8ab1481c8c76c47bf8c" class="flex justify-between">
+      <a href="/zh/docs/Digtal/" class="">Phusical Design</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-ff67059be7c32beefcdf72e37890b13c" class="toggle"  />
+    <label for="section-ff67059be7c32beefcdf72e37890b13c" class="flex justify-between">
+      <a href="/zh/docs/Digtal/flow/EDA4PR/" class="">EDA4PR</a>
+    </label>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-3a5c141b711a325dbe1622a077a41a40" class="toggle"  />
+    <label for="section-3a5c141b711a325dbe1622a077a41a40" class="flex justify-between">
+      <a href="/zh/docs/Digtal/flow/flow/" class="">flow</a>
+    </label>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-f28c2ba809b001a8d5f958c73ab215b0" class="toggle"  />
+    <label for="section-f28c2ba809b001a8d5f958c73ab215b0" class="flex justify-between">
+      <a href="/zh/docs/Digtal/Placement/placement/" class="">Placement</a>
+    </label>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-7c689408ea7337e324eb262164e5bff3" class="toggle"  />
+    <label for="section-7c689408ea7337e324eb262164e5bff3" class="flex justify-between">
+      <a href="/zh/docs/Digtal/Routing/routing2/" class="">Routing2</a>
+    </label>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/zh/docs/Digtal/flow/notebak/EDA&#43;GNN/" class="">Eda Gnn</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/zh/docs/Digtal/Routing/global-router/ISPD_2024_contest/ISPD-NTUEE-main/ISPD24_contest-main/" class="active">Index</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/zh/docs/Digtal/Routing/global-router/ISPD_2024_contest/ISPD-NTUEE-main/README/" class="">Readme</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/zh/docs/Digtal/Synthesis/synthesis/" class="">Synthesis</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</nav>
+
+
+
+
+  <script>(function(){var e=document.querySelector("aside .book-menu-content");addEventListener("beforeunload",function(){localStorage.setItem("menu.scrollTop",e.scrollTop)}),e.scrollTop=localStorage.getItem("menu.scrollTop")})()</script>
+
+
+ 
+      </div>
+    </aside>
+
+    <div class="book-page">
+      <header class="book-header">
+        
+  <div class="flex align-center justify-between">
+  <label for="menu-control">
+    <img src="/svg/menu.svg" class="book-icon" alt="Menu" />
+  </label>
+
+  <h3>Index</h3>
+
+  <label for="toc-control">
+    
+    <img src="/svg/toc.svg" class="book-icon" alt="Table of Contents" />
+    
+  </label>
+</div>
+
+
+  
+  <aside class="hidden clearfix">
+    
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#ispd24-contest-gpuml-enhanced-large-scale-global-routing">ISPD24 Contest: GPU/ML-Enhanced Large Scale Global Routing</a>
+      <ul>
+        <li>
+          <ul>
+            <li><a href="#contest-introduction">Contest Introduction</a></li>
+            <li><a href="#inputoutput-formats-and-evaluation">Input/Output Formats and Evaluation</a></li>
+            <li><a href="#submission-guidance">Submission Guidance</a></li>
+            <li><a href="#anouncement">Anouncement</a></li>
+            <li><a href="#registration">Registration</a></li>
+            <li><a href="#important-dates">Important Dates</a></li>
+            <li><a href="#downloads">Downloads</a></li>
+            <li><a href="#qa">Q&amp;A</a></li>
+            <li><a href="#contact">Contact</a></li>
+            <li><a href="#contest-prizes">Contest Prizes</a></li>
+            <li><a href="#sponsor">Sponsor</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+
+
+  </aside>
+  
+ 
+      </header>
+
+      
+      
+  <article class="markdown book-article"><h1 id="ispd24-contest-gpuml-enhanced-large-scale-global-routing">
+  ISPD24 Contest: GPU/ML-Enhanced Large Scale Global Routing
+  <a class="anchor" href="#ispd24-contest-gpuml-enhanced-large-scale-global-routing">#</a>
+</h1>
+<img width="1000" alt="profile" src="etc/ispd_logo.png">
+<h3 id="contest-introduction">
+  Contest Introduction
+  <a class="anchor" href="#contest-introduction">#</a>
+</h3>
+<p>Global routing is a critical component of the VLSI design process, exerting a substantial influence on circuit timing, power consumption, and overall routability. The efficiency of global routing is of paramount importance, as a swift and scalable approach can guide optimizations in early design stages like floor-planning and placement.</p>
+<p>Over the past decade, GPU accelerated computing platforms have been evolving into highly versatile and programmable systems capable of delivering immense parallel computing power. Recent studies have successfully leveraged GPUs to achieve over a 10x acceleration in global routing without compromising performance. Furthermore, machine learning (ML) techniques have been integrated into the global routing process, leading to enhanced routing solution quality.</p>
+<p>The goal of this competition is to stimulate academic research aimed at developing a GPU/ML-enhanced global router tailored for industrial-level circuits. Notably, contemporary VLSI circuits often encompass tens of millions of cells, which is a significant departure from past global routing competitions that typically dealt with scenarios involving no more than 1 million cells. Due to the limitations of current routers, hierarchical or partitioning-based methods are commonly employed to manage large circuits, albeit at the risk of sacrificing a certain degree of optimality.
+It is of great importance to develop a scalable global router capable of handling circuits with tens of millions of cells, as it can greatly inform optimizations in the early design stages, such as floor-planning and placement. By fostering enthusiasm and innovation within the global routing research community, this competition aims to deliver substantial reductions in global routing runtime for these expansive industrial-grade circuits, harnessing the computational power of GPUs and the potential of machine learning techniques. Simultaneously, it strives to enhance the overall quality of routing results.</p>
+<h3 id="inputoutput-formats-and-evaluation">
+  Input/Output Formats and Evaluation
+  <a class="anchor" href="#inputoutput-formats-and-evaluation">#</a>
+</h3>
+<p>To enable teams from diverse backgrounds to participate, we have extracted routing resource information and netlist data from LEF and DEF files and organized them in simplified formats. Consequently, participants can approach the contest as a mathematical optimization problem within the GCell grid graph. The desired outcome is global routing solutions described within the GCell grid graph. The evaluation process is centered on several key metrics, including total wirelength, via count and routing congestion of the global routing solution, as well as the execution runtime of the global router.</p>
+<p>Please check 
+  <a href="https://drive.google.com/file/d/11wSwOaLQ0ZMEq2Znb3gjCAtLhNn1DV1w/view?usp=sharing">Introduction of the contest</a> for more details.</p>
+<h3 id="submission-guidance">
+  Submission Guidance
+  <a class="anchor" href="#submission-guidance">#</a>
+</h3>
+<p>We expect teams to package their global routers into Docker images. And we will pull and execute these images on a NVIDIA platform equiped with 4 NVIDIA A100 GPUs.</p>
+<h3 id="anouncement">
+  Anouncement
+  <a class="anchor" href="#anouncement">#</a>
+</h3>
+<ul>
+<li>The evaluation platform is configured with CUDA version 11.7 and driver version 515.00. We have prepared a Dockerfile (
+  <a href="https://github.com/liangrj2014/ISPD24_contest/blob/main/Dockerfile">https://github.com/liangrj2014/ISPD24_contest/blob/main/Dockerfile</a>) that will install deep learning toolkits compatible with the CUDA version on our evaluation platform. Generally, participants are welcome to modify the Dockerfile as necessary, ensuring compatibility with our evaluation platform for utilizing the GPUs on the system. - Dec 02, 2023.</li>
+<li>We&rsquo;ve identified some bugs in our evaluation script (thanks to the participants for bringing them to our attention!). An updated version will be released shortly, addressing these bugs and significantly improving runtime speed. Stay tuned for the latest updates! - Nov 30, 2023.</li>
+<li>We&rsquo;ve released example global routing solutions on Oct 28, 2023.</li>
+<li>We&rsquo;ve released the evaluation scripts on Oct 28, 2023.</li>
+<li>To simplify the entry process for the competition, we&rsquo;ve extracted routing resource information and netlist data from LEF and DEF files and stored them in simplified formats. As a result, participants can tackle the contest challenge as a mathematic optimization problem within the GCell grid graph. - Oct 28, 2023.</li>
+<li>Registration opens on Sep 13, 2023!</li>
+<li>Released the first set of benchmarks on Sep 13, 2023</li>
+<li>Released the docker for environment setup on Sep 13, 2023</li>
+</ul>
+<h3 id="registration">
+  Registration
+  <a class="anchor" href="#registration">#</a>
+</h3>
+<ul>
+<li>
+<p>Please fill in this 
+  <a href="https://form.jotform.com/232454622032143">online registration form</a></p>
+</li>
+<li>
+<p>Registration window: Sep 13, 2023 - Dec 1, 2023</p>
+</li>
+<li>
+<p>We confirm that we&rsquo;ve received the registrations forms from the following teams. Please feel free to send us an email if we overlooked your registration forms or any related information.</p>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: left">ID</th>
+          <th style="text-align: left">Team Name</th>
+          <th style="text-align: left">Affiliation</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left">1</td>
+          <td style="text-align: left">Mamta</td>
+          <td style="text-align: left">Unknown</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">2</td>
+          <td style="text-align: left">NianNianYouYu</td>
+          <td style="text-align: left">Fudan University</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">3</td>
+          <td style="text-align: left">Binghamton</td>
+          <td style="text-align: left">Binghamton University</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">4</td>
+          <td style="text-align: left">NTHU-TCLAB-GR</td>
+          <td style="text-align: left">National Tsing Hua University</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">5</td>
+          <td style="text-align: left">Alpha-Team</td>
+          <td style="text-align: left">AlphaCHIP LLC; National Research University of Electronic Technology</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">6</td>
+          <td style="text-align: left">HumbleRoute</td>
+          <td style="text-align: left">University of South Florida; CMR Institute of Technology</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">7</td>
+          <td style="text-align: left">automl-for-global-routing</td>
+          <td style="text-align: left">Texas A&amp;M University</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">8</td>
+          <td style="text-align: left">Lira</td>
+          <td style="text-align: left">Unknown</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">9</td>
+          <td style="text-align: left">SCAW</td>
+          <td style="text-align: left">Sun Yat-sen University; Institute of Computing, Chinese Academy of Sciences</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">10</td>
+          <td style="text-align: left">TeamSD</td>
+          <td style="text-align: left">Unknown</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">11</td>
+          <td style="text-align: left">NTUSTGR</td>
+          <td style="text-align: left">National Taiwan University of Science and Technology</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">12</td>
+          <td style="text-align: left">SmartRoute</td>
+          <td style="text-align: left">University of Science and Technology of China</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">13</td>
+          <td style="text-align: left">metaRoute</td>
+          <td style="text-align: left">Fudan University</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">14</td>
+          <td style="text-align: left">IWantNvidia</td>
+          <td style="text-align: left">Unknown</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">15</td>
+          <td style="text-align: left">GRFirExp</td>
+          <td style="text-align: left">University of Science and Technology of China</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">16</td>
+          <td style="text-align: left">DIAG</td>
+          <td style="text-align: left">University of Science and Technology of China</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">17</td>
+          <td style="text-align: left">Santhosh</td>
+          <td style="text-align: left">Unknown</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">18</td>
+          <td style="text-align: left">VCISEDA</td>
+          <td style="text-align: left">Beijing University of Posts and Telecommunications</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">19</td>
+          <td style="text-align: left">Puipui</td>
+          <td style="text-align: left">Nara Institute of Science and Technology</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">20</td>
+          <td style="text-align: left">Team-XJWIN</td>
+          <td style="text-align: left">Xi&rsquo;an Jiaotong University</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">21</td>
+          <td style="text-align: left">Route 99</td>
+          <td style="text-align: left">Tsinghua University; University of Science and Technology Beijing</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">22</td>
+          <td style="text-align: left">Team California</td>
+          <td style="text-align: left">University of California , Santa Cruz</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">24</td>
+          <td style="text-align: left">AnxietyAttack</td>
+          <td style="text-align: left">University of Peradeniya</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">25</td>
+          <td style="text-align: left">fzu _team</td>
+          <td style="text-align: left">Unknown</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">26</td>
+          <td style="text-align: left">Jack&rsquo;s team</td>
+          <td style="text-align: left">Unknown</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">27</td>
+          <td style="text-align: left">iEDA-iRT</td>
+          <td style="text-align: left">Institute of Computing Technology; Chinese Academy of Sciences; Shenzhen University; Peng Cheng Laboratory</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">28</td>
+          <td style="text-align: left">GGRouter</td>
+          <td style="text-align: left">Pohang University of Science and Technology</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">29</td>
+          <td style="text-align: left">NTUEE+</td>
+          <td style="text-align: left">National Taiwan University</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">30</td>
+          <td style="text-align: left">color</td>
+          <td style="text-align: left">Chinese University of Hong Kong</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">31</td>
+          <td style="text-align: left">NNU_FZUTeam</td>
+          <td style="text-align: left">Nanjing Normal University; Fuzhou University</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">32</td>
+          <td style="text-align: left">NYCU_GR</td>
+          <td style="text-align: left">Unknown</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">33</td>
+          <td style="text-align: left">NTUEDA</td>
+          <td style="text-align: left">National Taiwan University</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">34</td>
+          <td style="text-align: left">FZU_MathGR</td>
+          <td style="text-align: left">Fuzhou University</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">35</td>
+          <td style="text-align: left">RL-Route</td>
+          <td style="text-align: left">The Chinese University of Hong Kong</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">36</td>
+          <td style="text-align: left">HustForest</td>
+          <td style="text-align: left">Huazhong University of Science and Technology</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">37</td>
+          <td style="text-align: left">ZJ</td>
+          <td style="text-align: left">Unknown</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">38</td>
+          <td style="text-align: left">Marvin</td>
+          <td style="text-align: left">Indian Institute of Technology Madras</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">39</td>
+          <td style="text-align: left">Tiger</td>
+          <td style="text-align: left">Unknown</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">40</td>
+          <td style="text-align: left">NJUFZUglobalrouter</td>
+          <td style="text-align: left">Nanjing Normal University</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">41</td>
+          <td style="text-align: left">GoToRoute</td>
+          <td style="text-align: left">Fuzhou University</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">42</td>
+          <td style="text-align: left">NYCU-VDA-GR</td>
+          <td style="text-align: left">National Yang Ming Chiao Tung University</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">43</td>
+          <td style="text-align: left">Kate</td>
+          <td style="text-align: left">Scientific research institute for system analysis of Russian Academy of Sciences</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">44</td>
+          <td style="text-align: left">SEU-Router</td>
+          <td style="text-align: left">Southeast University</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">45</td>
+          <td style="text-align: left">Easy_Router</td>
+          <td style="text-align: left">Unknown</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">46</td>
+          <td style="text-align: left">etuoReL</td>
+          <td style="text-align: left">Fudan University</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">47</td>
+          <td style="text-align: left">PY-Router</td>
+          <td style="text-align: left">Unknown</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">48</td>
+          <td style="text-align: left">PampaRouting</td>
+          <td style="text-align: left">Universidade Federal do Rio Grande do Sul</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">49</td>
+          <td style="text-align: left">Team Ondru</td>
+          <td style="text-align: left">Indian Institute of Technology Madras</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">50</td>
+          <td style="text-align: left">XianBaoMing</td>
+          <td style="text-align: left">National Tsing Hua University</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">51</td>
+          <td style="text-align: left">EA</td>
+          <td style="text-align: left">University of Calgary</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">52</td>
+          <td style="text-align: left">CUEDA</td>
+          <td style="text-align: left">The Chinese University of Hong Kong</td>
+      </tr>
+  </tbody>
+</table>
+</li>
+</ul>
+<h3 id="important-dates">
+  Important Dates
+  <a class="anchor" href="#important-dates">#</a>
+</h3>
+<ul>
+<li><del>Registration Open: Sep 13, 2023</del></li>
+<li><del>Registration Close: Dec 1, 2023</del></li>
+<li>Alpha Submission: Jan 5, 2024</li>
+<li>Beta Submission: Feb, 2, 2024</li>
+<li>Final Submission: Mar, 1, 2024</li>
+<li>Results Anouncement: March 15, 2024</li>
+</ul>
+<h3 id="downloads">
+  Downloads
+  <a class="anchor" href="#downloads">#</a>
+</h3>
+<ul>
+<li>
+  <a href="https://drive.google.com/file/d/11wSwOaLQ0ZMEq2Znb3gjCAtLhNn1DV1w/view?usp=sharing">Introduction of the contest</a></li>
+<li>
+  <a href="https://drive.google.com/drive/folders/1afrsbeS_KuSeHEVfuQOuLWPuuZqlDVlw?usp=sharing">First set of benchmarks with Nangate45 technology node</a>
+Please note that all the essential input information for global routing is contained within the .cap files and .net files located in the &ldquo;Simple_inputs&rdquo; folder. We also release the LEF/DEF files of the circuits just for reference.</li>
+<li>
+  <a href="https://drive.google.com/drive/folders/1VTnIFtCa6X7cRRx9xBtPDu-kHPdnhCzL?usp=sharing">Evaluation Scripts</a></li>
+<li>
+  <a href="https://drive.google.com/drive/folders/1901Cn31zsq1bNs8lrHBC_CUwEF0eUk8Z?usp=drive_link">Example global routing solutions</a></li>
+<li>
+  <a href="https://github.com/liangrj2014/ISPD24_contest/blob/main/Dockerfile">Dockerfile for environment setup</a> Note that the Dockerfile has been updated on Dec 02, 2023.</li>
+</ul>
+<h3 id="qa">
+  Q&amp;A
+  <a class="anchor" href="#qa">#</a>
+</h3>
+<ul>
+<li>Please post your questions in GitHub Issues</li>
+</ul>
+<h3 id="contact">
+  Contact
+  <a class="anchor" href="#contact">#</a>
+</h3>
+<ul>
+<li>Email：ispd2024contest@gmail.com</li>
+</ul>
+<h3 id="contest-prizes">
+  Contest Prizes
+  <a class="anchor" href="#contest-prizes">#</a>
+</h3>
+<ul>
+<li>1st place: $1000 + one NVIDIA GPU of similar value</li>
+<li>2nd place: $500 + one NVIDIA GPU of similar value</li>
+<li>3rd place: $250 + one NVIDIA GPU of similar value</li>
+</ul>
+<h3 id="sponsor">
+  Sponsor
+  <a class="anchor" href="#sponsor">#</a>
+</h3>
+<ul>
+<li>Sponsored by NVIDIA</li>
+</ul>
+<img width="600" alt="profile" src="etc/nvidia_logo.png">
+</article>
+ 
+      
+
+      <footer class="book-footer">
+        
+  <div class="flex flex-wrap justify-between">
+
+
+
+
+  <div>
+    <a class="flex align-center" href="https://github.com/alex-shpak/hugo-book/edit/main/exampleSite/content.zh/docs/Digtal/Routing/global%20router/ISPD_2024_contest/ISPD-NTUEE-main/ISPD24_contest-main/index.md" target="_blank" rel="noopener">
+      <img src="/svg/edit.svg" class="book-icon" alt="" />
+      <span>编辑本页</span>
+    </a>
+  </div>
+
+
+</div>
+
+
+
+  <script>(function(){function e(e){const t=window.getSelection(),n=document.createRange();n.selectNodeContents(e),t.removeAllRanges(),t.addRange(n)}document.querySelectorAll("pre code").forEach(t=>{t.addEventListener("click",function(){if(window.getSelection().toString())return;e(t.parentElement),navigator.clipboard&&navigator.clipboard.writeText(t.parentElement.textContent)})})})()</script>
+
+
+ 
+        
+      </footer>
+
+      
+  
+  <div class="book-comments">
+
+</div>
+  
+ 
+
+      <label for="menu-control" class="hidden book-menu-overlay"></label>
+    </div>
+
+    
+    <aside class="book-toc">
+      <div class="book-toc-content">
+        
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#ispd24-contest-gpuml-enhanced-large-scale-global-routing">ISPD24 Contest: GPU/ML-Enhanced Large Scale Global Routing</a>
+      <ul>
+        <li>
+          <ul>
+            <li><a href="#contest-introduction">Contest Introduction</a></li>
+            <li><a href="#inputoutput-formats-and-evaluation">Input/Output Formats and Evaluation</a></li>
+            <li><a href="#submission-guidance">Submission Guidance</a></li>
+            <li><a href="#anouncement">Anouncement</a></li>
+            <li><a href="#registration">Registration</a></li>
+            <li><a href="#important-dates">Important Dates</a></li>
+            <li><a href="#downloads">Downloads</a></li>
+            <li><a href="#qa">Q&amp;A</a></li>
+            <li><a href="#contact">Contact</a></li>
+            <li><a href="#contest-prizes">Contest Prizes</a></li>
+            <li><a href="#sponsor">Sponsor</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+
+ 
+      </div>
+    </aside>
+    
+  </main>
+
+  
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

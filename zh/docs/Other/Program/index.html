@@ -1,0 +1,946 @@
+<!doctype html><html lang=zh dir=ltr><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content='
+  C/C++
+  #
+
+
+  key word
+  #
+
+
+  extern
+  #
+
+extern可以置于变量或者函数前,以标示变量或者函数的定义在别的文件中,提示编译器遇到此变量和函数时在其他模块中寻找其定义。此外extern也可用来进行链接指定
+
+  register
+  #
+
+
+  union
+  #
+
+
+  volatile
+  #
+
+
+  C++ only keywords
+  #
+
+
+  
+
+  class
+  #
+
+#include <iostream>
+#include <string>
+using namespace std;
+
+class Person {
+private://私有成员只能在类内部访问。
+    string name;
+    int age;
+
+public://公有成员可以在类外部访问。
+    //static 关键字可以用于类成员变量或成员函数，表示它们属于类本身，而不是类的某个特定对象
+     static int totalPopulation;
+    
+    //构造函数是一种特殊的成员函数，用于初始化对象。它与类同名，没有返回类型，也不返回任何值。
+    Person(string n, int a) : name(n), age(a) {
+        totalPopulation++; // 每次创建新对象时增加人数
+    } // 构造函数
+
+    virtual void display() const {//如果你想在派生类中重写基类的虚函数，基类的函数必须被声明为 virtual
+        cout << "Name: " << name << ", Age: " << age << endl;
+    }
+    
+    friend void displayPerson(const Person &amp;p);//友元函数是类外部的函数，可以访问类的私有和保护成员。
+    
+    //操作符重载
+    Person& operator++() { // 前置++
+        ++age;
+        return *this;
+    }
+	//操作符重载
+    Person operator++(int) { // 后置++
+        Person temp = *this;
+        ++(*this);
+        return temp;
+    }
+
+    //静态函数
+    static void displayTotalPopulation() 
+    {
+        cout << "Total population: " << totalPopulation << endl;
+    }
+
+    ~Person() 
+    {
+        totalPopulation--; // 每次析构对象时减少人数
+    } // 析构函数用于在对象生命周期结束时进行清理工作。它与类同名，前面加上 ~，没有参数，也没有返回类型。
+};
+
+int Person::totalPopulation = 0; // 静态成员变量的初始化!
+
+void displayPerson(const Person &amp;p) {//友元函数, 在类内声明过了，可以访问类的私有和保护成员。
+    cout << "Name: " << p.name << ", Age: " << p.age << endl;
+}
+
+
+
+//继承
+class Student : public Person {
+private:
+    string school;
+
+public:
+    Student(string n, int a, string s) : Person(n, a), school(s) {}
+
+    void display() const override {
+        Person::display();
+        cout << "School: " << school << endl;
+    }
+};
+
+
+int main() {
+
+    Person person("Alice", 30);
+    person.display();
+    
+    //通过基类指针或引用调用派生类
+    Person *p1 = new Person("Alice", 30);
+    Person *p2 = new Student("Bob", 20, "MIT");
+
+    p1->display();
+    p2->display();
+
+    cout<< "total population = " << Person::totalPopulation <<endl;
+    Person::displayTotalPopulation();
+
+
+    delete p1;
+    delete p2;
+    
+    ++person;
+    person.display();
+    person++;
+    person.display();
+    displayPerson(person);//友元函数
+    
+    return 0;
+}
+//类模板允许你创建通用类，可以处理任何数据类型。
+template <typename T>
+class Stack {
+private:
+    std::vector<T> elements;
+
+public:
+    void push(const T& element) {
+        elements.push_back(element);
+    }
+
+    T pop() {
+        T elem = elements.back();
+        elements.pop_back();
+        return elem;
+    }
+};
+
+int main() {
+    Stack<int> intStack;
+    intStack.push(1);
+    intStack.push(2);
+    std::cout << intStack.pop() << std::endl; // 输出 2
+    std::cout << intStack.pop() << std::endl; // 输出 1
+    return 0;
+}
+copy，move构造函数，'><meta name=theme-color media="(prefers-color-scheme: light)" content="#ffffff"><meta name=theme-color media="(prefers-color-scheme: dark)" content="#343a40"><meta name=color-scheme content="light dark"><meta property="og:url" content="https://pxgh02.github.io/zh/docs/Other/Program/"><meta property="og:site_name" content="Pxmmmm"><meta property="og:title" content="Pxmmmm"><meta property="og:description" content='C/C++ # key word # extern # extern可以置于变量或者函数前,以标示变量或者函数的定义在别的文件中,提示编译器遇到此变量和函数时在其他模块中寻找其定义。此外extern也可用来进行链接指定
+register # union # volatile # C++ only keywords # class # #include <iostream> #include <string> using namespace std; class Person { private://私有成员只能在类内部访问。 string name; int age; public://公有成员可以在类外部访问。 //static 关键字可以用于类成员变量或成员函数，表示它们属于类本身，而不是类的某个特定对象 static int totalPopulation; //构造函数是一种特殊的成员函数，用于初始化对象。它与类同名，没有返回类型，也不返回任何值。 Person(string n, int a) : name(n), age(a) { totalPopulation++; // 每次创建新对象时增加人数 } // 构造函数 virtual void display() const {//如果你想在派生类中重写基类的虚函数，基类的函数必须被声明为 virtual cout << "Name: " << name << ", Age: " << age << endl; } friend void displayPerson(const Person &amp;p);//友元函数是类外部的函数，可以访问类的私有和保护成员。 //操作符重载 Person& operator++() { // 前置++ ++age; return *this; } //操作符重载 Person operator++(int) { // 后置++ Person temp = *this; ++(*this); return temp; } //静态函数 static void displayTotalPopulation() { cout << "Total population: " << totalPopulation << endl; } ~Person() { totalPopulation--; // 每次析构对象时减少人数 } // 析构函数用于在对象生命周期结束时进行清理工作。它与类同名，前面加上 ~，没有参数，也没有返回类型。 }; int Person::totalPopulation = 0; // 静态成员变量的初始化! void displayPerson(const Person &amp;p) {//友元函数, 在类内声明过了，可以访问类的私有和保护成员。 cout << "Name: " << p.name << ", Age: " << p.age << endl; } //继承 class Student : public Person { private: string school; public: Student(string n, int a, string s) : Person(n, a), school(s) {} void display() const override { Person::display(); cout << "School: " << school << endl; } }; int main() { Person person("Alice", 30); person.display(); //通过基类指针或引用调用派生类 Person *p1 = new Person("Alice", 30); Person *p2 = new Student("Bob", 20, "MIT"); p1->display(); p2->display(); cout<< "total population = " << Person::totalPopulation <<endl; Person::displayTotalPopulation(); delete p1; delete p2; ++person; person.display(); person++; person.display(); displayPerson(person);//友元函数 return 0; } //类模板允许你创建通用类，可以处理任何数据类型。 template <typename T> class Stack { private: std::vector<T> elements; public: void push(const T& element) { elements.push_back(element); } T pop() { T elem = elements.back(); elements.pop_back(); return elem; } }; int main() { Stack<int> intStack; intStack.push(1); intStack.push(2); std::cout << intStack.pop() << std::endl; // 输出 2 std::cout << intStack.pop() << std::endl; // 输出 1 return 0; } copy，move构造函数，'><meta property="og:locale" content="zh"><meta property="og:type" content="article"><meta property="article:section" content="docs"><meta property="article:modified_time" content="2025-02-20T08:28:24+00:00"><title>Program | Pxmmmm</title>
+<link rel=icon href=/favicon.png><link rel=manifest href=/manifest.json><link rel=canonical href=https://pxgh02.github.io/zh/docs/Other/Program/><link rel=stylesheet href=/book.min.6c8b9d2a1fc95075ed7da46ca81060b39add8fff6741ac51259f768929281e2c.css integrity="sha256-bIudKh/JUHXtfaRsqBBgs5rdj/9nQaxRJZ92iSkoHiw=" crossorigin=anonymous><script defer src=/fuse.min.js></script><script defer src=/zh.search.min.b08d01413d975a4c380ae1a5bfe3265f5e9c5c6655f82c0481f7d419c7faba49.js integrity="sha256-sI0BQT2XWkw4CuGlv+MmX16cXGZV+CwEgffUGcf6ukk=" crossorigin=anonymous></script><script defer src=/sw.min.6f6f90fcb8eb1c49ec389838e6b801d0de19430b8e516902f8d75c3c8bd98739.js integrity="sha256-b2+Q/LjrHEnsOJg45rgB0N4ZQwuOUWkC+NdcPIvZhzk=" crossorigin=anonymous></script></head><body dir=ltr><input type=checkbox class="hidden toggle" id=menu-control>
+<input type=checkbox class="hidden toggle" id=toc-control><main class="container flex"><aside class=book-menu><div class=book-menu-content><nav><h2 class=book-brand><a class="flex align-center" href=/zh/><span>Pxmmmm</span></a></h2><div class="book-search hidden"><input type=text id=book-search-input placeholder=搜索 aria-label=搜索 maxlength=64 data-hotkeys=s/><div class="book-search-spinner hidden"></div><ul id=book-search-results></ul></div><script>document.querySelector(".book-search").classList.remove("hidden")</script><ul class=book-languages><li><input type=checkbox id=languages class=toggle>
+<label for=languages class="flex justify-between"><a role=button class="flex align-center"><img src=/svg/translate.svg class=book-icon alt=Languages>
+Chinese</a></label><ul><li><a href=/>English</a></li></ul></li></ul><ul><li><input type=checkbox id=section-a7a8fb3cc34544172ff5103ce3adf7cc class=toggle checked>
+<label for=section-a7a8fb3cc34544172ff5103ce3adf7cc class="flex justify-between"><a href=/zh/docs/Other/>Other</a></label><ul><li><a href=/zh/docs/Other/Algorithms/>Algorithms</a></li><li><a href=/zh/docs/Other/git/>Git</a></li><li><a href=/zh/docs/Other/Hardware/>Hardware</a></li><li><a href=/zh/docs/Other/linux/>Linux</a></li><li><a href=/zh/docs/Other/Literature/>Literature</a></li><li><a href=/zh/docs/Other/makefile/>Makefile</a></li><li><a href=/zh/docs/Other/network/>Network</a></li><li><a href=/zh/docs/Other/Program/ class=active>Program</a></li><li><a href=/zh/docs/Other/Tools/>Tools</a></li><li><a href=/zh/docs/Other/window/>Window</a></li><li><a href=/zh/docs/Other/Writing-PPT-Presentation/>Writing Ppt Presentation</a></li></ul></li><li><input type=checkbox id=section-546194909198d851b05dc5d16088b0b9 class=toggle>
+<label for=section-546194909198d851b05dc5d16088b0b9 class="flex justify-between"><a href=/zh/docs/Digtal/>Physical Design</a></label><ul><li><input type=checkbox id=section-9bc128912acae8559e0b27b496b7779b class=toggle>
+<label for=section-9bc128912acae8559e0b27b496b7779b class="flex justify-between"><a href=/zh/docs/Digtal/flow/EDA4PR/>EDA4PR</a></label></li><li><input type=checkbox id=section-50846ac4cdec99c8bd1f8b0417acad9a class=toggle>
+<label for=section-50846ac4cdec99c8bd1f8b0417acad9a class="flex justify-between"><a href=/zh/docs/Digtal/flow/flow/>Flow</a></label></li><li><input type=checkbox id=section-b2241e4da59f24976e354abe344e8d4f class=toggle>
+<label for=section-b2241e4da59f24976e354abe344e8d4f class="flex justify-between"><a href=/zh/docs/Digtal/Placement/placement/>Placement</a></label></li><li><input type=checkbox id=section-259735f9bf2708d778569b162c141df5 class=toggle>
+<label for=section-259735f9bf2708d778569b162c141df5 class="flex justify-between"><a href=/zh/docs/Digtal/Routing/routing2/>Routing</a></label></li><li><input type=checkbox id=section-78b8f069c0c130e55062b802fff78361 class=toggle>
+<label for=section-78b8f069c0c130e55062b802fff78361 class="flex justify-between"><a href=/zh/docs/Digtal/Routing/routing1/>Routing1</a></label></li></ul></li></ul></nav><script>(function(){var e=document.querySelector("aside .book-menu-content");addEventListener("beforeunload",function(){localStorage.setItem("menu.scrollTop",e.scrollTop)}),e.scrollTop=localStorage.getItem("menu.scrollTop")})()</script></div></aside><div class=book-page><header class=book-header><div class="flex align-center justify-between"><label for=menu-control><img src=/svg/menu.svg class=book-icon alt=Menu></label><h3>Program</h3><label for=toc-control><img src=/svg/toc.svg class=book-icon alt="Table of Contents"></label></div><aside class="hidden clearfix"><nav id=TableOfContents><ul><li><a href=#cc>C/C++</a><ul><li><a href=#key-word>key word</a><ul><li><a href=#extern>extern</a></li><li><a href=#register>register</a></li><li><a href=#union>union</a></li><li><a href=#volatile>volatile</a></li><li><a href=#c-only-keywords>C++ only keywords</a></li></ul></li><li><a href=#class>class</a></li><li><a href=#左右值引用>左/右值引用</a><ul><li><a href=#左值引用>左值引用&</a></li><li><a href=#右值引用>右值引用&&</a></li></ul></li><li><a href=#指针>指针</a><ul><li><a href=#野指针和空指针>野指针和空指针</a></li><li><a href=#指针的魅力>指针的魅力</a></li><li><a href=#直接存储对象对象实例>直接存储对象（对象实例）</a></li><li><a href=#存储对象指针>存储对象指针</a></li><li><a href=#选择建议>选择建议</a></li></ul></li><li><a href=#vector数组链表与栈堆>vector&数组&链表与栈&堆</a><ul><li><a href=#数组>数组</a></li><li><a href=#智能指针>智能指针</a></li><li><a href=#内存泄漏悬空指针>内存泄漏&悬空指针</a></li><li><a href=#unique_ptr>unique_ptr</a></li><li><a href=#shared_ptr>shared_ptr</a></li><li><a href=#bugs>Bugs</a></li><li><a href=#参考>参考</a></li></ul></li><li><a href=#堆栈stack和堆heap>堆栈(<strong>Stack</strong>)和堆(Heap)</a><ul><li><a href=#内存分配>内存分配</a></li><li><a href=#数据结构>数据结构</a></li><li><a href=#参考-1>参考</a></li></ul></li><li><a href=#静态和动态链接>静态和动态链接</a><ul><li><a href=#静态链接>静态链接</a></li><li><a href=#动态链接>动态链接</a></li><li><a href=#参考-2>参考</a></li></ul></li><li><a href=#多线程>多线程</a><ul><li><a href=#进程与线程的区别>进程与线程的区别</a></li><li><a href=#并发和并行>并发和并行</a></li><li><a href=#特点-3>特点</a></li><li><a href=#stdthread性能分析>std::thread性能分析</a></li><li><a href=#多线程真的能加速>多线程真的能加速？</a></li><li><a href=#this_thread>this_thread</a></li><li><a href=#多个线程操作同一个变量>多个线程操作同一个变量</a></li><li><a href=#async>async</a></li><li><a href=#多线程与核心>多线程与核心</a></li></ul></li><li><a href=#speedup>speedup</a><ul><li><a href=#分析工具>分析工具</a></li><li><a href=#总结>总结</a></li></ul></li><li><a href=#boost>Boost</a><ul><li><a href=#简介>简介</a></li><li><a href=#参考-3>参考</a></li></ul></li><li><a href=#odb>ODB</a></li><li><a href=#buglist>buglist</a></li></ul></li><li><a href=#systemc>SystemC</a><ul><li><a href=#环境配置>环境配置</a><ul><li><a href=#eda-playground>EDA Playground</a></li><li><a href=#local>Local</a></li><li><a href=#other>other</a></li></ul></li></ul></li><li><a href=#complexity>Complexity</a><ul><li><a href=#time-complexity>Time Complexity</a><ul><li><a href=#举例-4>举例</a></li></ul></li><li><a href=#space-complexity>Space Complexity</a><ul><li><a href=#复杂度分类>复杂度分类</a></li><li><a href=#参考-4>参考</a></li></ul></li></ul></li><li><a href=#python>Python</a><ul><li><a href=#print>print</a></li><li><a href=#class-1>class</a><ul><li><a href=#basic>basic</a></li><li><a href=#reset>reset</a></li><li><a href=#__init__py><code>__init__.py</code></a></li><li><a href=#args-和-kwds><code>*args</code> 和 <code>**kwds</code></a></li></ul></li><li><a href=#pytorch>Pytorch</a><ul><li><a href=#ema>ema</a></li></ul></li><li><a href=#dgl>DGL</a></li><li><a href=#tensorflow>Tensorflow</a><ul><li><a href=#基本操作>基本操作</a></li><li><a href=#自动求导>自动求导</a></li><li><a href=#模型与层>模型与层</a></li><li><a href=#变量的恢复和保存>变量的恢复和保存</a></li><li><a href=#训练过程可视化>训练过程可视化</a></li><li><a href=#gpu使用>GPU使用</a></li><li><a href=#install>install</a></li><li><a href=#reference>reference</a></li></ul></li><li><a href=#collections>collections</a><ul><li><a href=#defaultdict>defaultdict</a></li><li><a href=#nametuple>NameTuple</a></li></ul></li><li><a href=#map>map</a></li></ul></li><li><a href=#tcl>TCL</a><ul><li><a href=#基本知识>基本知识</a><ul><li><a href=#list>list</a></li><li><a href=#关联数组>关联数组</a></li></ul></li><li><a href=#参考-5>参考</a></li></ul></li><li><a href=#cuda>CUDA</a><ul><li><a href=#简介-1>简介</a><ul><li><a href=#什么是cuda>什么是CUDA</a></li><li><a href=#gpu性能指标>GPU性能指标</a></li><li><a href=#架构>架构</a></li><li><a href=#开发环境>开发环境</a></li></ul></li><li><a href=#command>command</a></li><li><a href=#basic-1>basic</a><ul><li><a href=#核函数kernel-function>核函数(Kernel function)</a></li><li><a href=#同步>同步</a></li></ul></li><li><a href=#线程模型>线程模型</a><ul><li><a href=#一维线程模型>一维线程模型</a></li><li><a href=#多维线程模型>多维线程模型</a></li></ul></li><li><a href=#nvcc>nvcc</a><ul><li><a href=#简介-2>简介</a></li><li><a href=#原理-1>原理</a></li><li><a href=#flow>flow</a></li><li><a href=#command-1>command</a></li></ul></li><li><a href=#计算能力>计算能力</a></li><li><a href=#gpu架构>GPU架构</a></li><li><a href=#torch>torch</a><ul><li><a href=#性能对比>性能对比</a></li></ul></li><li><a href=#tutorial>tutorial</a><ul><li><a href=#1-introduction>1. Introduction</a></li><li><a href=#2-programming-model>2. Programming Model</a></li></ul></li><li><a href=#install-1>install</a></li><li><a href=#参考-6>参考</a></li></ul></li><li><a href=#np问题>NP问题</a><ul><li><a href=#基本概念>基本概念：</a></li><li><a href=#p问题>P问题</a></li><li><a href=#np问题-1>NP问题</a></li><li><a href=#np-hard>NP-hard</a></li><li><a href=#np-complete问题-1>NP-Complete问题</a></li></ul></li><li><a href=#python和cc的区别>python和c/c++的区别</a><ul><li><a href=#主要区别><strong>主要区别</strong></a><ul><li><a href=#1-性能><strong>1. 性能</strong></a></li><li><a href=#2-开发效率><strong>2. 开发效率</strong></a></li><li><a href=#3-类型系统><strong>3. 类型系统</strong></a></li><li><a href=#4-内存管理><strong>4. 内存管理</strong></a></li><li><a href=#5-库支持><strong>5. 库支持</strong></a></li><li><a href=#6-使用场景><strong>6. 使用场景</strong></a></li></ul></li><li><a href=#性能优化方法><strong>性能优化方法</strong></a><ul><li></li></ul></li><li><a href=#总结-1><strong>总结</strong></a></li></ul></li></ul></nav></aside></header><article class="markdown book-article"><h1 id=cc>C/C++
+<a class=anchor href=#cc>#</a></h1><h2 id=key-word>key word
+<a class=anchor href=#key-word>#</a></h2><h3 id=extern>extern
+<a class=anchor href=#extern>#</a></h3><p>extern可以置于变量或者函数前,以标示变量或者函数的定义在别的文件中,提示编译器遇到此变量和函数时<strong>在其他模块中寻找其定义</strong>。此外extern也可用来进行链接指定</p><h3 id=register>register
+<a class=anchor href=#register>#</a></h3><h3 id=union>union
+<a class=anchor href=#union>#</a></h3><h3 id=volatile>volatile
+<a class=anchor href=#volatile>#</a></h3><h3 id=c-only-keywords>C++ only keywords
+<a class=anchor href=#c-only-keywords>#</a></h3><p><img src=assets/image-20240918090732446.png alt=image-20240918090732446></p><h2 id=class>class
+<a class=anchor href=#class>#</a></h2><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c++ data-lang=c++><span style=display:flex><span><span style=color:#75715e>#include</span> <span style=color:#75715e>&lt;iostream&gt;</span><span style=color:#75715e>
+</span></span></span><span style=display:flex><span><span style=color:#75715e>#include</span> <span style=color:#75715e>&lt;string&gt;</span><span style=color:#75715e>
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#66d9ef>using</span> <span style=color:#66d9ef>namespace</span> std;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>class</span> <span style=color:#a6e22e>Person</span> {
+</span></span><span style=display:flex><span><span style=color:#66d9ef>private</span><span style=color:#f92672>:</span><span style=color:#75715e>//私有成员只能在类内部访问。
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    string name;
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>int</span> age;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>public</span><span style=color:#f92672>:</span><span style=color:#75715e>//公有成员可以在类外部访问。
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#75715e>//static 关键字可以用于类成员变量或成员函数，表示它们属于类本身，而不是类的某个特定对象
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>     <span style=color:#66d9ef>static</span> <span style=color:#66d9ef>int</span> totalPopulation;
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#75715e>//构造函数是一种特殊的成员函数，用于初始化对象。它与类同名，没有返回类型，也不返回任何值。
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    Person(string n, <span style=color:#66d9ef>int</span> a) <span style=color:#f92672>:</span> name(n), age(a) {
+</span></span><span style=display:flex><span>        totalPopulation<span style=color:#f92672>++</span>; <span style=color:#75715e>// 每次创建新对象时增加人数
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    } <span style=color:#75715e>// 构造函数
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>virtual</span> <span style=color:#66d9ef>void</span> <span style=color:#a6e22e>display</span>() <span style=color:#66d9ef>const</span> {<span style=color:#75715e>//如果你想在派生类中重写基类的虚函数，基类的函数必须被声明为 virtual
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>        cout <span style=color:#f92672>&lt;&lt;</span> <span style=color:#e6db74>&#34;Name: &#34;</span> <span style=color:#f92672>&lt;&lt;</span> name <span style=color:#f92672>&lt;&lt;</span> <span style=color:#e6db74>&#34;, Age: &#34;</span> <span style=color:#f92672>&lt;&lt;</span> age <span style=color:#f92672>&lt;&lt;</span> endl;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>friend</span> <span style=color:#66d9ef>void</span> <span style=color:#a6e22e>displayPerson</span>(<span style=color:#66d9ef>const</span> Person <span style=color:#f92672>&amp;</span>p);<span style=color:#75715e>//友元函数是类外部的函数，可以访问类的私有和保护成员。
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    
+</span></span><span style=display:flex><span>    <span style=color:#75715e>//操作符重载
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    Person<span style=color:#f92672>&amp;</span> <span style=color:#66d9ef>operator</span><span style=color:#f92672>++</span>() { <span style=color:#75715e>// 前置++
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>        <span style=color:#f92672>++</span>age;
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> <span style=color:#f92672>*</span><span style=color:#66d9ef>this</span>;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>	<span style=color:#75715e>//操作符重载
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    Person <span style=color:#66d9ef>operator</span><span style=color:#f92672>++</span>(<span style=color:#66d9ef>int</span>) { <span style=color:#75715e>// 后置++
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>        Person temp <span style=color:#f92672>=</span> <span style=color:#f92672>*</span><span style=color:#66d9ef>this</span>;
+</span></span><span style=display:flex><span>        <span style=color:#f92672>++</span>(<span style=color:#f92672>*</span><span style=color:#66d9ef>this</span>);
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> temp;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>//静态函数
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#66d9ef>static</span> <span style=color:#66d9ef>void</span> <span style=color:#a6e22e>displayTotalPopulation</span>() 
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        cout <span style=color:#f92672>&lt;&lt;</span> <span style=color:#e6db74>&#34;Total population: &#34;</span> <span style=color:#f92672>&lt;&lt;</span> totalPopulation <span style=color:#f92672>&lt;&lt;</span> endl;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>~</span>Person() 
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        totalPopulation<span style=color:#f92672>--</span>; <span style=color:#75715e>// 每次析构对象时减少人数
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    } <span style=color:#75715e>// 析构函数用于在对象生命周期结束时进行清理工作。它与类同名，前面加上 ~，没有参数，也没有返回类型。
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>};
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>int</span> Person<span style=color:#f92672>::</span>totalPopulation <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span>; <span style=color:#75715e>// 静态成员变量的初始化!
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>void</span> <span style=color:#a6e22e>displayPerson</span>(<span style=color:#66d9ef>const</span> Person <span style=color:#f92672>&amp;</span>p) {<span style=color:#75715e>//友元函数, 在类内声明过了，可以访问类的私有和保护成员。
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    cout <span style=color:#f92672>&lt;&lt;</span> <span style=color:#e6db74>&#34;Name: &#34;</span> <span style=color:#f92672>&lt;&lt;</span> p.name <span style=color:#f92672>&lt;&lt;</span> <span style=color:#e6db74>&#34;, Age: &#34;</span> <span style=color:#f92672>&lt;&lt;</span> p.age <span style=color:#f92672>&lt;&lt;</span> endl;
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>//继承
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#66d9ef>class</span> <span style=color:#a6e22e>Student</span> <span style=color:#f92672>:</span> <span style=color:#66d9ef>public</span> Person {
+</span></span><span style=display:flex><span><span style=color:#66d9ef>private</span><span style=color:#f92672>:</span>
+</span></span><span style=display:flex><span>    string school;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>public</span><span style=color:#f92672>:</span>
+</span></span><span style=display:flex><span>    Student(string n, <span style=color:#66d9ef>int</span> a, string s) <span style=color:#f92672>:</span> Person(n, a), school(s) {}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>void</span> <span style=color:#a6e22e>display</span>() <span style=color:#66d9ef>const</span> <span style=color:#66d9ef>override</span> {
+</span></span><span style=display:flex><span>        Person<span style=color:#f92672>::</span>display();
+</span></span><span style=display:flex><span>        cout <span style=color:#f92672>&lt;&lt;</span> <span style=color:#e6db74>&#34;School: &#34;</span> <span style=color:#f92672>&lt;&lt;</span> school <span style=color:#f92672>&lt;&lt;</span> endl;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>};
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>int</span> <span style=color:#a6e22e>main</span>() {
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    Person person(<span style=color:#e6db74>&#34;Alice&#34;</span>, <span style=color:#ae81ff>30</span>);
+</span></span><span style=display:flex><span>    person.display();
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#75715e>//通过基类指针或引用调用派生类
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    Person <span style=color:#f92672>*</span>p1 <span style=color:#f92672>=</span> <span style=color:#66d9ef>new</span> Person(<span style=color:#e6db74>&#34;Alice&#34;</span>, <span style=color:#ae81ff>30</span>);
+</span></span><span style=display:flex><span>    Person <span style=color:#f92672>*</span>p2 <span style=color:#f92672>=</span> <span style=color:#66d9ef>new</span> Student(<span style=color:#e6db74>&#34;Bob&#34;</span>, <span style=color:#ae81ff>20</span>, <span style=color:#e6db74>&#34;MIT&#34;</span>);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    p1<span style=color:#f92672>-&gt;</span>display();
+</span></span><span style=display:flex><span>    p2<span style=color:#f92672>-&gt;</span>display();
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    cout<span style=color:#f92672>&lt;&lt;</span> <span style=color:#e6db74>&#34;total population = &#34;</span> <span style=color:#f92672>&lt;&lt;</span> Person<span style=color:#f92672>::</span>totalPopulation <span style=color:#f92672>&lt;&lt;</span>endl;
+</span></span><span style=display:flex><span>    Person<span style=color:#f92672>::</span>displayTotalPopulation();
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>delete</span> p1;
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>delete</span> p2;
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#f92672>++</span>person;
+</span></span><span style=display:flex><span>    person.display();
+</span></span><span style=display:flex><span>    person<span style=color:#f92672>++</span>;
+</span></span><span style=display:flex><span>    person.display();
+</span></span><span style=display:flex><span>    displayPerson(person);<span style=color:#75715e>//友元函数
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#ae81ff>0</span>;
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c++ data-lang=c++><span style=display:flex><span><span style=color:#75715e>//类模板允许你创建通用类，可以处理任何数据类型。
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#66d9ef>template</span> <span style=color:#f92672>&lt;</span><span style=color:#66d9ef>typename</span> T<span style=color:#f92672>&gt;</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>class</span> <span style=color:#a6e22e>Stack</span> {
+</span></span><span style=display:flex><span><span style=color:#66d9ef>private</span><span style=color:#f92672>:</span>
+</span></span><span style=display:flex><span>    std<span style=color:#f92672>::</span>vector<span style=color:#f92672>&lt;</span>T<span style=color:#f92672>&gt;</span> elements;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>public</span><span style=color:#f92672>:</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>void</span> push(<span style=color:#66d9ef>const</span> T<span style=color:#f92672>&amp;</span> element) {
+</span></span><span style=display:flex><span>        elements.push_back(element);
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    T <span style=color:#a6e22e>pop</span>() {
+</span></span><span style=display:flex><span>        T elem <span style=color:#f92672>=</span> elements.back();
+</span></span><span style=display:flex><span>        elements.pop_back();
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> elem;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>};
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>int</span> <span style=color:#a6e22e>main</span>() {
+</span></span><span style=display:flex><span>    Stack<span style=color:#f92672>&lt;</span><span style=color:#66d9ef>int</span><span style=color:#f92672>&gt;</span> intStack;
+</span></span><span style=display:flex><span>    intStack.push(<span style=color:#ae81ff>1</span>);
+</span></span><span style=display:flex><span>    intStack.push(<span style=color:#ae81ff>2</span>);
+</span></span><span style=display:flex><span>    std<span style=color:#f92672>::</span>cout <span style=color:#f92672>&lt;&lt;</span> intStack.pop() <span style=color:#f92672>&lt;&lt;</span> std<span style=color:#f92672>::</span>endl; <span style=color:#75715e>// 输出 2
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    std<span style=color:#f92672>::</span>cout <span style=color:#f92672>&lt;&lt;</span> intStack.pop() <span style=color:#f92672>&lt;&lt;</span> std<span style=color:#f92672>::</span>endl; <span style=color:#75715e>// 输出 1
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#66d9ef>return</span> <span style=color:#ae81ff>0</span>;
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>copy，move构造函数，</p><h2 id=左右值引用>左/右值引用
+<a class=anchor href=#%e5%b7%a6%e5%8f%b3%e5%80%bc%e5%bc%95%e7%94%a8>#</a></h2><h3 id=左值引用>左值引用&
+<a class=anchor href=#%e5%b7%a6%e5%80%bc%e5%bc%95%e7%94%a8>#</a></h3><h3 id=右值引用>右值引用&&
+<a class=anchor href=#%e5%8f%b3%e5%80%bc%e5%bc%95%e7%94%a8>#</a></h3><ul><li><strong>一次性使用</strong>：右值引用只能绑定到右值上，一旦绑定，原始的右值就不能再被使用。</li><li><strong>移动语义</strong>：右值引用允许你转移资源的所有权，而不是复制资源。这是通过移动构造函数和移动赋值运算符实现的。</li><li><strong>临时对象</strong>：右值引用可以用来延长临时对象的生命周期，使其可以被多次使用。</li><li><strong>完美转发</strong>：右值引用在模板编程中用于完美转发参数，这样可以保留参数的左值或右值性质。</li></ul><h2 id=指针>指针
+<a class=anchor href=#%e6%8c%87%e9%92%88>#</a></h2><h3 id=野指针和空指针>野指针和空指针
+<a class=anchor href=#%e9%87%8e%e6%8c%87%e9%92%88%e5%92%8c%e7%a9%ba%e6%8c%87%e9%92%88>#</a></h3><p><strong>空指针</strong>: 如 int *p = NULL 这就定义了一个指针，通常NULL是一个零值，操作系统定义内存64kb以下的内存单元是不可访问的，所以像如 *p = 9 这样给他赋值是系统不允许的，将会发生内存报错。</p><p><strong>野指针</strong>: 如 int *p就是一个野指针，可以看到它在创建时没有赋初值，所以它的值是一个随机数，也就是乱指一气，通常都是指向了不合法的内存段，所以使用它也会内存报错。还有指针p被free或者delete之后也会成为野指针，因为它所指的内存空间被释放之后，变成了一个不合法内存段。野指针，它顾名思义它就是一个野指针，它是没有主人领养的野兽，凶猛残暴，用它你就得自食其果。</p><h3 id=指针的魅力>指针的魅力
+<a class=anchor href=#%e6%8c%87%e9%92%88%e7%9a%84%e9%ad%85%e5%8a%9b>#</a></h3><h4 id=场景1使一个字符串颠倒顺序>场景1：使一个字符串颠倒顺序
+<a class=anchor href=#%e5%9c%ba%e6%99%af1%e4%bd%bf%e4%b8%80%e4%b8%aa%e5%ad%97%e7%ac%a6%e4%b8%b2%e9%a2%a0%e5%80%92%e9%a1%ba%e5%ba%8f>#</a></h4><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c++ data-lang=c++><span style=display:flex><span><span style=color:#66d9ef>void</span> <span style=color:#a6e22e>reverse</span>(<span style=color:#66d9ef>char</span> <span style=color:#f92672>*</span>_str,<span style=color:#66d9ef>int</span> _l) <span style=color:#75715e>//反转函数,_l指要反转字串的长度
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>{
+</span></span><span style=display:flex><span> <span style=color:#66d9ef>char</span> <span style=color:#f92672>*</span>p<span style=color:#f92672>=</span>_str,<span style=color:#f92672>*</span>q<span style=color:#f92672>=</span>_str<span style=color:#f92672>+</span>_l<span style=color:#f92672>-</span><span style=color:#ae81ff>1</span>,temp;	<span style=color:#75715e>//指针直接得到值
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span> 
+</span></span><span style=display:flex><span> <span style=color:#66d9ef>while</span>(q<span style=color:#f92672>&gt;</span>p)
+</span></span><span style=display:flex><span>   { 
+</span></span><span style=display:flex><span>     temp<span style=color:#f92672>=*</span>p;
+</span></span><span style=display:flex><span>     <span style=color:#f92672>*</span>p<span style=color:#f92672>=*</span>q;
+</span></span><span style=display:flex><span>     <span style=color:#f92672>*</span>q<span style=color:#f92672>=</span>temp;
+</span></span><span style=display:flex><span> 
+</span></span><span style=display:flex><span>     p<span style=color:#f92672>++</span>;
+</span></span><span style=display:flex><span>     q<span style=color:#f92672>--</span>;
+</span></span><span style=display:flex><span>   }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-C++ data-lang=C++><span style=display:flex><span><span style=color:#66d9ef>void</span> <span style=color:#a6e22e>reverse</span>(<span style=color:#66d9ef>char</span> <span style=color:#f92672>*</span>_str,<span style=color:#66d9ef>int</span> _l) <span style=color:#75715e>//反转函数,_l指要反转字串的长度
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>{
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>int</span> i<span style=color:#f92672>=</span><span style=color:#ae81ff>0</span>,j<span style=color:#f92672>=</span>_l<span style=color:#f92672>-</span><span style=color:#ae81ff>1</span>,temp;
+</span></span><span style=display:flex><span> 
+</span></span><span style=display:flex><span> <span style=color:#66d9ef>while</span>(j<span style=color:#f92672>&gt;</span>i)
+</span></span><span style=display:flex><span>   { 
+</span></span><span style=display:flex><span>     temp<span style=color:#f92672>=</span>str[i];
+</span></span><span style=display:flex><span>     str[i]<span style=color:#f92672>=</span>str[j];
+</span></span><span style=display:flex><span>     str[j]<span style=color:#f92672>=</span>str[i];
+</span></span><span style=display:flex><span> 
+</span></span><span style=display:flex><span>     i<span style=color:#f92672>++</span>;
+</span></span><span style=display:flex><span>     j<span style=color:#f92672>--</span>;    
+</span></span><span style=display:flex><span>   }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>这样并不比上面用迭代器的情况好，而且要糟很多，因为这样用str[i]，str[j]的下标的方式访问元素时，需要先对str所存的数组首地址进行一次加减运算才能正确得到第i个、第j个值（读者可在任何一款编译器上进行反汇编查看），上面一共出现了5次下标访问str元素，情况可想而知。</p><h4 id=场景2函数传递>场景2：函数传递
+<a class=anchor href=#%e5%9c%ba%e6%99%af2%e5%87%bd%e6%95%b0%e4%bc%a0%e9%80%92>#</a></h4><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-C++ data-lang=C++><span style=display:flex><span><span style=color:#66d9ef>typedef</span> <span style=color:#66d9ef>struct</span> <span style=color:#a6e22e>structType</span>
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span><span style=color:#66d9ef>int</span> i;
+</span></span><span style=display:flex><span><span style=color:#66d9ef>char</span> arr[<span style=color:#ae81ff>100</span>];
+</span></span><span style=display:flex><span>}structType;
+</span></span><span style=display:flex><span><span style=color:#75715e>//一个print函数的定义：
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#66d9ef>void</span> <span style=color:#a6e22e>print0</span>(<span style=color:#66d9ef>const</span> structType data)
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>       <span style=color:#75715e>//printf something about data
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>}
+</span></span><span style=display:flex><span><span style=color:#75715e>//另一个print函数的定义：
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#66d9ef>void</span> <span style=color:#a6e22e>print1</span>(<span style=color:#66d9ef>const</span> structType <span style=color:#f92672>*</span>pdata)
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>       <span style=color:#75715e>//printf something about data
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>}
+</span></span></code></pre></div><p>print1比print0有明显的效率优势，因为print0是值传递，当值传进去时，必须要<strong>开辟一个structType那么大的内存空间来乘装这些值，这就要相当大的一部分资源消耗</strong>，而print1是指针传递，传进去的是地址，一个地址只需4字节内存空间，使用时解析其指针即可，因此它比print0更高效更实用。</p><h4 id=场景3>场景3
+<a class=anchor href=#%e5%9c%ba%e6%99%af3>#</a></h4><p>在C++中，使用<code>std::vector</code>存储类对象时，你可以选择存储对象的<strong>实例</strong>（直接存储变量）或者对象的<strong>指针</strong>。这两种方式各有优缺点：</p><h3 id=直接存储对象对象实例>直接存储对象（对象实例）
+<a class=anchor href=#%e7%9b%b4%e6%8e%a5%e5%ad%98%e5%82%a8%e5%af%b9%e8%b1%a1%e5%af%b9%e8%b1%a1%e5%ae%9e%e4%be%8b>#</a></h3><p><strong>优点：</strong></p><ol><li><strong>简单易用</strong>：不需要管理内存，<code>std::vector</code>会自动管理对象的生命周期。</li><li><strong>性能</strong>：<strong>不需要额外的间接寻址，直接访问对象</strong>。</li><li><strong>安全性</strong>：对象生命周期由<code>std::vector</code>管理，减少了内存泄漏的风险。</li></ol><p><strong>缺点：</strong></p><ol><li><strong>拷贝开销</strong>：当对象较大时，复制对象可能会有性能开销。</li><li><strong>灵活性</strong>：如果需要存储不同类型的对象，可能需要使用虚函数和基类指针。</li></ol><h3 id=存储对象指针>存储对象指针
+<a class=anchor href=#%e5%ad%98%e5%82%a8%e5%af%b9%e8%b1%a1%e6%8c%87%e9%92%88>#</a></h3><p><strong>优点：</strong></p><ol><li><strong>灵活性</strong>：可以存储不同类型的对象，只要它们继承自同一个基类。</li><li><strong>性能</strong>：对于大型对象，存储指针可以避免复制开销。</li></ol><p><strong>缺点：</strong></p><ol><li><strong>内存管理</strong>：需要手动管理对象的内存，容易出错。</li><li><strong>间接寻址</strong>：访问对象属性或方法时需要额外的间接寻址，可能会有轻微的性能开销。</li><li><strong>复杂性</strong>：代码复杂度增加，需要考虑对象的创建和销毁。</li></ol><h3 id=选择建议>选择建议
+<a class=anchor href=#%e9%80%89%e6%8b%a9%e5%bb%ba%e8%ae%ae>#</a></h3><ol><li><strong>如果对象较小且不需要存储多种类型的对象</strong>，直接存储对象实例通常更简单、更安全。</li><li><strong>如果对象较大或需要存储多种类型的对象</strong>，存储指针可能更合适，但需要小心管理内存。</li></ol><h2 id=vector数组链表与栈堆>vector&数组&链表与栈&堆
+<a class=anchor href=#vector%e6%95%b0%e7%bb%84%e9%93%be%e8%a1%a8%e4%b8%8e%e6%a0%88%e5%a0%86>#</a></h2><h3 id=数组>数组
+<a class=anchor href=#%e6%95%b0%e7%bb%84>#</a></h3><p>用来存储<strong>固定大小的同类型元素</strong>的序列</p><h5 id=特点>特点
+<a class=anchor href=#%e7%89%b9%e7%82%b9>#</a></h5><ul><li>固定大小：创建时需要指定数组的大小，之后无法更改。</li><li>随机访问：可以直接通过索引快速访问任何元素，<strong>时间复杂度为 O(1)</strong>。</li><li>高效的内存利用：由于连续的内存分配，数组在内存利用和访问速度方面非常高效。</li><li>插入/删除操作耗时：在数组中间插入或删除元素通常需要移动其他元素，因此这些操作的时间复杂度较高。</li><li>数组的限制：数组的大小在声明时必须确定，且不能改变，数组不提供检查越界的机制，访问无效索引可能导致未定义行为。</li></ul><h4 id=vector>vector
+<a class=anchor href=#vector>#</a></h4><p><strong>向量（Vector，如 std::vector）随机访问快</strong>，时间复杂度为 O(1)，<strong>插入/删除操作慢</strong>，<strong>在末尾快</strong>，但在中间或开始较慢，<strong>内存动态分配</strong>，可以根据需要改变大小，但可能涉及复制整个数组到新的内存位置。适用场景：当需要动态数组，即数组大小可以改变的场景，需要随机访问，但也会有在<strong>末尾</strong>添加或删除元素的操作场景。</p><h5 id=特点-1>特点
+<a class=anchor href=#%e7%89%b9%e7%82%b9-1>#</a></h5><ul><li>动态大小：向量可以在运行时根据需要扩展或缩减其大小。</li><li>随机访问：与数组一样，向量<strong>支持通过索引的快速随机访问</strong>。</li><li>自动管理内存：向量在内部管理内存，自动扩展和缩减存储空间。</li><li>可能的重新分配开销：当向量扩展到超过当前分配的内存时，它可能需要重新分配整个内存块来存储元素。</li><li>由于动态扩容，向量的内存使用可能不如静态数组高效， 在频繁扩容的情况下，性能可能受到影响。</li></ul><h4 id=链表>链表
+<a class=anchor href=#%e9%93%be%e8%a1%a8>#</a></h4><p>链表是一种由节点组成的数据结构，每个节点包含数据和指向下一个节点的指针，链表中的元素<strong>不必在内存中连续存储</strong>，这种情况下频繁插入和删除时，链表会更加高效，但是<strong>不支持随机访问</strong>，访问特定索引的元素需要从头开始遍历，效率较低。</p><p>C++ 标准库提供了两种链表类型：<code>std::list：双向链表</code> 和 <code>std::forward_list：单向链表</code></p><p><code>std::forward_list</code> 提供了单向链表的实现，适合于需要频繁在头部插入或删除元素的场景。由于其单向特性，它在内存使用上比 <code>std::list</code> 更高效，但也牺牲了一些灵活性，如无法直接访问前一个元素。</p><h5 id=特点-2>特点
+<a class=anchor href=#%e7%89%b9%e7%82%b9-2>#</a></h5><ul><li>动态大小：链表的大小可以根据需要动态变化。</li><li>高效的插入和删除：可以在任何位置快速地插入或删除节点，不需要移动其他元素。</li><li>无随机访问：访问链表中的元素需要从头开始遍历，时间复杂度为 O(n)。</li><li>额外的内存开销：每个节点需要额外的存储空间来存储指针。</li></ul><h3 id=智能指针>智能指针
+<a class=anchor href=#%e6%99%ba%e8%83%bd%e6%8c%87%e9%92%88>#</a></h3><h3 id=内存泄漏悬空指针>内存泄漏&悬空指针
+<a class=anchor href=#%e5%86%85%e5%ad%98%e6%b3%84%e6%bc%8f%e6%82%ac%e7%a9%ba%e6%8c%87%e9%92%88>#</a></h3><h4 id=举例>举例
+<a class=anchor href=#%e4%b8%be%e4%be%8b>#</a></h4><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c++ data-lang=c++><span style=display:flex><span><span style=color:#66d9ef>void</span> <span style=color:#a6e22e>foo</span>(<span style=color:#66d9ef>int</span> n) {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>int</span><span style=color:#f92672>*</span> ptr <span style=color:#f92672>=</span> <span style=color:#66d9ef>new</span> <span style=color:#66d9ef>int</span>(<span style=color:#ae81ff>42</span>);
+</span></span><span style=display:flex><span>    ...
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> (n <span style=color:#f92672>&gt;</span> <span style=color:#ae81ff>5</span>) {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span>;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>    ...
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>delete</span> ptr;
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span><span style=color:#66d9ef>void</span> <span style=color:#a6e22e>other_fn</span>(<span style=color:#66d9ef>int</span><span style=color:#f92672>*</span> ptr) {
+</span></span><span style=display:flex><span>    ...
+</span></span><span style=display:flex><span>};
+</span></span><span style=display:flex><span><span style=color:#66d9ef>void</span> <span style=color:#a6e22e>bar</span>() {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>int</span><span style=color:#f92672>*</span> ptr <span style=color:#f92672>=</span> <span style=color:#66d9ef>new</span> <span style=color:#66d9ef>int</span>(<span style=color:#ae81ff>42</span>);
+</span></span><span style=display:flex><span>    other_fn(ptr);
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// ptr == ?
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>}
+</span></span></code></pre></div><p>在<code>foo</code>函数中，如果入参<code>n</code> > 5, 则会导致指针<code>ptr</code>的内存未被正确释放，从而导致<strong>内存泄漏</strong>。</p><p>在<code>bar</code>函数中，我们将指针<code>ptr</code>传递给了另外一个函数<code>other_fn</code>，我们无法确定<code>other_fn</code>有没有释放<code>ptr</code>内存，如果被释放了，那<code>ptr</code>将成为一个<strong>悬空指针</strong>，<code>bar</code>在后续还继续访问它，会引发未定义行为，可能导致程序崩溃。</p><h3 id=unique_ptr>unique_ptr
+<a class=anchor href=#unique_ptr>#</a></h3><p>在超出作用域时，会自动释放所管理的对象内存</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c++ data-lang=c++><span style=display:flex><span><span style=color:#75715e>#include</span> <span style=color:#75715e>&lt;memory&gt;</span><span style=color:#75715e>
+</span></span></span><span style=display:flex><span><span style=color:#75715e>#include</span> <span style=color:#75715e>&lt;iostream&gt;</span><span style=color:#75715e>
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#66d9ef>class</span> <span style=color:#a6e22e>MyClass</span> {
+</span></span><span style=display:flex><span><span style=color:#66d9ef>public</span><span style=color:#f92672>:</span>
+</span></span><span style=display:flex><span>    MyClass() {
+</span></span><span style=display:flex><span>        std<span style=color:#f92672>::</span>cout <span style=color:#f92672>&lt;&lt;</span> <span style=color:#e6db74>&#34;MyClass constructed&#34;</span> <span style=color:#f92672>&lt;&lt;</span> std<span style=color:#f92672>::</span>endl;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>    <span style=color:#f92672>~</span>MyClass() {
+</span></span><span style=display:flex><span>        std<span style=color:#f92672>::</span>cout <span style=color:#f92672>&lt;&lt;</span> <span style=color:#e6db74>&#34;MyClass destroyed&#34;</span> <span style=color:#f92672>&lt;&lt;</span> std<span style=color:#f92672>::</span>endl;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>};
+</span></span><span style=display:flex><span><span style=color:#66d9ef>int</span> <span style=color:#a6e22e>main</span>() {
+</span></span><span style=display:flex><span>    std<span style=color:#f92672>::</span>unique_ptr<span style=color:#f92672>&lt;</span>MyClass<span style=color:#f92672>&gt;</span> ptr1(<span style=color:#66d9ef>new</span> MyClass);
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#ae81ff>0</span>;
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><blockquote><p>MyClass constructed
+MyClass destroyed</p></blockquote><h3 id=shared_ptr>shared_ptr
+<a class=anchor href=#shared_ptr>#</a></h3><p><code>shared_ptr</code>是C++11提供的另外一种常见的智能指针，与<code>unique_ptr</code>独占对象方式不同，<code>shared_ptr</code>是一种共享式智能指针，允许多个<code>shared_ptr</code>指针共同拥有同一个对象，采用引用计数的方式来管理对象的生命周期。当所有的 <code>shared_ptr</code> 对象都销毁时，才会自动释放所管理的对象。</p><h3 id=bugs>Bugs
+<a class=anchor href=#bugs>#</a></h3><h4 id=1>1.
+<a class=anchor href=#1>#</a></h4><blockquote><p>vector<int> var1[m][n];//不行
+vector&lt;vector&lt;vector<int>&#187; var2[m][n]；//可以</p></blockquote><blockquote><p>//当wire_max_level和wire_max_sublevel较大(1000）时，初始化第258和259行的 “IntVec dst[wire_max_level][wire_max_sublevel];IntVec dst_ports[wire_max_level][wire_max_sublevel];”会报错：Segmentation fault</p></blockquote><p>在C++中，这两种声明方式涉及到多维向量的初始化和存储方式，它们之间存在一些关键的差异：</p><p><strong>vector<int> var1[m][n];</strong>
+这种声明方式试图在栈上创建一个二维数组，其中每个元素是一个 vector<int>。这种声明是非法的，因为标准C++不支持非静态数组大小的非固定大小数组（non-POD types，即包含构造函数、析构函数、虚函数等的类型）作为数组元素。std::vector 是一个非POD类型，因为它有动态内存管理和其他资源管理的需求。</p><p>问题：
+栈溢出：如果 m 和 n 较大，这种声明可能会因为<strong>栈空间不足而导致编译错误或运行时错误</strong>（如段错误）。
+未定义行为：在C++标准中，这种用法是未定义的，因为 vector 需要动态内存分配，而数组的静态内存分配无法满足这一需求。</p><p><strong>vector&lt;vector&lt;vector<int>&#187; var2[m][n];</strong>
+这种声明方式创建了一个三维向量，其中最外层是一个数组，每个元素是一个二维 vector<int> 的向量。尽管这种声明在语法上是合法的，但它仍然存在效率和安全性问题。</p><p>特点：
+堆分配：尽管 vector 通常在堆上分配内存，但这种声明方式实际上在栈上创建了一个指向 vector 的指针数组，每个指针指向一个在堆上分配的 vector。
+内存管理：这种方式需要手动管理内存，因为数组中的每个 vector 指针都需要适当地构造和析构。
+性能问题：每次访问 var2[i][j] 时，实际上涉及到两次内存访问：一次是从数组中获取指针，另一次是从 vector 中访问数据。</p><h3 id=参考>参考
+<a class=anchor href=#%e5%8f%82%e8%80%83>#</a></h3><p><a href=https://www.jb51.net/program/285055q9v.htm>C++学习之智能指针中的unique_ptr与shared_ptr_C 语言_脚本之家 (jb51.net)</a></p><h2 id=堆栈stack和堆heap>堆栈(<strong>Stack</strong>)和堆(Heap)
+<a class=anchor href=#%e5%a0%86%e6%a0%88stack%e5%92%8c%e5%a0%86heap>#</a></h2><h3 id=内存分配>内存分配
+<a class=anchor href=#%e5%86%85%e5%ad%98%e5%88%86%e9%85%8d>#</a></h3><p>程序的内存布局和组织可能会根据所使用的操作系统和体系结构而有所不同。然而，一般来说，内存可以分为以下几个部分:</p><ul><li>全局段（ Global segment ）：负责存储全局变量和静态变量，这些变量的生命周期等于程序执行的整个持续时间。</li><li>代码段（ Code segment ）：也称为文本段，包含组成我们程序的实际机器代码或指令，包括函数和方法。</li><li>堆栈（ Stack ）：用于管理局部变量、函数参数和控制信息（例如返回地址）</li><li>堆（ Heap ）：提供了一个灵活的区域来存储大型数据结构和具有动态生命周期的对象。堆内存可以在程序执行期间分配或释放</li></ul><blockquote><p>注意：值得注意的是，<strong>内存分配</strong>上下文中的堆栈和堆不应与<strong>数据结构</strong>堆栈和堆混淆，它们具有不同的用途和功能。</p></blockquote><h4 id=堆栈stack>堆栈(<strong>Stack</strong>)
+<a class=anchor href=#%e5%a0%86%e6%a0%88stack>#</a></h4><p><strong>堆栈简称为栈</strong>。</p><h5 id=堆栈存储器的主要特点>堆栈存储器的主要特点
+<a class=anchor href=#%e5%a0%86%e6%a0%88%e5%ad%98%e5%82%a8%e5%99%a8%e7%9a%84%e4%b8%bb%e8%a6%81%e7%89%b9%e7%82%b9>#</a></h5><ul><li><p>固定大小： 当涉及到堆栈内存时，其大小保持固定，并在程序执行开始时确定。</p></li><li><p>速度优势： 堆栈内存帧是连续的。因此，在堆栈内存中分配和释放内存的速度非常快。这是通过操作系统管理的堆栈指针对引用进行简单调整来完成的。</p></li><li><p>控制信息和变量的存储： 堆栈内存负责容纳控制信息、局部变量和函数参数，包括返回地址。</p></li><li><p>有限的可访问性： 请务必记住，存储在堆栈内存中的数据只能在活动函数调用期间访问。</p></li><li><p>自动管理： 堆栈内存的高效管理由系统本身完成，不需要我们额外的工作。</p></li></ul><h5 id=举例-1>举例
+<a class=anchor href=#%e4%b8%be%e4%be%8b-1>#</a></h5><p><img src=https://p7.itc.cn/q_70/images03/20230807/67187575cc3948c296c35acd21cdf1e9.png alt=img></p><p>堆栈段为空</p><p>1共 9 个</p><p><img src=https://p2.itc.cn/q_70/images03/20230807/aa722433d3ff4ddbb7ee50c2543e1329.png alt=img></p><p>为主函数创建一个新的堆栈帧</p><p>2共 9 个</p><p><img src=https://p5.itc.cn/q_70/images03/20230807/ff1a1ede1e7244048997241e0981a904.png alt=img></p><p>在 main 函数的堆栈帧中，局部变量 x 现在的值为 5</p><p>3共 9 个</p><p><img src=https://p7.itc.cn/q_70/images03/20230807/720e81901ff043b085b9db14b8307be4.png alt=img></p><p>调用 add 函数，实际参数为 (5, 10)</p><p>4共 9 个</p><p><img src=https://p3.itc.cn/q_70/images03/20230807/5bbd09a703d24285b9334e1232de183a.png alt=img></p><p>控制权转移到 add 函数，为 add 函数创建一个新的堆栈帧，其中包含局部变量 a、b 和 sum</p><p>5共 9 个</p><p><img src=https://p3.itc.cn/q_70/images03/20230807/2cc6947b2ffd485090e3c89db17746c6.png alt=img></p><p>add 函数的堆栈帧上的 sum 变量被分配 a + b 的结果</p><p>6共 9 个</p><p><img src=https://p6.itc.cn/q_70/images03/20230807/e0c38c8165354d0c9655a71c4b36b7bc.png alt=img></p><p>add 函数完成其任务并且其堆栈帧被销毁</p><p>7共 9 个</p><p><img src=https://p2.itc.cn/q_70/images03/20230807/2f08647bd1054290b56579e4c4bf4bf4.png alt=img></p><p>具有可变结果的主函数的堆栈帧存储从 add 函数返回的值</p><p>8共 9 个</p><p><img src=https://p6.itc.cn/q_70/images03/20230807/9bcf71528e32493f864b08706866b55b.png alt=img></p><p>在显示结果值（此处未显示）后，主功能块也被销毁，并且堆栈段再次为空</p><h4 id=堆heap>堆(Heap)
+<a class=anchor href=#%e5%a0%86heap>#</a></h4><p>也称为动态内存</p><p>是内存分配的野孩子。程序员必须手动管理它。堆内存允许我们在程序执行期间随时分配和释放内存。它非常适合存储大型数据结构或大小事先未知的对象。</p><h5 id=举例-2>举例
+<a class=anchor href=#%e4%b8%be%e4%be%8b-2>#</a></h5><p><img src=https://p7.itc.cn/q_70/images03/20230807/1c9670506335474b8410774fa3a2d26e.png alt=img></p><p>栈段和堆段为空</p><p>1共 7 个</p><p><img src=https://p6.itc.cn/q_70/images03/20230807/c1d20d3282134224bf815303ef48b98c.png alt=img></p><p>为主函数创建一个新的堆栈帧</p><p>2共 7 个</p><p><img src=https://p3.itc.cn/q_70/images03/20230807/11b357c87a9d4274ad222ef6febddab2.png alt=img></p><p>局部变量值被赋予值 42</p><p>3共 7 个</p><p><img src=https://p9.itc.cn/q_70/images03/20230807/456c141d8c0a49e689711e2c04cf75c8.png alt=img></p><p><strong>在堆上分配了一个指针变量ptr，指针ptr中存放的是分配的堆内存的地址（即0x1000）！</strong></p><p>4共 7 个</p><p><img src=https://p3.itc.cn/q_70/images03/20230807/c5e5fdf922c94acf9245db057b5e7979.png alt=img></p><p>value变量中存储的值（即42）被赋值给ptr指向的内存位置（堆地址0x1000）</p><p>5共 7 个</p><p><img src=https://p7.itc.cn/q_70/images03/20230807/d9baeed91e034ee79d0a22c416097a43.png alt=img></p><p>堆上地址 0x1000 处分配的内存被释放</p><p>6共 7 个</p><p><img src=https://p2.itc.cn/q_70/images03/20230807/fcdf7e25069c4a309673d6cfe742eac6.png alt=img></p><p>main函数的栈帧从栈中弹出（显示result的值后），栈段和堆段再次清空</p><p>7共7 个</p><ul><li>第 3 行： main 调用该函数，并为其创建一个新的堆栈帧。</li><li>第 5 行： 堆栈帧上的局部变量 value 被赋值为 42 。</li><li>第 8 行： ptr 使用关键字为堆上的单个整数动态创建的内存分配给指针变量 new 。我们假设<strong>堆上新内存</strong>的地址为 0x1000。分配的堆内存的地址（0x1000）存储在指针中。 ptr 。</li><li>第 11 行： 将整数值 42 分配给 ptr （堆地址 0x1000）所指向的内存位置。</li><li>第 12 行：( ptr )指向的内存位置存储的值 42 被打印到控制台。</li><li>第 15 行： 使用关键字释放在堆上地址 0x1000 处分配的内存 delete 。在此行之后， ptr 成为悬空指针，因为它仍然保存地址 0x1000，但该内存已被释放。然而，对于这个重要的讨论，我们不会详细讨论悬空指针。</li><li>第17行： main函数返回0，表示执行成功。</li><li>第 18 行： 从堆栈中弹出主函数的堆栈帧，并释放所有局部变量 ( value 和)。 ptr</li></ul><blockquote><p>注意：C++ 标准库还提供了一系列智能指针，可以帮助自动化堆中内存分配和释放的过程。</p></blockquote><h5 id=特征>特征
+<a class=anchor href=#%e7%89%b9%e5%be%81>#</a></h5><ul><li>大小的灵活性： 堆内存大小可以在程序执行过程中发生变化。</li><li>速度权衡： 在堆中分配和释放内存速度较慢，因为它涉及寻找合适的内存帧和处理碎片。</li><li>动态对象的存储： 堆内存存储具有动态生命周期的对象和数据结构，如 new Java 或 C++ 中使用关键字创建的对象和数据结构。</li><li>持久数据： 存储在堆内存中的数据将一直保留在那里，直到我们手动释放它或程序结束。</li><li>手动管理： 在某些编程语言（例如C和C++）中，必须手动管理堆内存。如果处理不当，可能会导致内存泄漏或资源使用效率低下。</li></ul><h4 id=对比>对比
+<a class=anchor href=#%e5%af%b9%e6%af%94>#</a></h4><ul><li>大小管理： 堆栈内存具有在程序执行开始时确定的固定大小，而堆内存是灵活的，可以在程序的整个生命周期中更改。</li><li>速度： 堆栈内存在分配和释放内存时具有速度优势，因为它只需要调整引用。相反，由于需要定位合适的内存帧并管理碎片，堆内存操作速度较慢。</li><li>存储目的： 堆栈内存指定用于控制信息（例如函数调用和返回地址）、局部变量和函数参数（包括返回地址）。另一方面，堆内存用于存储具有动态生命周期的对象和数据结构，例如 new Java 或 C++ 中使用关键字创建的对象和数据结构。</li><li>数据可访问性： 堆栈内存中的数据只能在活动函数调用期间访问，而堆内存中的数据在手动释放或程序结束之前仍然可以访问。</li><li>内存管理： 系统自动管理堆栈内存，优化其使用，以实现快速高效的内存引用。相比之下，堆内存管理是程序员的责任，处理不当可能会导致内存泄漏或资源使用效率低下。</li></ul><h3 id=数据结构>数据结构
+<a class=anchor href=#%e6%95%b0%e6%8d%ae%e7%bb%93%e6%9e%84>#</a></h3><h4 id=堆栈stack-1>堆栈(<strong>Stack</strong>)
+<a class=anchor href=#%e5%a0%86%e6%a0%88stack-1>#</a></h4><p><strong>堆栈简称为栈</strong>。一种线性表数据结构，是一种只允许在表的一端进行插入和删除操作的线性表</p><ul><li>我们把栈中允许插入和删除的一端称为 <strong>「栈顶（top）」</strong>；另一端则称为 <strong>「栈底（bottom）」</strong>。</li><li>表中没有任何数据元素时，称之为 <strong>「空栈」</strong>。</li><li>栈的插入操作又称为「入栈」或者「进栈」</li><li>栈的删除操作又称为「出栈」或者「退栈」。</li><li>栈是一种 <strong>「后进先出（Last In First Out）」</strong> 的线性表，简称为 <strong>「LIFO 结构」</strong>。</li></ul><h5 id=堆栈的基本操作>堆栈的基本操作
+<a class=anchor href=#%e5%a0%86%e6%a0%88%e7%9a%84%e5%9f%ba%e6%9c%ac%e6%93%8d%e4%bd%9c>#</a></h5><ul><li><p>初始化空栈：创建一个空栈，定义栈的大小 size，以及栈顶元素指针 top。</p></li><li><p>判断栈是否为空：当堆栈为空时，返回 True。当堆栈不为空时，返回 False。一般只用于栈中删除操作和获取当前栈顶元素操作中。</p></li><li><p>判断栈是否已满：当堆栈已满时，返回 True，当堆栈未满时，返回 False。一般只用于顺序栈中插入元素和获取当前栈顶元素操作中。</p></li><li><p>插入元素（进栈、入栈）：相当于在线性表最后元素后面插入一个新的数据元素。并改变栈顶指针 top 的指向位置。</p></li><li><p>删除元素（出栈、退栈）：相当于在线性表最后元素后面删除最后一个数据元素。并改变栈顶指针 top 的指向位置。</p></li><li><p>获取栈顶元素：相当于获取线性表中<strong>最后一个数据元素</strong>。与插入元素、删除元素不同的是，该操作并不改变栈顶指针 top 的指向位置。</p></li></ul><h4 id=堆heap-1>堆(Heap)
+<a class=anchor href=#%e5%a0%86heap-1>#</a></h4><h3 id=参考-1>参考
+<a class=anchor href=#%e5%8f%82%e8%80%83-1>#</a></h3><p><a href=https://roll.sohu.com/a/709585652_121124377>堆栈与堆（Stack vs Heap）：有什么区别？图文并茂拆解代码解析！_内存_存储_函数 (sohu.com)</a></p><h2 id=静态和动态链接>静态和动态链接
+<a class=anchor href=#%e9%9d%99%e6%80%81%e5%92%8c%e5%8a%a8%e6%80%81%e9%93%be%e6%8e%a5>#</a></h2><p>编译分三步：</p><ul><li>预处理（宏、#include、预编译指令#ifdef等）生成.i文件</li><li>编译，生成.s汇编文件</li><li>汇编，将汇编语言翻译为二进制机器语言</li></ul><p>​ 静态链接和动态链接两者最大的区别就在于链接的时机不一样，静态链接是在形成可执行程序前，而动态链接的进行则是在程序执行时，下面来详细介绍这两种链接方式。</p><h3 id=静态链接>静态链接
+<a class=anchor href=#%e9%9d%99%e6%80%81%e9%93%be%e6%8e%a5>#</a></h3><h4 id=原理>原理
+<a class=anchor href=#%e5%8e%9f%e7%90%86>#</a></h4><p>将所有.c/cpp文件独立编译生成的.o进行链接从而形成可执行程序</p><p><img src=assets/image-20240918091939423.png alt=image-20240918091939423></p><p>​ 我们知道，链接器在链接静态链接库的时候是以目标文件为单位的。比如我们引用了静态库中的printf()函数，那么链接器就会把库中包含printf()函数的那个目标文件链接进来，<strong>如果很多函数都放在一个目标文件中，很可能很多没用的函数都被一起链接进了输出结果中</strong>。由于运行库有成百上千个函数，数量非常庞大，每个函数独立地放在一个目标文件中可以尽量减少空间的浪费，那些没有被用到的目标文件就不要链接到最终的输出文件中。</p><h4 id=优缺点>优缺点
+<a class=anchor href=#%e4%bc%98%e7%bc%ba%e7%82%b9>#</a></h4><ul><li><p>浪费空间</p></li><li><p>另一方面就是更新比较困难，因为每当库函数的代码修改了，这个时候就需要重新进行编译链接形成可执行程序。</p></li><li><p>在可执行程序中已经具备了所有执行程序所需要的任何东西，在执行的时候运行速度快。</p></li></ul><h3 id=动态链接>动态链接
+<a class=anchor href=#%e5%8a%a8%e6%80%81%e9%93%be%e6%8e%a5>#</a></h3><p>将程序按照模块拆分成各个相对独立的部分，<strong>程序运行到时才链接</strong></p><p>假设现在有两个程序program1.o和program2.0，这两者共用同一个库lib.o,假设首先运行程序program1，系统首先加载program1.0，当系统发现program1.o中用到了lib.0，即program1.o依赖于lib.o，那么系统接着加载lib.o，如果program1.o和lib.o还依赖于其他目标文件，则依次全部加载到内存中。当program2运行时，同样的加载program2.0，然后发现program2.o依赖于lib.o，但是此时lib.o已经存在于内存中，这个时候就不再进行重新加载，而是将内存中已经存在的lib.o映射到program2的虚拟地址空间中，从而进行链接(这个链接过程和静态链接类似)形成可执行程序。</p><p>动态链接的优点显而易见，就是即使需要每个程序都依赖同一个库，但是该库<strong>不会像静态链接那样在内存中存在多分</strong>，副本，而是这多个程序在执行时共享同一份副本；另一个优点是，更新也比较方便，更新时只需要替换原来的目标文件，而无需将所有的程序再重新链接一遍。当程序下一次运行时，新版本的目标文件会被自动加载到内存并且链接起来，程序就完成了升级的目标。但是动态链接也是有缺点的，因为把链接推迟到了程序运行时，所以每次执行程序都需要进行链接，所以性能会有一定损失。</p><p>​ 据估算，动态链接和静态链接相比，性能损失大约在5%以下。经过实践证明，这点性能损失用来换区程序在空间上的节省和程序构建和升级时的灵活性是值得的。</p><h3 id=参考-2>参考
+<a class=anchor href=#%e5%8f%82%e8%80%83-2>#</a></h3><h2 id=多线程>多线程
+<a class=anchor href=#%e5%a4%9a%e7%ba%bf%e7%a8%8b>#</a></h2><ul><li>C++11及以后标准才有</li></ul><h3 id=进程与线程的区别>进程与线程的区别
+<a class=anchor href=#%e8%bf%9b%e7%a8%8b%e4%b8%8e%e7%ba%bf%e7%a8%8b%e7%9a%84%e5%8c%ba%e5%88%ab>#</a></h3><p><img src=assets/image-20241023224153349.png alt=image-20241023224153349></p><ul><li><p>进程是正在运行的程序的实例，是可以执行的程序或文件(例如: exe)；而线程是是进程中的实际运作单位，指的是进程的指定单元,也叫执行路径</p></li><li><p>一个程序有且只有一个进程，但可以拥有至少一个的线程</p></li><li><p>不同进程拥有不同的<strong>地址空间</strong>，互不相关，而不同线程共同拥有相同进程的地址空间</p></li><li><p>线程是<strong>CPU</strong>调度和分配的基本单位，可以理解为CPU只看得到线程；进程是<strong>操作系统</strong>进行资源分配的最小单位</p><blockquote><p>当你执行这个程序时，CPU响应为该进程分配资源对其进行处理，但是CPU看不到"进程"， 看到的是由很多个线程组成的一个网络（就是一个进程），于是CPU开始为这些线程利用<code>时间分配算法</code>来循环执行任务。</p></blockquote></li></ul><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#75715e># ubuntu下查看电脑CPU核数，CPU个数，最大线程数(逻辑CPU的数量)</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>## CPU个数</span>
+</span></span><span style=display:flex><span>more /proc/cpuinfo |grep <span style=color:#e6db74>&#34;physical id&#34;</span>|uniq|wc -l    <span style=color:#75715e># 1</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>## 查看CPU核数</span>
+</span></span><span style=display:flex><span>cat /proc/cpuinfo| grep <span style=color:#e6db74>&#34;cpu cores&#34;</span>| uniq      <span style=color:#75715e># 6</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>## 查看最大线程数(逻辑CPU的数量)</span>
+</span></span><span style=display:flex><span>more /proc/cpuinfo |grep <span style=color:#e6db74>&#34;physical id&#34;</span>|grep <span style=color:#e6db74>&#34;0&#34;</span>|wc -l    <span style=color:#75715e># 12</span>
+</span></span></code></pre></div><h3 id=并发和并行>并发和并行
+<a class=anchor href=#%e5%b9%b6%e5%8f%91%e5%92%8c%e5%b9%b6%e8%a1%8c>#</a></h3><p><strong>并发</strong>： 指的是两个(或以上)的线程同时请求执行，但是同一瞬间CPU只能执行一个，于是CPU就安排他们<strong>交替</strong>执行，我们看起来好像是同时执行的，其实不是。并发可认为是一种逻辑结构的设计模式。你可以用并发的设计方式去设计模型，然后运行在一个单核系统上，通过系统动态地逻辑切换制造出并行的假象。</p><blockquote><p>并发在生活中随处可见，单核CPU边听歌边写代码</p></blockquote><p><strong>并行</strong>： 指的是两个(或以上)的线程<strong>同时</strong>执行。</p><h3 id=特点-3>特点
+<a class=anchor href=#%e7%89%b9%e7%82%b9-3>#</a></h3><ul><li>线程是在thread对象<strong>被定义的时候开始执行</strong>的，而不是在调用<strong>join函数</strong>时才执行的，调用join函数只是阻塞<strong>等待线程结束</strong>并回收资源</li><li>线程会在函数运行完毕后自动释放，不推荐利用其他方法强制结束线程，可能会因资源未释放而导致内存泄漏。</li><li>没有执行<code>join</code>或<code>detach</code>的线程在程序结束时会引发异常</li></ul><h3 id=stdthread性能分析>std::thread性能分析
+<a class=anchor href=#stdthread%e6%80%a7%e8%83%bd%e5%88%86%e6%9e%90>#</a></h3><p>在C++中，<code>std::thread</code>（标准线程）的性能主要受以下几个因素影响：</p><ol><li><strong>线程创建和销毁的开销（Overhead of Thread Creation and Destruction）</strong>：每次创建或销毁线程都会带来一定的开销。这是因为操作系统需要为每个线程分配和回收资源，如栈空间、线程局部存储等。因此，频繁地创建和销毁线程可能会导致性能下降。</li><li><strong>线程切换的开销（Overhead of Thread Switching）</strong>：操作系统通过线程调度器来管理多个线程的执行。当一个线程的执行被暂停，另一个线程被唤醒时，就会发生线程切换。线程切换会带来一定的开销，因为需要保存和恢复线程的执行环境。</li><li><strong>线程同步的开销（Overhead of Thread Synchronization）</strong>：在多线程环境中，通常需要使用同步机制（如互斥锁、条件变量等）来协调线程的执行。这些同步操作也会带来一定的开销。</li></ol><p>为了减少这些开销，我们可以采取以下策略：</p><ul><li><strong>线程池（Thread Pool）</strong>：通过预先创建一定数量的线程，并重复使用这些线程，可以减少线程创建和销毁的开销。</li><li><strong>减少线程切换（Reduce Thread Switching）</strong>：通过合理地设计程序，减少不必要的线程切换，可以提高性能。</li><li><strong>减少锁的使用（Reduce Lock Usage）</strong>：通过使用无锁数据结构或者减少锁的粒度，可以减少线程同步的开销。</li></ul><h3 id=多线程真的能加速>多线程真的能加速？
+<a class=anchor href=#%e5%a4%9a%e7%ba%bf%e7%a8%8b%e7%9c%9f%e7%9a%84%e8%83%bd%e5%8a%a0%e9%80%9f>#</a></h3><ul><li><p><strong>线程的调度是根据cpu的算法，如果线程的运算量不大，cpu
+<a href="https://zhida.zhihu.com/search?content_id=106728170&amp;content_type=Article&amp;match_order=1&amp;q=%e7%ae%97%e6%b3%95%e8%b0%83%e5%ba%a6&amp;zhida_source=entity">算法调度</a>线程不一定会平均分配给每个内核的</strong></p><p>测试代码创建了四个线程，四个线程都遍历一百万次。通过使用JDK自带监控工具：Visual VM 查看线程的执行过程</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c++ data-lang=c++><span style=display:flex><span><span style=color:#66d9ef>public</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>ThreadTest</span> {
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>private</span> <span style=color:#66d9ef>static</span> <span style=color:#66d9ef>final</span> <span style=color:#66d9ef>int</span> num <span style=color:#f92672>=</span> <span style=color:#ae81ff>1000</span> <span style=color:#f92672>*</span> <span style=color:#ae81ff>1000</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>static</span> <span style=color:#66d9ef>void</span> <span style=color:#a6e22e>main</span>(String[] args) <span style=color:#66d9ef>throws</span> InterruptedException {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>new</span> Thread(()<span style=color:#f92672>-&gt;</span>{
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>for</span> (<span style=color:#66d9ef>int</span> i <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span>; i <span style=color:#f92672>&lt;</span> num; i<span style=color:#f92672>++</span>) {
+</span></span><span style=display:flex><span>                System.out.println(i);
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>        },<span style=color:#e6db74>&#34;线程1&#34;</span>).start();
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>new</span> Thread(()<span style=color:#f92672>-&gt;</span>{
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>for</span> (<span style=color:#66d9ef>int</span> i <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span>; i <span style=color:#f92672>&lt;</span> num; i<span style=color:#f92672>++</span>) {
+</span></span><span style=display:flex><span>                System.out.println(i);
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>        },<span style=color:#e6db74>&#34;线程2&#34;</span>).start();
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>new</span> Thread(()<span style=color:#f92672>-&gt;</span>{
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>for</span> (<span style=color:#66d9ef>int</span> i <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span>; i <span style=color:#f92672>&lt;</span> num; i<span style=color:#f92672>++</span>) {
+</span></span><span style=display:flex><span>                System.out.println(i);
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>        },<span style=color:#e6db74>&#34;线程3&#34;</span>).start();
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>new</span> Thread(()<span style=color:#f92672>-&gt;</span>{
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>for</span> (<span style=color:#66d9ef>int</span> i <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span>; i <span style=color:#f92672>&lt;</span> num; i<span style=color:#f92672>++</span>) {
+</span></span><span style=display:flex><span>                System.out.println(i);
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>        },<span style=color:#e6db74>&#34;线程4&#34;</span>).start();
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p><img src=assets/image-20241024092636134.png alt=image-20241024092636134></p><p>发现，多个线程根本没有并发执行，而是不断的在线程之间
+<a href="https://zhida.zhihu.com/search?content_id=106728170&amp;content_type=Article&amp;match_order=1&amp;q=%e4%b8%8a%e4%b8%8b%e6%96%87%e5%88%87%e6%8d%a2&amp;zhida_source=entity">上下文切换</a>！也就是说，4个线程都是在单个内核执行，其他的内核并没有工作</p></li><li></li></ul><h3 id=this_thread>this_thread
+<a class=anchor href=#this_thread>#</a></h3><p><img src=assets/image-20241024002254831.png alt=image-20241024002254831></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c++ data-lang=c++><span style=display:flex><span><span style=color:#75715e>#include</span> <span style=color:#75715e>&lt;iostream&gt;</span><span style=color:#75715e>
+</span></span></span><span style=display:flex><span><span style=color:#75715e>#include</span> <span style=color:#75715e>&lt;thread&gt;</span><span style=color:#75715e>
+</span></span></span><span style=display:flex><span><span style=color:#75715e>#include</span> <span style=color:#75715e>&lt;atomic&gt;</span><span style=color:#75715e>
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#66d9ef>using</span> <span style=color:#66d9ef>namespace</span> std;
+</span></span><span style=display:flex><span>atomic_bool ready <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span>;
+</span></span><span style=display:flex><span><span style=color:#75715e>// uintmax_t ==&gt; unsigned long long
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#66d9ef>void</span> <span style=color:#a6e22e>sleep</span>(uintmax_t ms) {
+</span></span><span style=display:flex><span>	this_thread<span style=color:#f92672>::</span>sleep_for(chrono<span style=color:#f92672>::</span>milliseconds(ms));
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span><span style=color:#66d9ef>void</span> <span style=color:#a6e22e>count</span>() {
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>while</span> (<span style=color:#f92672>!</span>ready) this_thread<span style=color:#f92672>::</span>yield();
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>for</span> (<span style=color:#66d9ef>int</span> i <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span>; i <span style=color:#f92672>&lt;=</span> <span style=color:#ae81ff>20&#39;0000&#39;0000</span>; i<span style=color:#f92672>++</span>);
+</span></span><span style=display:flex><span>	cout <span style=color:#f92672>&lt;&lt;</span> <span style=color:#e6db74>&#34;Thread &#34;</span> <span style=color:#f92672>&lt;&lt;</span> this_thread<span style=color:#f92672>::</span>get_id() <span style=color:#f92672>&lt;&lt;</span> <span style=color:#e6db74>&#34; finished!&#34;</span> <span style=color:#f92672>&lt;&lt;</span> endl;
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>return</span>;
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span><span style=color:#66d9ef>int</span> <span style=color:#a6e22e>main</span>() {
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>thread</span> th[<span style=color:#ae81ff>10</span>];
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>for</span> (<span style=color:#66d9ef>int</span> i <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span>; i <span style=color:#f92672>&lt;</span> <span style=color:#ae81ff>10</span>; i<span style=color:#f92672>++</span>)
+</span></span><span style=display:flex><span>		th[i] <span style=color:#f92672>=</span> <span style=color:#66d9ef>thread</span>(<span style=color:#f92672>::</span>count);
+</span></span><span style=display:flex><span>	sleep(<span style=color:#ae81ff>5000</span>);
+</span></span><span style=display:flex><span>	ready <span style=color:#f92672>=</span> true;
+</span></span><span style=display:flex><span>	cout <span style=color:#f92672>&lt;&lt;</span> <span style=color:#e6db74>&#34;Start!&#34;</span> <span style=color:#f92672>&lt;&lt;</span> endl;
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>for</span> (<span style=color:#66d9ef>int</span> i <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span>; i <span style=color:#f92672>&lt;</span> <span style=color:#ae81ff>10</span>; i<span style=color:#f92672>++</span>)
+</span></span><span style=display:flex><span>		th[i].join();
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>return</span> <span style=color:#ae81ff>0</span>;
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><h3 id=多个线程操作同一个变量>多个线程操作同一个变量
+<a class=anchor href=#%e5%a4%9a%e4%b8%aa%e7%ba%bf%e7%a8%8b%e6%93%8d%e4%bd%9c%e5%90%8c%e4%b8%80%e4%b8%aa%e5%8f%98%e9%87%8f>#</a></h3><p><code>std::mutex</code></p><p>一个线程将mutex锁住时，其它的线程就不能操作mutex，直到这个线程将mutex解锁</p><p>mutex很好地解决了多线程资源争抢的问题，但它也有缺点：<strong>太……慢……了……</strong>
+<img src=assets/image-20241023235747771.png alt=image-20241023235747771></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-C++ data-lang=C++><span style=display:flex><span><span style=color:#75715e>#include</span> <span style=color:#75715e>&lt;iostream&gt;</span><span style=color:#75715e>
+</span></span></span><span style=display:flex><span><span style=color:#75715e>#include</span> <span style=color:#75715e>&lt;thread&gt;</span><span style=color:#75715e>
+</span></span></span><span style=display:flex><span><span style=color:#75715e>#include</span> <span style=color:#75715e>&lt;mutex&gt;</span><span style=color:#75715e>
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#66d9ef>using</span> <span style=color:#66d9ef>namespace</span> std;
+</span></span><span style=display:flex><span><span style=color:#66d9ef>int</span> n <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span>;
+</span></span><span style=display:flex><span>mutex mtx;
+</span></span><span style=display:flex><span><span style=color:#66d9ef>void</span> <span style=color:#a6e22e>count10000</span>() {
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>for</span> (<span style=color:#66d9ef>int</span> i <span style=color:#f92672>=</span> <span style=color:#ae81ff>1</span>; i <span style=color:#f92672>&lt;=</span> <span style=color:#ae81ff>10000</span>; i<span style=color:#f92672>++</span>) {
+</span></span><span style=display:flex><span>		mtx.lock();
+</span></span><span style=display:flex><span>		n<span style=color:#f92672>++</span>;
+</span></span><span style=display:flex><span>		mtx.unlock(); <span style=color:#75715e>//去掉mtx，输出的n就不正确了
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>	}
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span><span style=color:#66d9ef>int</span> <span style=color:#a6e22e>main</span>() {
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>thread</span> th[<span style=color:#ae81ff>100</span>];
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>for</span> (<span style=color:#66d9ef>thread</span> <span style=color:#f92672>&amp;</span>x : th)
+</span></span><span style=display:flex><span>		x <span style=color:#f92672>=</span> <span style=color:#66d9ef>thread</span>(count10000);
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>for</span> (<span style=color:#66d9ef>thread</span> <span style=color:#f92672>&amp;</span>x : th)
+</span></span><span style=display:flex><span>		x.join();
+</span></span><span style=display:flex><span>	cout <span style=color:#f92672>&lt;&lt;</span> n <span style=color:#f92672>&lt;&lt;</span> endl;
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>return</span> <span style=color:#ae81ff>0</span>;
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p><code>std::atomic</code></p><p>比mutex快</p><p><code>std::atomic_int</code>只是<code>std::atomic&lt;int></code>的别名</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c++ data-lang=c++><span style=display:flex><span><span style=color:#75715e>#include</span> <span style=color:#75715e>&lt;iostream&gt;</span><span style=color:#75715e>
+</span></span></span><span style=display:flex><span><span style=color:#75715e>#include</span> <span style=color:#75715e>&lt;thread&gt;</span><span style=color:#75715e>
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#75715e>// #include &lt;mutex&gt; //这个例子不需要mutex了
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#75715e>#include</span> <span style=color:#75715e>&lt;atomic&gt;</span><span style=color:#75715e>
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#66d9ef>using</span> <span style=color:#66d9ef>namespace</span> std;
+</span></span><span style=display:flex><span>atomic_int n <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span>;
+</span></span><span style=display:flex><span><span style=color:#66d9ef>void</span> <span style=color:#a6e22e>count10000</span>() {
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>for</span> (<span style=color:#66d9ef>int</span> i <span style=color:#f92672>=</span> <span style=color:#ae81ff>1</span>; i <span style=color:#f92672>&lt;=</span> <span style=color:#ae81ff>10000</span>; i<span style=color:#f92672>++</span>) {
+</span></span><span style=display:flex><span>		n<span style=color:#f92672>++</span>;
+</span></span><span style=display:flex><span>	}
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span><span style=color:#66d9ef>int</span> <span style=color:#a6e22e>main</span>() {
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>thread</span> th[<span style=color:#ae81ff>100</span>];
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>for</span> (<span style=color:#66d9ef>thread</span> <span style=color:#f92672>&amp;</span>x : th)
+</span></span><span style=display:flex><span>		x <span style=color:#f92672>=</span> <span style=color:#66d9ef>thread</span>(count10000);
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>for</span> (<span style=color:#66d9ef>thread</span> <span style=color:#f92672>&amp;</span>x : th)
+</span></span><span style=display:flex><span>		x.join();
+</span></span><span style=display:flex><span>	cout <span style=color:#f92672>&lt;&lt;</span> n <span style=color:#f92672>&lt;&lt;</span> endl;
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>return</span> <span style=color:#ae81ff>0</span>;
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><h3 id=async>async
+<a class=anchor href=#async>#</a></h3><h4 id=大多数情况下使用async而不用thread>大多数情况下使用async而不用thread
+<a class=anchor href=#%e5%a4%a7%e5%a4%9a%e6%95%b0%e6%83%85%e5%86%b5%e4%b8%8b%e4%bd%bf%e7%94%a8async%e8%80%8c%e4%b8%8d%e7%94%a8thread>#</a></h4><p>async可以根据情况选择同步执行或创建新线程来异步执行，当然也可以手动选择。对于async的返回值操作也比thread更加方便。</p><blockquote><p>注：std::async定义在<code>future</code>头文件中。</p></blockquote><h4 id=api>api
+<a class=anchor href=#api>#</a></h4><p><img src=assets/image-20241024000248442.png alt=image-20241024000248442></p><p><img src=assets/image-20241024000315395.png alt=image-20241024000315395></p><p><img src=assets/image-20241024000909324.png alt=image-20241024000909324></p><h4 id=举例-3>举例
+<a class=anchor href=#%e4%b8%be%e4%be%8b-3>#</a></h4><h5 id=使用stdfuture获取线程的返回值>使用std::future获取线程的返回值
+<a class=anchor href=#%e4%bd%bf%e7%94%a8stdfuture%e8%8e%b7%e5%8f%96%e7%ba%bf%e7%a8%8b%e7%9a%84%e8%bf%94%e5%9b%9e%e5%80%bc>#</a></h5><p>定义了一个对象<code>val</code>，它的类型是<code>std::future&lt;int></code>，这里的<code>int</code>代表这个函数的返回值是int类型。在创建线程后，我们使用了<code>future::get()</code>来<strong>阻塞</strong>等待线程结束并获取其返回值</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c++ data-lang=c++><span style=display:flex><span><span style=color:#75715e>// Compiler: MSVC 19.29.30038.1
+</span></span></span><span style=display:flex><span><span style=color:#75715e>// C++ Standard: C++17
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#75715e>#include</span> <span style=color:#75715e>&lt;iostream&gt;</span><span style=color:#75715e>
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#75715e>// #include &lt;thread&gt; // 这里我们用async创建线程
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#75715e>#include</span> <span style=color:#75715e>&lt;future&gt;</span><span style=color:#75715e> </span><span style=color:#75715e>// std::async std::future
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#66d9ef>using</span> <span style=color:#66d9ef>namespace</span> std;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>template</span><span style=color:#f92672>&lt;</span><span style=color:#66d9ef>class</span> <span style=color:#960050;background-color:#1e0010>... </span><span style=color:#a6e22e>Args</span><span style=color:#f92672>&gt;</span> <span style=color:#66d9ef>decltype</span>(<span style=color:#66d9ef>auto</span>) sum(Args<span style=color:#f92672>&amp;&amp;</span>... args) {
+</span></span><span style=display:flex><span>	<span style=color:#75715e>// C++17折叠表达式
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>	<span style=color:#75715e>// &#34;0 +&#34;避免空参数包错误
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>	<span style=color:#66d9ef>return</span> (<span style=color:#ae81ff>0</span> <span style=color:#f92672>+</span> ... <span style=color:#f92672>+</span> args);
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>int</span> <span style=color:#a6e22e>main</span>() {
+</span></span><span style=display:flex><span>	<span style=color:#75715e>// 注：这里不能只写函数名sum，必须带模板参数
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>	future<span style=color:#f92672>&lt;</span><span style=color:#66d9ef>int</span><span style=color:#f92672>&gt;</span> val <span style=color:#f92672>=</span> async(launch<span style=color:#f92672>::</span>async, sum<span style=color:#f92672>&lt;</span><span style=color:#66d9ef>int</span>, <span style=color:#66d9ef>int</span>, <span style=color:#66d9ef>int</span><span style=color:#f92672>&gt;</span>, <span style=color:#ae81ff>1</span>, <span style=color:#ae81ff>10</span>, <span style=color:#ae81ff>100</span>);
+</span></span><span style=display:flex><span>	<span style=color:#75715e>// future::get() 阻塞等待线程结束并获得返回值
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>	cout <span style=color:#f92672>&lt;&lt;</span> val.get() <span style=color:#f92672>&lt;&lt;</span> endl;
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>return</span> <span style=color:#ae81ff>0</span>;
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><blockquote><p>Out: 111</p></blockquote><h5 id=void特化stdfuture>void特化std::future
+<a class=anchor href=#void%e7%89%b9%e5%8c%96stdfuture>#</a></h5><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c++ data-lang=c++><span style=display:flex><span><span style=color:#75715e>// Compiler: MSVC 19.29.30038.1
+</span></span></span><span style=display:flex><span><span style=color:#75715e>// C++ Standard: C++17
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#75715e>#include</span> <span style=color:#75715e>&lt;iostream&gt;</span><span style=color:#75715e>
+</span></span></span><span style=display:flex><span><span style=color:#75715e>#include</span> <span style=color:#75715e>&lt;future&gt;</span><span style=color:#75715e>
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#66d9ef>using</span> <span style=color:#66d9ef>namespace</span> std;
+</span></span><span style=display:flex><span><span style=color:#66d9ef>void</span> <span style=color:#a6e22e>count_big_number</span>() {
+</span></span><span style=display:flex><span>	<span style=color:#75715e>// C++14标准中，可以在数字中间加上单
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>	<span style=color:#75715e>// 引号 &#39; 来分隔数字，使其可读性更强
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>	<span style=color:#66d9ef>for</span> (<span style=color:#66d9ef>int</span> i <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span>; i <span style=color:#f92672>&lt;=</span> <span style=color:#ae81ff>10&#39;0000&#39;0000</span>; i<span style=color:#f92672>++</span>);
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span><span style=color:#66d9ef>int</span> <span style=color:#a6e22e>main</span>() {
+</span></span><span style=display:flex><span>	future<span style=color:#f92672>&lt;</span><span style=color:#66d9ef>void</span><span style=color:#f92672>&gt;</span> fut <span style=color:#f92672>=</span> async(launch<span style=color:#f92672>::</span>async, count_big_number);
+</span></span><span style=display:flex><span>	cout <span style=color:#f92672>&lt;&lt;</span> <span style=color:#e6db74>&#34;Please wait&#34;</span> <span style=color:#f92672>&lt;&lt;</span> flush;
+</span></span><span style=display:flex><span>	<span style=color:#75715e>// 每次等待1秒
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>	<span style=color:#66d9ef>while</span> (fut.wait_for(chrono<span style=color:#f92672>::</span>seconds(<span style=color:#ae81ff>1</span>)) <span style=color:#f92672>!=</span> future_status<span style=color:#f92672>::</span>ready)
+</span></span><span style=display:flex><span>		cout <span style=color:#f92672>&lt;&lt;</span> <span style=color:#e6db74>&#39;.&#39;</span> <span style=color:#f92672>&lt;&lt;</span> flush;
+</span></span><span style=display:flex><span>	cout <span style=color:#f92672>&lt;&lt;</span> endl <span style=color:#f92672>&lt;&lt;</span> <span style=color:#e6db74>&#34;Finished!&#34;</span> <span style=color:#f92672>&lt;&lt;</span> endl;
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>return</span> <span style=color:#ae81ff>0</span>;
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><blockquote><p>如果你运行一下这个代码，你也许就能搞懂那些软件的加载画面是怎么实现的。</p></blockquote><h3 id=多线程与核心>多线程与核心
+<a class=anchor href=#%e5%a4%9a%e7%ba%bf%e7%a8%8b%e4%b8%8e%e6%a0%b8%e5%bf%83>#</a></h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#75715e># ubuntu下查看电脑CPU核数，CPU个数，最大线程数(逻辑CPU的数量)</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>## CPU个数</span>
+</span></span><span style=display:flex><span>more /proc/cpuinfo |grep <span style=color:#e6db74>&#34;physical id&#34;</span>|uniq|wc -l    <span style=color:#75715e># 1</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>## 查看CPU核数</span>
+</span></span><span style=display:flex><span>cat /proc/cpuinfo| grep <span style=color:#e6db74>&#34;cpu cores&#34;</span>| uniq      <span style=color:#75715e># 6</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>## 查看最大线程数(逻辑CPU的数量)</span>
+</span></span><span style=display:flex><span>more /proc/cpuinfo |grep <span style=color:#e6db74>&#34;physical id&#34;</span>|grep <span style=color:#e6db74>&#34;0&#34;</span>|wc -l    <span style=color:#75715e># 12</span>
+</span></span></code></pre></div><h2 id=speedup>speedup
+<a class=anchor href=#speedup>#</a></h2><h3 id=分析工具>分析工具
+<a class=anchor href=#%e5%88%86%e6%9e%90%e5%b7%a5%e5%85%b7>#</a></h3><h3 id=总结>总结
+<a class=anchor href=#%e6%80%bb%e7%bb%93>#</a></h3><ul><li>使用const</li><li>使用inline</li><li><strong>避免频繁的内存分配和释放</strong>：使用<strong>对象池技术</strong>预先分配对象？</li><li><strong>使用引用传递而非指针传递</strong>：在某些情况下，使用引用可以避免对象的复制，提高性能</li><li>减少函数调用次数</li><li><strong>使用位运算替代算术运算</strong>：在低级代码中，位运算通常比算术运算更快</li><li><strong>使用编译器优化选项</strong>：如<code>-O2</code>或<code>-O3</code>，让编译器进行更多的优化</li><li><strong>选择合适的数据结构</strong>：例如，使用<code>std::vector</code>而不是<code>std::list</code>可以提高内存局部性，减少访问时间</li><li><strong>优化算法</strong>：选择高效的算法和数据结构，如使用哈希表进行快速查找</li><li><strong>使用<code>std::move</code>进行容器转移</strong>：移动语义可以避免不必要的复制，提高效率？</li><li><strong>使用局部静态变量和成员变量</strong></li><li><strong>使用作用域限定</strong>：限定变量的作用域，避免不必要的变量生命周期延长</li><li><strong>预先使用<code>reserve</code>优化容器</strong>：减少动态数组类型的容器在运行时的内存分配次数？</li><li><strong>减少除法运算</strong>：将除法运算转换为乘法运算，以提高效率？</li><li><strong>使用多线程</strong>：对于可以并行处理的任务，使用多线程可以显著提高性能</li><li><strong>减少值传递，多用引用传递</strong>：避免在函数调用时复制整个对象，特别是对于大型对象</li><li><strong>避免不同数据类型相互操作</strong>：减少数据类型转换，以提高效率</li><li><strong>使用内存访问优化</strong>：例如，使用指针直接访问数组元素，而不是使用<code>.at()</code>方法</li><li>直接使用现有的封装函数很方便，但是效率不是最好的，简单的功能实现，最好还是自己写源码</li></ul><h2 id=boost>Boost
+<a class=anchor href=#boost>#</a></h2><h3 id=简介>简介
+<a class=anchor href=#%e7%ae%80%e4%bb%8b>#</a></h3><p>Boost是一个流行的、开源的<strong>C++库集合</strong>，提供了各种功能强大的库和工具，扩展了C++语言的能力，并为开发者提供了更高级别的抽象和工具。Boost库经过广泛的使用和测试，被认为是C++社区的事实标准之一</p><p>Boost库包含了多个模块，每个模块都提供了不同领域的功能和工具，覆盖了诸如字符串操作、数据结构、算法、日期时间处理、文件系统、线程、网络、正则表达式等各个方面。以下是一些常用的Boost库：</p><blockquote><p>1.Boost.Asio：提供了异步I/O操作的网络编程库，支持TCP、UDP、串口等网络协议。</p><p>2.Boost.Smart_Ptr：提供了<strong>智能指针类</strong>，如shared_ptr和weak_ptr，用于方便地进行内存管理。</p><p>3.Boost.Filesystem：提供了对<strong>文件系统</strong>的访问和操作，包括文件和目录的创建、删除、遍历等。</p><p>4.Boost.Regex：提供了<strong>正则表达式</strong>的功能，用于进行文本匹配和搜索操作。</p><p>5.Boost.Thread：提供了<strong>跨平台的多线程编程接口</strong>，简化了线程的创建、同步和通信等操作。</p><p>6.Boost.Serialization：提供了对象的序列化和反序列化功能，可以将对象以二进制或XML格式进行存储和传输。</p><p>7.Boost.Math用于数学计算</p><p>8.Boost.Graph用于<strong>图论算法</strong>
+<a href=https://theboostcpplibraries.com/boost.graph>Chapter 31. Boost.Graph</a></p><p>9.Boost.Algorithm - 提供了包括排序、搜索等在内的<strong>各种算法</strong>。</p><p>10.Boost.Numeric - 提供了用于数值计算的库，如用于线性代数、随机数生成等</p></blockquote><h3 id=参考-3>参考
+<a class=anchor href=#%e5%8f%82%e8%80%83-3>#</a></h3><ol><li><a href=https://cloud.tencent.com/developer/article/2438818>【C++】开源：Boost库常用组件配置使用-腾讯云开发者社区-腾讯云</a></li><li>项目Github地址：<code>https://github.com/boostorg/boost</code></li><li>Boost库在线书籍：<code>https://wizardforcel.gitbooks.io/the-boost-cpp-libraries/content/0.html</code></li><li><a href=https://theboostcpplibraries.com/>官方文档：The Boost C++ Libraries</a></li><li></li></ol><h2 id=odb>ODB
+<a class=anchor href=#odb>#</a></h2><p>ODB（Object-Relational Mapping）是一个C++库，用于将C++对象映射到关系数据库中。</p><h2 id=buglist>buglist
+<a class=anchor href=#buglist>#</a></h2><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c++ data-lang=c++><span style=display:flex><span><span style=color:#75715e>#include</span> <span style=color:#75715e>&lt;iostream&gt;</span><span style=color:#75715e>
+</span></span></span><span style=display:flex><span><span style=color:#75715e>#include</span> <span style=color:#75715e>&lt;vector&gt;</span><span style=color:#75715e>
+</span></span></span><span style=display:flex><span><span style=color:#75715e>#include</span> <span style=color:#75715e>&lt;array&gt;</span><span style=color:#75715e>
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#66d9ef>using</span> <span style=color:#66d9ef>namespace</span> std;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>int</span> <span style=color:#a6e22e>main</span>()
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>int</span> a <span style=color:#f92672>=</span> <span style=color:#ae81ff>10</span>;
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>int</span> b <span style=color:#f92672>=</span> <span style=color:#ae81ff>3</span>;
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>const</span> size_t wire_max_level <span style=color:#f92672>=</span> a;
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>const</span> size_t wire_max_sublevel <span style=color:#f92672>=</span> b;
+</span></span><span style=display:flex><span>    array<span style=color:#f92672>&lt;</span>array<span style=color:#f92672>&lt;</span>vector<span style=color:#f92672>&lt;</span>array<span style=color:#f92672>&lt;</span><span style=color:#66d9ef>int</span>, <span style=color:#ae81ff>2</span><span style=color:#f92672>&gt;&gt;</span>, wire_max_level<span style=color:#f92672>&gt;</span>, wire_max_sublevel<span style=color:#f92672>&gt;</span> dst;       
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><h1 id=systemc>SystemC
+<a class=anchor href=#systemc>#</a></h1><h2 id=环境配置>环境配置
+<a class=anchor href=#%e7%8e%af%e5%a2%83%e9%85%8d%e7%bd%ae>#</a></h2><h3 id=eda-playground>EDA Playground
+<a class=anchor href=#eda-playground>#</a></h3><h3 id=local>Local
+<a class=anchor href=#local>#</a></h3><p><a href=https://blog.csdn.net/yp18792574062/article/details/133747670>SystemC 学习之 Linux 安装 SystemC（一）_systemc如何安装-CSDN博客</a></p><h3 id=other>other
+<a class=anchor href=#other>#</a></h3><p><a href="https://stackoverflow.com/users/auth/gcp?ssrc=google-one-tap&amp;returnurl=https%3a%2f%2fstackoverflow.com%2fusers%2fauth%2fgcp%3fssrc%3dgoogle-one-tap%26returnurl%3dhttps%3a%2f%2fstackoverflow.com%2fusers%2fauth%2fgcp%3fssrc%3dgoogle-one-tap%26returnurl%3dhttps%253a%252f%252fstackoverflow.com%252f">Sign Up - Stack Overflow</a></p><h1 id=complexity>Complexity
+<a class=anchor href=#complexity>#</a></h1><h2 id=time-complexity>Time Complexity
+<a class=anchor href=#time-complexity>#</a></h2><p>算法运行所花费的时间量化为与输入长度有关的函数</p><p>随着输入的量级增加，低阶项相对无关紧要，因此仅采用最高阶项</p><h3 id=举例-4>举例
+<a class=anchor href=#%e4%b8%be%e4%be%8b-4>#</a></h3><p>假设给定数组<code>array A</code>，在<code>array A</code>中找出是否存在一组<code>pair(x,y)</code>使其和为<code>x+y=z</code>，<code>array A</code>中有<code>N</code>个元素</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#66d9ef>for</span>(<span style=color:#66d9ef>int</span> i <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span>;i <span style=color:#f92672>&lt;</span> n;i<span style=color:#f92672>++</span>)
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>for</span>(<span style=color:#66d9ef>int</span> j <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span>;j <span style=color:#f92672>&lt;</span> n;j<span style=color:#f92672>++</span>)
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span>(i<span style=color:#f92672>!=</span>j <span style=color:#f92672>&amp;&amp;</span> a[i]<span style=color:#f92672>+</span>a[j] <span style=color:#f92672>==</span> z)
+</span></span><span style=display:flex><span>       <span style=color:#66d9ef>return</span> true
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>return</span> false
+</span></span></code></pre></div><p>分析算法的时候通常考虑最差的情况，也就是说上面算法的时间复杂度为<code>O(N2)</code></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span>count <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span>
+</span></span><span style=display:flex><span>i <span style=color:#f92672>=</span> N
+</span></span><span style=display:flex><span><span style=color:#66d9ef>while</span>(i <span style=color:#f92672>&gt;</span> <span style=color:#ae81ff>0</span>)<span style=color:#f92672>:</span>
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>for</span> j in <span style=color:#a6e22e>range</span>(i)<span style=color:#f92672>:</span>
+</span></span><span style=display:flex><span>    count<span style=color:#f92672>+=</span><span style=color:#ae81ff>1</span>
+</span></span><span style=display:flex><span>  i <span style=color:#f92672>/=</span> <span style=color:#ae81ff>2</span>
+</span></span></code></pre></div><p>count+=1<code>总共运行次数为</code>N + N/2 + N/4+…+1= 2 * N<code>，因此时间复杂度为</code>O(N)</p><h2 id=space-complexity>Space Complexity
+<a class=anchor href=#space-complexity>#</a></h2><p>算法运行所占用的空间量化为与输入长度有关的函数</p><h3 id=复杂度分类>复杂度分类
+<a class=anchor href=#%e5%a4%8d%e6%9d%82%e5%ba%a6%e5%88%86%e7%b1%bb>#</a></h3><p><img src=C:%5cUsers%5cPxmmmm.DESKTOP-G18CTQU%5cAppData%5cRoaming%5cTypora%5ctypora-user-images%5cimage-20240903193210608.png alt=image-20240903193210608></p><h4 id=p问题polynomial-time>P问题(<strong>Polynomial Time</strong>)
+<a class=anchor href=#p%e9%97%ae%e9%a2%98polynomial-time>#</a></h4><p>可以在确定性多项式时间内解决的决策问题集合</p><p>常见P问题有<strong>计算最大公约数；寻找最大匹配(maximum matching)；线性规划的决策版本</strong></p><h4 id=np问题non-deterministic-polynomial-time>NP问题(<strong>Non-deterministic Polynomial Time</strong>)
+<a class=anchor href=#np%e9%97%ae%e9%a2%98non-deterministic-polynomial-time>#</a></h4><p>NP问题是机器可以在非确定性多项式时间内解决的决策问题的集合</p><p>常见NP问题有<strong>布尔可满足性问题 (Boolean Satisfiability Problem SAT)，哈密顿路径问题，图着色问题</strong></p><h4 id=np-hard问题>NP-hard问题
+<a class=anchor href=#np-hard%e9%97%ae%e9%a2%98>#</a></h4><p>NP-hard问题至少要和NP问题中最难的一类一样难，代表所有NP问题都能在多项式时间复杂度内归约(reduction)到的问题</p><p>归约：我们现在遇到了个问题，可以把它转化到一个某个已解决的问题上，而不是一定要直接解决这个问题。</p><p>如果给出了一个NP-hard 问题的解，验证也需要很长时间</p><p>常见的NP-hard问题有<strong>停机问题(Halting problem)，TSP</strong></p><h4 id=np-complete问题>NP-complete问题
+<a class=anchor href=#np-complete%e9%97%ae%e9%a2%98>#</a></h4><p>如果一个问题既是 NP 问题又是 NP-hard问题，那么它就是NP-complete问题</p><p>NP-complete问题是 NP 中的难题。</p><p>常见NP-complete问题有<strong>0/1背包问题，哈密尔顿回路，顶点覆盖(Vertex cover)</strong></p><h3 id=参考-4>参考
+<a class=anchor href=#%e5%8f%82%e8%80%83-4>#</a></h3><p><a href=https://blog.csdn.net/weixin_45526117/article/details/127493748>时间和空间复杂度及复杂度分类(P,NP,NP-hard,NP-complete)_np-hard np-complete-CSDN博客</a></p><h1 id=python>Python
+<a class=anchor href=#python>#</a></h1><h2 id=print>print
+<a class=anchor href=#print>#</a></h2><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span>print(<span style=color:#e6db74>f</span><span style=color:#e6db74>&#34; pin:</span><span style=color:#e6db74>{</span>self<span style=color:#f92672>.</span>connecting_pins[<span style=color:#ae81ff>0</span>]<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>)
+</span></span></code></pre></div><h2 id=class-1>class
+<a class=anchor href=#class-1>#</a></h2><h3 id=basic>basic
+<a class=anchor href=#basic>#</a></h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#66d9ef>class</span> <span style=color:#a6e22e>PIN</span>:
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>def</span> __init__(self, value_<span style=color:#f92672>=</span>PIN_VALUE_X):
+</span></span><span style=display:flex><span>        self<span style=color:#f92672>.</span>value <span style=color:#f92672>=</span> value_
+</span></span><span style=display:flex><span>        
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>def</span> <span style=color:#a6e22e>func0</span>(self):
+</span></span><span style=display:flex><span>        <span style=color:#f92672>...</span>
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>def</span> __str__(self):
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> <span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;value=</span><span style=color:#e6db74>{</span>self<span style=color:#f92672>.</span>value<span style=color:#e6db74>}</span><span style=color:#ae81ff>\n</span><span style=color:#e6db74>&#34;</span>
+</span></span></code></pre></div><h3 id=reset>reset
+<a class=anchor href=#reset>#</a></h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#66d9ef>def</span> __init__(self, <span style=color:#f92672>...</span>)
+</span></span><span style=display:flex><span>	super()<span style=color:#f92672>.</span>__init__()
+</span></span><span style=display:flex><span>    <span style=color:#f92672>...</span>
+</span></span><span style=display:flex><span>    self<span style=color:#f92672>.</span>reset()<span style=color:#75715e>#调用的是当前类中的 reset 方法。这个方法通常用于重置对象的状态到初始状态。</span>
+</span></span></code></pre></div><h3 id=__init__py><code>__init__.py</code>
+<a class=anchor href=#__init__py>#</a></h3><ol><li><strong>包初始化</strong>：当一个目录包含 <code>__init__.py</code> 文件时，Python 解释器会将其视为一个包，允许你使用 <code>import</code> 语句导入该目录下的模块。</li><li><strong>初始化代码</strong>：<code>__init__.py</code> 文件可以包含包的初始化代码。这些代码在包被导入时执行，可以用来执行一些初始化操作，比如设置包的属性、定义函数或类等。</li><li><strong>命名空间管理</strong>：<code>__init__.py</code> 文件允许你控制包的命名空间。你可以通过这个文件来定义哪些模块或对象应该被暴露给包的使用者。</li><li><strong>避免命名冲突</strong>：如果你的包中包含的模块名与标准库或其他第三方库的模块名相同，通过在 <code>__init__.py</code> 中明确导入和导出特定的模块或对象，可以避免命名冲突。</li><li><strong>向后兼容性</strong>：在 Python 3.3 之前，<code>__init__.py</code> 文件是必须的，以将目录标记为包。从 Python 3.3 开始，PEP 420 允许隐式命名空间包，这意味着即使没有 <code>__init__.py</code> 文件，也可以将目录作为包使用。但是，使用 <code>__init__.py</code> 仍然是一种良好的实践，因为它提供了上述的好处。</li><li><strong>运行包</strong>：如果 <code>__init__.py</code> 文件中包含 <code>if __name__ == "__main__":</code> 块，那么当包作为脚本直接运行时，该块中的代码将被执行。</li></ol><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span>mypackage<span style=color:#f92672>/</span>
+</span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>│</span>
+</span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>├──</span> __init__<span style=color:#f92672>.</span>py
+</span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>├──</span> module1<span style=color:#f92672>.</span>py
+</span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>└──</span> module2<span style=color:#f92672>.</span>py
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#75715e># mypackage/__init__.py</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>from</span> .module1 <span style=color:#f92672>import</span> my_function
+</span></span><span style=display:flex><span><span style=color:#f92672>from</span> .module2 <span style=color:#f92672>import</span> MyClass
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#f92672>import</span> mypackage
+</span></span><span style=display:flex><span>mypackage<span style=color:#f92672>.</span>my_function()
+</span></span><span style=display:flex><span>mypackage<span style=color:#f92672>.</span>MyClass()
+</span></span></code></pre></div><h3 id=args-和-kwds><code>*args</code> 和 <code>**kwds</code>
+<a class=anchor href=#args-%e5%92%8c-kwds>#</a></h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#66d9ef>def</span> <span style=color:#a6e22e>func</span>(<span style=color:#f92672>*</span>args, <span style=color:#f92672>**</span>kwds):
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>for</span> arg <span style=color:#f92672>in</span> args:
+</span></span><span style=display:flex><span>        print(arg)
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>for</span> key, value <span style=color:#f92672>in</span> kwds<span style=color:#f92672>.</span>items():
+</span></span><span style=display:flex><span>        print(<span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;</span><span style=color:#e6db74>{</span>key<span style=color:#e6db74>}</span><span style=color:#e6db74> = </span><span style=color:#e6db74>{</span>value<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>func(<span style=color:#ae81ff>1</span>, <span style=color:#ae81ff>2</span>, <span style=color:#ae81ff>3</span>, a<span style=color:#f92672>=</span><span style=color:#ae81ff>4</span>, b<span style=color:#f92672>=</span><span style=color:#ae81ff>5</span>)  <span style=color:#75715e># 输出:</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 1</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 2</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 3</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># a = 4</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># b = 5</span>
+</span></span></code></pre></div><h2 id=pytorch>Pytorch
+<a class=anchor href=#pytorch>#</a></h2><h3 id=ema>ema
+<a class=anchor href=#ema>#</a></h3><p>指数加权移动平均（Exponential Moving Average, EMA）是一种用于平滑时间序列数据的技术，它通过对历史数据赋予不同的权重来实现平滑。与简单移动平均（<strong>SMA</strong>）不同，EMA<strong>对最近的数据赋予更大的权重</strong>，从而能够更敏感地反映数据的近期变化趋势</p><p><img src=assets/image-20241007204521456.png alt=image-20241007204521456></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#66d9ef>class</span> <span style=color:#a6e22e>ExponentialMovingAverage</span>(torch<span style=color:#f92672>.</span>optim<span style=color:#f92672>.</span>swa_utils<span style=color:#f92672>.</span>AveragedModel):
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;&#34;&#34;Maintains moving averages of model parameters using an exponential decay.
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    ``ema_avg = decay * avg_model_param + (1 - decay) * model_param``
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    `torch.optim.swa_utils.AveragedModel &lt;https://pytorch.org/docs/stable/optim.html#custom-averaging-strategies&gt;`_
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    is used to compute the EMA.
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    &#34;&#34;&#34;</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>def</span> __init__(self, model, decay, device):
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>def</span> <span style=color:#a6e22e>ema_avg</span>(avg_model_param, model_param, num_averaged):
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span> decay <span style=color:#f92672>*</span> avg_model_param <span style=color:#f92672>+</span> (<span style=color:#ae81ff>1</span> <span style=color:#f92672>-</span> decay) <span style=color:#f92672>*</span> model_param
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        super()<span style=color:#f92672>.</span>__init__(model, device, ema_avg)
+</span></span></code></pre></div><h2 id=dgl>DGL
+<a class=anchor href=#dgl>#</a></h2><p><code>with g.local_scope():</code> #</p><h2 id=tensorflow>Tensorflow
+<a class=anchor href=#tensorflow>#</a></h2><h3 id=基本操作>基本操作
+<a class=anchor href=#%e5%9f%ba%e6%9c%ac%e6%93%8d%e4%bd%9c>#</a></h3><p><a href=https://blog.csdn.net/qq_35091353/article/details/117234223>pytorch函数mm() mul() matmul()区别_torch.mm matmul区别-CSDN博客</a></p><pre tabindex=0><code>tf.Variable(initial_value=1.)
+tf.constant([[1., 2.], [3., 4.]])
+tf.zero
+tf.square() 操作代表对输入张量的每一个元素求平方
+tf.reduce_sum() 操作代表对输入张量的所有元素求和
+tf.random.uniform
+
+print(A.shape)      # 输出(2, 2)，即矩阵的长和宽均为2
+print(A.dtype)      # 输出&lt;dtype: &#39;float32&#39;&gt;
+print(A.numpy())  
+</code></pre><h3 id=自动求导>自动求导
+<a class=anchor href=#%e8%87%aa%e5%8a%a8%e6%b1%82%e5%af%bc>#</a></h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#f92672>import</span> tensorflow <span style=color:#66d9ef>as</span> tf
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>x <span style=color:#f92672>=</span> tf<span style=color:#f92672>.</span>Variable(initial_value<span style=color:#f92672>=</span><span style=color:#ae81ff>3.</span>)
+</span></span><span style=display:flex><span><span style=color:#66d9ef>with</span> tf<span style=color:#f92672>.</span>GradientTape() <span style=color:#66d9ef>as</span> tape:     <span style=color:#75715e># 在 tf.GradientTape() 的上下文内，所有计算步骤都会被记录以用于求导</span>
+</span></span><span style=display:flex><span>    y <span style=color:#f92672>=</span> tf<span style=color:#f92672>.</span>square(x)
+</span></span><span style=display:flex><span>y_grad <span style=color:#f92672>=</span> tape<span style=color:#f92672>.</span>gradient(y, x)        <span style=color:#75715e># 计算y关于x的导数</span>
+</span></span><span style=display:flex><span>print(y, y_grad)
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span>tf<span style=color:#f92672>.</span>GradientTape() 是一个自动求导的记录器<span style=color:#960050;background-color:#1e0010>。</span>只要进入了 <span style=color:#66d9ef>with</span> tf<span style=color:#f92672>.</span>GradientTape() <span style=color:#66d9ef>as</span> tape 的上下文环境<span style=color:#960050;background-color:#1e0010>，</span>则在该环境中计算步骤都会被自动记录<span style=color:#960050;background-color:#1e0010>。</span>比如在上面的示例中<span style=color:#960050;background-color:#1e0010>，</span>计算步骤 y <span style=color:#f92672>=</span> tf<span style=color:#f92672>.</span>square(x) 即被自动记录<span style=color:#960050;background-color:#1e0010>。</span>离开上下文环境后<span style=color:#960050;background-color:#1e0010>，</span>记录将停止<span style=color:#960050;background-color:#1e0010>，</span>但记录器 tape 依然可用<span style=color:#960050;background-color:#1e0010>，</span>因此可以通过 y_grad <span style=color:#f92672>=</span> tape<span style=color:#f92672>.</span>gradient(y, x) 求张量 y 对变量 x 的导数<span style=color:#960050;background-color:#1e0010>。</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>X <span style=color:#f92672>=</span> tf<span style=color:#f92672>.</span>constant([[<span style=color:#ae81ff>1.</span>, <span style=color:#ae81ff>2.</span>], [<span style=color:#ae81ff>3.</span>, <span style=color:#ae81ff>4.</span>]])
+</span></span><span style=display:flex><span>y <span style=color:#f92672>=</span> tf<span style=color:#f92672>.</span>constant([[<span style=color:#ae81ff>1.</span>], [<span style=color:#ae81ff>2.</span>]])
+</span></span><span style=display:flex><span>w <span style=color:#f92672>=</span> tf<span style=color:#f92672>.</span>Variable(initial_value<span style=color:#f92672>=</span>[[<span style=color:#ae81ff>1.</span>], [<span style=color:#ae81ff>2.</span>]])
+</span></span><span style=display:flex><span>b <span style=color:#f92672>=</span> tf<span style=color:#f92672>.</span>Variable(initial_value<span style=color:#f92672>=</span><span style=color:#ae81ff>1.</span>)
+</span></span><span style=display:flex><span><span style=color:#66d9ef>with</span> tf<span style=color:#f92672>.</span>GradientTape() <span style=color:#66d9ef>as</span> tape:
+</span></span><span style=display:flex><span>    L <span style=color:#f92672>=</span> tf<span style=color:#f92672>.</span>reduce_sum(tf<span style=color:#f92672>.</span>square(tf<span style=color:#f92672>.</span>matmul(X, w) <span style=color:#f92672>+</span> b <span style=color:#f92672>-</span> y))
+</span></span><span style=display:flex><span>w_grad, b_grad <span style=color:#f92672>=</span> tape<span style=color:#f92672>.</span>gradient(L, [w, b])        <span style=color:#75715e># 计算L(w, b)关于w, b的偏导数</span>
+</span></span><span style=display:flex><span>print(L, w_grad, b_grad)
+</span></span></code></pre></div><h3 id=模型与层>模型与层
+<a class=anchor href=#%e6%a8%a1%e5%9e%8b%e4%b8%8e%e5%b1%82>#</a></h3><p><a href=https://tf.wiki/zh_hans/>简单粗暴 TensorFlow 2 | A Concise Handbook of TensorFlow 2 — 简单粗暴 TensorFlow 2 0.4 beta 文档 (tf.wiki)</a></p><ul><li><p>Keras 在 <code>tf.keras.layers</code> 下内置了深度学习中大量常用的的预定义层，同时也允许我们自定义层</p><ul><li><p>keras.layers.Dense</p><ul><li><code>units</code> ：输出张量的维度；</li><li><code>activation</code> ：激活函数，对应于
+<img src=https://tf.wiki/_images/math/92bb903eabd575a64bd61bd559678418cda7afb2.png alt="f(AW + b)"> 中的
+<img src=https://tf.wiki/_images/math/95dc71c95728695dd2fada939d146ae97def5061.png alt=f> ，默认为无激活函数（ <code>a(x) = x</code> ）。常用的激活函数包括 <code>tf.nn.relu</code> 、 <code>tf.nn.tanh</code> 和 <code>tf.nn.sigmoid</code> ；</li><li><code>use_bias</code> ：是否加入偏置向量 <code>bias</code> ，即
+<img src=https://tf.wiki/_images/math/92bb903eabd575a64bd61bd559678418cda7afb2.png alt="f(AW + b)"> 中的
+<img src=https://tf.wiki/_images/math/3de2ed824326dc0eb383a42dd6ec44d3b401047b.png alt=b>。默认为 <code>True</code> ；</li><li><code>kernel_initializer</code> 、 <code>bias_initializer</code> ：权重矩阵 <code>kernel</code> 和偏置向量 <code>bias</code> 两个变量的初始化器。默认为 <code>tf.glorot_uniform_initializer</code>
+<a href=https://tf.wiki/zh_hans/basic/models.html#glorot>1</a> 。设置为 <code>tf.zeros_initializer</code> 表示将两个变量均初始化为全 0；</li><li>该层包含权重矩阵 <code>kernel = [input_dim, units]</code> 和偏置向量 <code>bias = [units]</code>
+<a href=https://tf.wiki/zh_hans/basic/models.html#broadcast>2</a> 两个可训练变量</li></ul></li><li><p>tf.keras.layers.Conv2D</p></li><li><p>tf.keras.layers.MaxPool2D</p></li><li><p>tf.keras.layers.Reshape</p></li><li><p>tf.keras.layers.LSTMCell</p></li></ul></li><li><p>我们可以通过继承 <code>tf.keras.Model</code> 这个 Python 类来定义自己的模型</p></li><li><p>在继承类中，我们需要重写 <code>__init__()</code> （构造函数，初始化）和 <code>call(input)</code> （模型调用）两个方法，同时也可以根据需要增加自定义的方法。</p></li><li><p>实例化类 <code>model = Model()</code> 后，可以通过 <code>model.variables</code> 这一属性直接获得模型中的所有变量</p></li></ul><h4 id=自定义层>自定义层
+<a class=anchor href=#%e8%87%aa%e5%ae%9a%e4%b9%89%e5%b1%82>#</a></h4><p><code>tf.keras.models.Sequential()</code> 提供一个层的列表，就能快速地建立一个 <code>tf.keras.Model</code> 模型并返回</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span>        model <span style=color:#f92672>=</span> tf<span style=color:#f92672>.</span>keras<span style=color:#f92672>.</span>models<span style=color:#f92672>.</span>Sequential([
+</span></span><span style=display:flex><span>            tf<span style=color:#f92672>.</span>keras<span style=color:#f92672>.</span>layers<span style=color:#f92672>.</span>Flatten(),
+</span></span><span style=display:flex><span>            tf<span style=color:#f92672>.</span>keras<span style=color:#f92672>.</span>layers<span style=color:#f92672>.</span>Dense(<span style=color:#ae81ff>100</span>, activation<span style=color:#f92672>=</span>tf<span style=color:#f92672>.</span>nn<span style=color:#f92672>.</span>relu),
+</span></span><span style=display:flex><span>            tf<span style=color:#f92672>.</span>keras<span style=color:#f92672>.</span>layers<span style=color:#f92672>.</span>Dense(<span style=color:#ae81ff>10</span>),
+</span></span><span style=display:flex><span>            tf<span style=color:#f92672>.</span>keras<span style=color:#f92672>.</span>layers<span style=color:#f92672>.</span>Softmax()
+</span></span><span style=display:flex><span>        ])
+</span></span></code></pre></div><h3 id=变量的恢复和保存>变量的恢复和保存
+<a class=anchor href=#%e5%8f%98%e9%87%8f%e7%9a%84%e6%81%a2%e5%a4%8d%e5%92%8c%e4%bf%9d%e5%ad%98>#</a></h3><p><a href=https://tf.wiki/zh_hans/basic/tools.html>TensorFlow常用模块 — 简单粗暴 TensorFlow 2 0.4 beta 文档 (tf.wiki)</a></p><h3 id=训练过程可视化>训练过程可视化
+<a class=anchor href=#%e8%ae%ad%e7%bb%83%e8%bf%87%e7%a8%8b%e5%8f%af%e8%a7%86%e5%8c%96>#</a></h3><h3 id=gpu使用>GPU使用
+<a class=anchor href=#gpu%e4%bd%bf%e7%94%a8>#</a></h3><h4 id=分布式训练>分布式训练
+<a class=anchor href=#%e5%88%86%e5%b8%83%e5%bc%8f%e8%ae%ad%e7%bb%83>#</a></h4><h4 id=tpu训练>TPU训练
+<a class=anchor href=#tpu%e8%ae%ad%e7%bb%83>#</a></h4><h3 id=install>install
+<a class=anchor href=#install>#</a></h3><p><a href="https://tensorflow.google.cn/install/pip?hl=zh-cn#1.-install-the-python-development-environment-on-your-system">使用 pip 安装 TensorFlow (google.cn)</a></p><p><a href=https://tf.wiki/zh_hans/basic/installation.html>TensorFlow安装与环境配置 — 简单粗暴 TensorFlow 2 0.4 beta 文档 (tf.wiki)</a></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#75715e>#需要使用 Python 3.6-3.9 和 pip 19.0 及更高版本</span>
+</span></span><span style=display:flex><span>sudo apt update
+</span></span><span style=display:flex><span>sudo apt install python3-dev python3-pip python3-venv
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>python3 --version
+</span></span><span style=display:flex><span>pip3 --version
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#enter vir env</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#从 TensorFlow 2.1 开始，pip 包 tensorflow 即同时包含 GPU 支持，无需通过特定的 pip 包 tensorflow-gpu 安装 GPU 版本</span>
+</span></span><span style=display:flex><span>pip install --upgrade tensorflow#install
+</span></span><span style=display:flex><span><span style=color:#75715e>#指定版本号</span>
+</span></span><span style=display:flex><span>pip install tensorflow<span style=color:#f92672>==</span>2.6.0
+</span></span></code></pre></div><h3 id=reference>reference
+<a class=anchor href=#reference>#</a></h3><p><a href=https://tf.wiki/zh_hans/>简单粗暴 TensorFlow 2 | A Concise Handbook of TensorFlow 2 — 简单粗暴 TensorFlow 2 0.4 beta 文档 (tf.wiki)</a></p><h2 id=collections>collections
+<a class=anchor href=#collections>#</a></h2><h3 id=defaultdict>defaultdict
+<a class=anchor href=#defaultdict>#</a></h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#f92672>from</span> collections <span style=color:#f92672>import</span> defaultdict
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 创建一个默认值为int的defaultdict，int类型的默认值为0</span>
+</span></span><span style=display:flex><span>dd <span style=color:#f92672>=</span> defaultdict(int)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 访问一个不存在的键，会自动创建该键，并将值设置为默认值0</span>
+</span></span><span style=display:flex><span>print(dd[<span style=color:#e6db74>&#39;foo&#39;</span>])  <span style=color:#75715e># 输出: 0</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 手动设置一个键的值</span>
+</span></span><span style=display:flex><span>dd[<span style=color:#e6db74>&#39;foo&#39;</span>] <span style=color:#f92672>=</span> <span style=color:#ae81ff>1</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 再次访问该键，返回设置后的值</span>
+</span></span><span style=display:flex><span>print(dd[<span style=color:#e6db74>&#39;foo&#39;</span>])  <span style=color:#75715e># 输出: 1</span>
+</span></span></code></pre></div><h3 id=nametuple>NameTuple
+<a class=anchor href=#nametuple>#</a></h3><p>元组 tuple 一样，NamedTuple 也是<strong>不可变数据类型</strong>，创建之后就不能改变内容</p><p>NamedTuple 不像数组那样使用下标读写，反而和类相似，使用 <code>.</code> 来读写。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span>collections<span style=color:#f92672>.</span>namedtuple(typename, field_names, <span style=color:#f92672>*</span>, rename<span style=color:#f92672>=</span><span style=color:#66d9ef>False</span>, defaults<span style=color:#f92672>=</span><span style=color:#66d9ef>None</span>, module<span style=color:#f92672>=</span><span style=color:#66d9ef>None</span>)
+</span></span></code></pre></div><p><img src=assets/image-20240926141600864.png alt=image-20240926141600864></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#75715e># 导包</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>from</span> collections <span style=color:#f92672>import</span> namedtuple
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 创建普通元组</span>
+</span></span><span style=display:flex><span>point <span style=color:#f92672>=</span> (<span style=color:#ae81ff>22</span>, <span style=color:#ae81ff>33</span>)
+</span></span><span style=display:flex><span>print(point) <span style=color:#75715e># 输出：(22, 33)</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 创建命名元组</span>
+</span></span><span style=display:flex><span>Point <span style=color:#f92672>=</span> namedtuple(<span style=color:#e6db74>&#39;Point&#39;</span>, <span style=color:#e6db74>&#39;x y&#39;</span>)<span style=color:#75715e>#我们先用 namedtuple 创建了一个名为 Point，有两个字段 x、y 的子类，然后将这个类赋给 Point 变量。</span>
+</span></span><span style=display:flex><span>point_A <span style=color:#f92672>=</span> Point(<span style=color:#ae81ff>22</span>, <span style=color:#ae81ff>33</span>)<span style=color:#75715e>#相当于 new </span>
+</span></span><span style=display:flex><span>print(point_A) <span style=color:#75715e># 输出：Point(x=22, y=33)</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#75715e>#三种风格</span>
+</span></span><span style=display:flex><span>Point <span style=color:#f92672>=</span> namedtuple(<span style=color:#e6db74>&#39;Point&#39;</span>, <span style=color:#e6db74>&#39;x y&#39;</span>)
+</span></span><span style=display:flex><span>Point <span style=color:#f92672>=</span> namedtuple(<span style=color:#e6db74>&#39;Point&#39;</span>, <span style=color:#e6db74>&#39;x,y&#39;</span>)
+</span></span><span style=display:flex><span>Point <span style=color:#f92672>=</span> namedtuple(<span style=color:#e6db74>&#39;Point&#39;</span>, [<span style=color:#e6db74>&#39;x&#39;</span>, <span style=color:#e6db74>&#39;y&#39;</span>])
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#75715e>#取值</span>
+</span></span><span style=display:flex><span>print(point_A[<span style=color:#ae81ff>0</span>])
+</span></span><span style=display:flex><span>print(point_A[<span style=color:#ae81ff>1</span>])
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>print(point_A<span style=color:#f92672>.</span>x)
+</span></span><span style=display:flex><span>print(point_A<span style=color:#f92672>.</span>y)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#创造一个对象</span>
+</span></span><span style=display:flex><span>point1 <span style=color:#f92672>=</span> Point(x<span style=color:#f92672>=</span><span style=color:#ae81ff>1</span>, y<span style=color:#f92672>=</span><span style=color:#ae81ff>2</span>)
+</span></span></code></pre></div><p><a href=https://blog.csdn.net/XcantloadX/article/details/134071289>【Python 高级特性】深入 NamedTuple 命名元组-CSDN博客</a></p><h2 id=map>map
+<a class=anchor href=#map>#</a></h2><p>map()传入的第一个参数是f，即函数对象本身。由于结果r是一个
+<a href="https://so.csdn.net/so/search?q=Iterator&amp;spm=1001.2101.3001.7020">Iterator</a>，Iterator是惰性序列，因此通过list()函数让它把整个序列都计算出来并返回一个list。你可能会想，不需要map()函数，写一个循环，也可以计算出结果。但是，map要比循环更快，更稳健。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#66d9ef>def</span> <span style=color:#a6e22e>Fun</span>(x) :                     <span style=color:#75715e># 计算平方数</span>
+</span></span><span style=display:flex><span>      <span style=color:#66d9ef>return</span> x <span style=color:#f92672>+</span>  <span style=color:#ae81ff>2</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>data <span style=color:#f92672>=</span> [<span style=color:#ae81ff>1</span>, <span style=color:#ae81ff>4</span>, <span style=color:#ae81ff>9</span>, <span style=color:#ae81ff>16</span>, <span style=color:#ae81ff>25</span>]
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>outdata <span style=color:#f92672>=</span> list(map(Fun, data))
+</span></span><span style=display:flex><span><span style=color:#75715e>#结果：outdata=[3, 4, 6, 7, 10, 12]</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#75715e>#lambda</span>
+</span></span><span style=display:flex><span>rewards <span style=color:#f92672>=</span> list(map(<span style=color:#66d9ef>lambda</span> s: s<span style=color:#f92672>.</span>reward, batch))<span style=color:#75715e>#get reward from batch</span>
+</span></span></code></pre></div><h1 id=tcl>TCL
+<a class=anchor href=#tcl>#</a></h1><h2 id=基本知识>基本知识
+<a class=anchor href=#%e5%9f%ba%e6%9c%ac%e7%9f%a5%e8%af%86>#</a></h2><h3 id=list>list
+<a class=anchor href=#list>#</a></h3><p>一组单词或者使用双引号或大括号可以用来表示一个简单的列表</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-tcl data-lang=tcl><span style=display:flex><span><span style=color:#75715e>#!/usr/bin/tclsh
+</span></span></span><span style=display:flex><span><span style=color:#75715e>
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#66d9ef>set</span> myVariable <span style=color:#66d9ef>{</span>red green blue<span style=color:#66d9ef>}</span>
+</span></span><span style=display:flex><span>puts <span style=color:#66d9ef>[</span>lindex $myVariable <span style=color:#ae81ff>2</span><span style=color:#66d9ef>]</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>set</span> myVariable <span style=color:#e6db74>&#34;red green blue&#34;</span>
+</span></span><span style=display:flex><span>puts <span style=color:#66d9ef>[</span>lindex $myVariable <span style=color:#ae81ff>1</span><span style=color:#66d9ef>]</span>
+</span></span></code></pre></div><blockquote><p>blue
+green</p></blockquote><h3 id=关联数组>关联数组
+<a class=anchor href=#%e5%85%b3%e8%81%94%e6%95%b0%e7%bb%84>#</a></h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-tcl data-lang=tcl><span style=display:flex><span><span style=color:#75715e>#!/usr/bin/tclsh
+</span></span></span><span style=display:flex><span><span style=color:#75715e>
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#66d9ef>set</span>  marks<span style=color:#66d9ef>(</span>english<span style=color:#66d9ef>)</span> <span style=color:#ae81ff>80</span>
+</span></span><span style=display:flex><span>puts $marks<span style=color:#66d9ef>(</span>english<span style=color:#66d9ef>)</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>set</span>  marks<span style=color:#66d9ef>(</span>mathematics<span style=color:#66d9ef>)</span> <span style=color:#ae81ff>90</span>
+</span></span><span style=display:flex><span>puts $marks<span style=color:#66d9ef>(</span>mathematics<span style=color:#66d9ef>)</span>
+</span></span></code></pre></div><blockquote><p>80 90</p></blockquote><h2 id=参考-5>参考
+<a class=anchor href=#%e5%8f%82%e8%80%83-5>#</a></h2><p><a href="https://www.yiibai.com/tcl/tcl_data_types.html#:~:text=%e5%8e%9f%e5%a7%8b%e6%95%b0%e6%8d%ae%e7%b1%bb%e5%9e%8b%e5%9c%a8Tcl">TCL数据类型 - Tcl教程 (yiibai.com)</a></p><h1 id=cuda>CUDA
+<a class=anchor href=#cuda>#</a></h1><h2 id=简介-1>简介
+<a class=anchor href=#%e7%ae%80%e4%bb%8b-1>#</a></h2><h3 id=什么是cuda>什么是CUDA
+<a class=anchor href=#%e4%bb%80%e4%b9%88%e6%98%afcuda>#</a></h3><p>CUDA建立在NVIDIA的GPU上的一个通用并行计算平台和编程模型</p><h3 id=gpu性能指标>GPU性能指标
+<a class=anchor href=#gpu%e6%80%a7%e8%83%bd%e6%8c%87%e6%a0%87>#</a></h3><ul><li>核心数：为GPU提供计算能力的硬件单元，核心数量越多，可并行运算的线程数量也就越多</li><li>GPU显存容量</li><li>GPU计算峰值：代表GPU的最大计算能力</li><li>显存带宽：运算单元与显存之间的通信速率</li></ul><p>下图由GPT生成：</p><p><img src=assets/image-20241124215537149.png alt=image-20241124215537149></p><p><img src=assets/image-20241124215706595.png alt=image-20241124215706595></p><h3 id=架构>架构
+<a class=anchor href=#%e6%9e%b6%e6%9e%84>#</a></h3><p><img src=assets/image-20241124210526461.png alt=image-20241124210526461></p><ul><li>控制器：</li><li>算数逻辑单元</li><li>缓存器</li><li>动态随机存取储存器</li></ul><p><img src=assets/image-20241124215841653.png alt=image-20241124215841653></p><h3 id=开发环境>开发环境
+<a class=anchor href=#%e5%bc%80%e5%8f%91%e7%8e%af%e5%a2%83>#</a></h3><p>可以用C++或python</p><p><img src=assets/image-20241124220854342.png alt=image-20241124220854342></p><p><img src=assets/image-20241124220911844.png alt=image-20241124220911844></p><h2 id=command>command
+<a class=anchor href=#command>#</a></h2><ul><li><p><code>nvidia-smi</code></p><p><img src=assets/image-20241124221507821.png alt=image-20241124221507821></p><p>显存存满了GPU不一定在高速工作</p></li><li><p><code>nvidia-smi -q</code>:</p><p>显示显卡的详细信息</p></li><li><p><code>nvidia-smi -q -i 0</code>:多卡下，看具体是哪一块显卡</p></li><li><p><code>nvidia-smi -q -i 0 -d MEMORY</code>:具体看MEMORY的信息</p></li></ul><h2 id=basic-1>basic
+<a class=anchor href=#basic-1>#</a></h2><h3 id=核函数kernel-function>核函数(Kernel function)
+<a class=anchor href=#%e6%a0%b8%e5%87%bd%e6%95%b0kernel-function>#</a></h3><p>主机对设备的调用是通过核函数进行的</p><p>__global__和void的书写和函数是两个重要的规则</p><ul><li>核函数<strong>只能访问GPU内存</strong><ul><li>CPU与GPU是无法相互直接访问各自内存的</li><li>通过PCIE进行相互访问</li></ul></li><li>核函数不能使用变<strong>长参数</strong></li><li>核函数不能使用<strong>静态变量</strong></li><li>核函数不能使用<strong>函数指针</strong></li><li>核函数具有<strong>异步性</strong><ul><li>CPU主机无法控制GPU设备的执行</li><li>CPU主机不会等待核函数执行完毕</li><li>所以我们需要显示的调用同步函数同步主机CPU</li></ul></li><li>核函数不支持C++的iostream, 要使用printf来显示<ul><li>为什么可以使用printf?</li></ul></li><li>一个helloworld核函数</li></ul><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c++ data-lang=c++><span style=display:flex><span><span style=color:#75715e>//声明
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>__global__ <span style=color:#66d9ef>void</span> <span style=color:#a6e22e>hello_from_gpu</span>()
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    printf(<span style=color:#e6db74>&#34;Hello World from the the GPU</span><span style=color:#ae81ff>\n</span><span style=color:#e6db74>&#34;</span>);
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>//调用
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>hello_from_gpu<span style=color:#f92672>&lt;&lt;&lt;</span><span style=color:#ae81ff>1</span>, <span style=color:#ae81ff>1</span><span style=color:#f92672>&gt;&gt;&gt;</span>(); <span style=color:#75715e>//&lt;&lt;&lt;grid_size, block_size&gt;&gt;&gt;指定线程块和线程数量
+</span></span></span></code></pre></div><h3 id=同步>同步
+<a class=anchor href=#%e5%90%8c%e6%ad%a5>#</a></h3><p>使用原因：CPU主机不会等待核函数执行完毕</p><ul><li><code>cudaDeviceSynchronize()</code></li></ul><h2 id=线程模型>线程模型
+<a class=anchor href=#%e7%ba%bf%e7%a8%8b%e6%a8%a1%e5%9e%8b>#</a></h2><p><img src=assets/image-20241124224740792.png alt=image-20241124224740792></p><p><strong>grid->block->thread</strong></p><ul><li>线程分块是逻辑上的划分， <strong>物理上线程不分块</strong></li><li>最大允许线程块大小： 1024</li><li>最大允许网格大小： 231 - 1 （针对一维网格）</li></ul><h3 id=一维线程模型>一维线程模型
+<a class=anchor href=#%e4%b8%80%e7%bb%b4%e7%ba%bf%e7%a8%8b%e6%a8%a1%e5%9e%8b>#</a></h3><p><img src=assets/image-20241124230211667.png alt=image-20241124230211667></p><h4 id=8个线程helloworld>8个线程helloworld
+<a class=anchor href=#8%e4%b8%aa%e7%ba%bf%e7%a8%8bhelloworld>#</a></h4><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c++ data-lang=c++><span style=display:flex><span><span style=color:#75715e>#include</span> <span style=color:#75715e>&lt;stdio.h&gt;</span><span style=color:#75715e>
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>
+</span></span><span style=display:flex><span>__global__ <span style=color:#66d9ef>void</span> <span style=color:#a6e22e>hello_from_gpu</span>()
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>const</span> <span style=color:#66d9ef>int</span> bid <span style=color:#f92672>=</span> blockIdx.x;
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>const</span> <span style=color:#66d9ef>int</span> tid <span style=color:#f92672>=</span> threadIdx.x;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>const</span> <span style=color:#66d9ef>int</span> id <span style=color:#f92672>=</span> threadIdx.x <span style=color:#f92672>+</span> blockIdx.x <span style=color:#f92672>*</span> blockDim.x; 
+</span></span><span style=display:flex><span>    printf(<span style=color:#e6db74>&#34;Hello World from block %d and thread %d, global id %d</span><span style=color:#ae81ff>\n</span><span style=color:#e6db74>&#34;</span>, bid, tid, id);
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>int</span> <span style=color:#a6e22e>main</span>(<span style=color:#66d9ef>void</span>)
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    hello_from_gpu<span style=color:#f92672>&lt;&lt;&lt;</span><span style=color:#ae81ff>2</span>, <span style=color:#ae81ff>4</span><span style=color:#f92672>&gt;&gt;&gt;</span>();
+</span></span><span style=display:flex><span>    cudaDeviceSynchronize();
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#ae81ff>0</span>;
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><blockquote><p>Hello World from block 1 and thread 0, global id 4
+Hello World from block 1 and thread 1, global id 5
+Hello World from block 1 and thread 2, global id 6
+Hello World from block 1 and thread 3, global id 7
+Hello World from block 0 and thread 0, global id 0
+Hello World from block 0 and thread 1, global id 1
+Hello World from block 0 and thread 2, global id 2
+Hello World from block 0 and thread 3, global id 3</p></blockquote><h3 id=多维线程模型>多维线程模型
+<a class=anchor href=#%e5%a4%9a%e7%bb%b4%e7%ba%bf%e7%a8%8b%e6%a8%a1%e5%9e%8b>#</a></h3><p>cuda最多3维度</p><p><img src=assets/image-20241124231042656.png alt=image-20241124231042656></p><p><img src=assets/image-20241124231118958.png alt=image-20241124231118958></p><p>gridDim和blockDim没有指定的维度默认为1：</p><p><img src=assets/image-20241124231733142.png alt=image-20241124231733142></p><p><strong>线程块总数不能超过1024</strong></p><h4 id=线程index计算>线程index计算
+<a class=anchor href=#%e7%ba%bf%e7%a8%8bindex%e8%ae%a1%e7%ae%97>#</a></h4><p><img src=assets/image-20241124232130150.png alt=image-20241124232130150></p><p><img src=assets/image-20241124232306410.png alt=image-20241124232306410>
+<img src=assets/image-20241124232612592.png alt=image-20241124232612592></p><p><img src=assets/image-20241124232624025.png alt=image-20241124232624025></p><h2 id=nvcc>nvcc
+<a class=anchor href=#nvcc>#</a></h2><h3 id=简介-2>简介
+<a class=anchor href=#%e7%ae%80%e4%bb%8b-2>#</a></h3><p>类似gcc, 用于编译.cu文件</p><h3 id=原理-1>原理
+<a class=anchor href=#%e5%8e%9f%e7%90%86-1>#</a></h3><p><img src=assets/image-20241124233519108.png alt=image-20241124233519108></p><ul><li>nvcc分离全部源代码为： （1） 主机代码 （2） 设备代码</li><li>nvcc先将设备代码编译为<strong>PTX（Parallel Thread Execution）</strong> 伪汇编代码， 再将PTX代码编译为二进制的<strong>cubin</strong>目标代码</li><li>在将源代码编译为 PTX 代码时， 需要用选项**-arch=compute_XY<strong>指定一个</strong>虚拟架构**的计算能力，用以确定代码中能够使用的CUDA功能。</li><li>在将PTX代码编译为cubin代码时， 需要用选项**-code=sm_XY<strong>指定一个</strong>真实架构**的计算能力， 用以确定可执行文件能够使用的GPU。</li></ul><h4 id=ptx>PTX
+<a class=anchor href=#ptx>#</a></h4><ul><li>PTX（ Parallel Thread Execution） 是CUDA平台为基于GPU的通用计算而定义的虚拟机和指令集</li><li>可以适配更多的GPU，C/C++源码转化为PTX这一步骤与GPU<strong>硬件无关</strong></li></ul><h3 id=flow>flow
+<a class=anchor href=#flow>#</a></h3><p><img src=assets/image-20241124234028186.png alt=image-20241124234028186></p><h3 id=command-1>command
+<a class=anchor href=#command-1>#</a></h3><p><code>nvcc -arch=compute_x1 -code=sm_x2 file.cu -o file_binary -run</code></p><ul><li><p>-o 输出binary</p></li><li><p>-arch=compute_XY</p><ul><li>XY： 第一个数字X代表计算能力的主版本号， 第二个数字Y代表计算能力的次版本号</li><li><img src=assets/image-20241124235011510.png alt=image-20241124235011510></li><li>可以理解为对显卡版本的最低要求</li></ul></li><li><p>-code=sm_XY</p><ul><li><p>XY： 第一个数字X代表计算能力的主版本号， 第二个数字Y代表计算能力的次版本号</p></li><li><p>二进制cubin代码， 大版本之间不兼容 ，必须对应自己的GPU</p></li><li><p>指定真实架构计算能力的时候必须指定虚拟架构计算能力</p></li><li><p>定的真实架构能力必须大于或等于虚拟架构能力</p><p><img src=assets/image-20241124235204324.png alt=image-20241124235204324></p></li><li><p>真实架构小版本之间是兼容的</p></li></ul></li><li><p>-gencode arch=compute_XY –code=sm_XY</p><ul><li>使得编译出来的可执行文件可以在多GPU中执行</li><li><img src=assets/image-20241124235903422.png alt=image-20241124235903422></li><li>执行上述指令必须CUDA版本支持<strong>7.0</strong>计算能力， 否则会报错</li></ul></li><li><p>-arch=sm_XY</p></li></ul><h2 id=计算能力>计算能力
+<a class=anchor href=#%e8%ae%a1%e7%ae%97%e8%83%bd%e5%8a%9b>#</a></h2><p>不同版本CUDA编译器在编译CUDA代码时， 都有一个默认计算能力</p><p><img src=assets/image-20241125000235933.png alt=image-20241125000235933></p><h2 id=gpu架构>GPU架构
+<a class=anchor href=#gpu%e6%9e%b6%e6%9e%84>#</a></h2><p>不同的GPU架构之间, GPU指令集会有较大的差异，因此编译出的<strong>二进制可执行文件在不同的架构之间是不可以混用的</strong></p><ul><li>例如为帕斯卡GPU编译的扩大应用程序，很可能无法在福特GPU上运行</li></ul><p><img src=assets/image-20241124234346389.png alt=image-20241124234346389></p><p><img src=assets/image-20241124234356373.png alt=image-20241124234356373></p><h2 id=torch>torch
+<a class=anchor href=#torch>#</a></h2><p>ATen库</p><h3 id=性能对比>性能对比
+<a class=anchor href=#%e6%80%a7%e8%83%bd%e5%af%b9%e6%af%94>#</a></h3><p><a href=https://pytorch.org/tutorials/advanced/cpp_extension.html>LLTM上的对比</a>:</p><p><img src=assets/image-20241210111719619.png alt=image-20241210111719619></p><h2 id=tutorial>tutorial
+<a class=anchor href=#tutorial>#</a></h2><h3 id=1-introduction>1. Introduction
+<a class=anchor href=#1-introduction>#</a></h3><p>While the CPU is designed to excel at executing a sequence of operations, called a <em>thread</em>, as fast as possible and can execute a few tens of these threads in parallel, the GPU is designed to excel at executing thousands of them in parallel (amortizing the slower single-thread performance to achieve greater throughput).</p><p>GPU专门用于高度并行计算，因此设计了<strong>更多的晶体管用于数据处理，而不是数据缓存和流量控制</strong>。</p><p><img src=assets/image-20250208140810700.png alt=image-20250208140810700></p><p>整体架构还是一样的，只是各个模块的量不一样？</p><p>GPU缓存较少，浮点计算单元较多</p><p>Applications with a high degree of parallelism can exploit this massively parallel nature of the GPU to achieve higher performance than on the CPU.</p><h4 id=a-scalable-programming-mode>A Scalable Programming Mode
+<a class=anchor href=#a-scalable-programming-mode>#</a></h4><p>At its core are three key abstractions — <strong>a hierarchy of thread groups, shared memories, and barrier synchronization</strong> — that are simply exposed to the programmer as a minimal set of language extensions.</p><h3 id=2-programming-model>2. Programming Model
+<a class=anchor href=#2-programming-model>#</a></h3><h4 id=kernels>Kernels
+<a class=anchor href=#kernels>#</a></h4><h2 id=install-1>install
+<a class=anchor href=#install-1>#</a></h2><ul><li><a href="https://www.bilibili.com/video/BV1sM4y1x7of?spm_id_from=333.788.videopod.episodes&amp;vd_source=ea5f077dc692dc32725d05ff92da61a5&amp;p=3">wsl下的安装</a></li><li><a href=https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html>CUDA C++ Programming Guide</a></li><li><a href=https://docs.nvidia.com/cuda/index.html#cuda-toolkit-documentation-v12-8>CUDA 所有相关官方文档</a></li><li>An extensive description of CUDA C++ is given in
+<a href=https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#programming-interface>Programming Interface</a>.</li></ul><h2 id=参考-6>参考
+<a class=anchor href=#%e5%8f%82%e8%80%83-6>#</a></h2><ol><li><a href=https://github.com/sangyc10/CUDA-code>sangyc10/CUDA-code</a></li></ol><h1 id=np问题>NP问题
+<a class=anchor href=#np%e9%97%ae%e9%a2%98>#</a></h1><p><img src=assets/image-20241007154028698.png alt=image-20241007154028698></p><h2 id=基本概念>基本概念：
+<a class=anchor href=#%e5%9f%ba%e6%9c%ac%e6%a6%82%e5%bf%b5>#</a></h2><p><strong>约化：</strong></p><p><img src=assets/image-20241114152215359.png alt=image-20241114152215359></p><p><strong>多项式</strong></p><p><img src=assets/image-20241114152322930.png alt=image-20241114152322930></p><h2 id=p问题>P问题
+<a class=anchor href=#p%e9%97%ae%e9%a2%98>#</a></h2><p>定义:一个可以在多项式时间复杂度内解决的问题。
+例如:n个数的排序问题(不超过0(n^2^))</p><h2 id=np问题-1>NP问题
+<a class=anchor href=#np%e9%97%ae%e9%a2%98-1>#</a></h2><p>定义:可以在多项式的时间里<strong>验证</strong>一个解的问题。即给出一个答案，可以很快地(在多项式时间内)验证这个答案是对的还是错的，但是<strong>不一定能在多项式时间内求出正确的解</strong>。</p><p>举例：</p><p>1.数独问题：</p><p><img src=assets/image-20241114152803989.png alt=image-20241114152803989></p><p><img src=assets/image-20241114152837257.png alt=image-20241114152837257></p><p>2.hamilton问题：</p><p><img src=assets/image-20241114153556169.png alt=image-20241114153556169></p><p><img src=assets/image-20241114153620362.png alt=image-20241114153620362></p><p><img src=assets/image-20241114152654619.png alt=image-20241114152654619></p><h2 id=np-hard>NP-hard
+<a class=anchor href=#np-hard>#</a></h2><p>定义:任意NP问题可以在多项式时间内约化成该问题即为了解决NP问题A，先将问题A约化为另一个问题B，解决问题B同时也间接解决了问题A。问题B就是一个NP难问题</p><p>举例：旅行商最短路径问题</p><p>设一个推销员需要从香港出发，经过广州，北京，上海，…，等n个城市，最后返回香港。 任意两个城市之间都有飞机直达，但双向的票价不等。求总路费最少的行程安排。</p><p>分析:想要知道所有方案中花费最少的，必须检查所有可能的旅行安排才能找到，即**(n-1)!种<strong>方案，很显然这</strong>不是P问题（不是多项式）<strong>。给出任意一个行程安排，你能算出它的总路费，但</strong>无法在多项式时间内验证这条路是否是最短路**。所以不是NP问题。（下图纯绿色部分）</p><p><img src=assets/image-20241114153533432.png alt=image-20241114153533432></p><p><img src=assets/image-20241114153410035.png alt=image-20241114153410035></p><h2 id=np-complete问题-1>NP-Complete问题
+<a class=anchor href=#np-complete%e9%97%ae%e9%a2%98-1>#</a></h2><p>定义:所有<strong>既是NP问题，又是NP难问题</strong>的问题
+即一个NP问题，任意的NP问题可以约化到它:</p><p>NPC问题只能暴力求解？</p><p>举例：</p><p>旅行商问题（限制花费）</p><p>设一个推销员需 要从香港出发，经过广州，北京，上海，…，等n个城市，最后返回香港。 任意两个城市之间都有飞机直达，但双向的票价不等。现在假设公司给报销C块钱问是否存在一个行程安排，使得他能遍历所有城市，而且总的路费小于C?</p><p><img src=assets/image-20241114154643484.png alt=image-20241114154643484></p><p><img src=assets/image-20241114154501370.png alt=image-20241114154501370></p><h1 id=python和cc的区别>python和c/c++的区别
+<a class=anchor href=#python%e5%92%8ccc%e7%9a%84%e5%8c%ba%e5%88%ab>#</a></h1><h2 id=主要区别><strong>主要区别</strong>
+<a class=anchor href=#%e4%b8%bb%e8%a6%81%e5%8c%ba%e5%88%ab>#</a></h2><h3 id=1-性能><strong>1. 性能</strong>
+<a class=anchor href=#1-%e6%80%a7%e8%83%bd>#</a></h3><h4 id=c-性能优势><strong>C++ 性能优势</strong>
+<a class=anchor href=#c-%e6%80%a7%e8%83%bd%e4%bc%98%e5%8a%bf>#</a></h4><ol><li><p>编译型语言</p><p>：</p><ul><li>C++ 是编译型语言，代码在执行前被编译成机器码，因此运行时不需要额外的翻译步骤，执行速度非常快。</li></ul></li><li><p>手动内存管理</p><p>：</p><ul><li>C++ 提供对内存的直接控制（如 <code>new/delete</code> 或 <code>malloc/free</code>），允许开发者优化性能。</li></ul></li><li><p>零运行时开销</p><p>：</p><ul><li>C++ 不依赖虚拟机，运行时没有垃圾回收器等额外的开销。</li></ul></li><li><p>硬件亲和性</p><p>：</p><ul><li>C++ 可以直接控制硬件资源（如寄存器、指令级优化），这在需要高性能的场景（如嵌入式系统、游戏引擎）中非常重要。</li></ul></li></ol><h4 id=python-性能劣势><strong>Python 性能劣势</strong>
+<a class=anchor href=#python-%e6%80%a7%e8%83%bd%e5%8a%a3%e5%8a%bf>#</a></h4><ol><li><p>解释型语言</p><p>：</p><ul><li>Python 是解释型语言，代码需要在运行时由解释器（如 CPython）逐行翻译成机器码，这会显著降低运行速度。</li></ul></li><li><p>动态类型系统</p><p>：</p><ul><li>Python 的动态类型检查在运行时执行，增加了额外的开销。</li></ul></li><li><p>垃圾回收</p><p>：</p><ul><li>Python 使用自动垃圾回收器（如引用计数和标记清除），虽然减少了内存管理的复杂性，但增加了运行时负担。</li></ul></li><li><p>全局解释器锁 (GIL)</p><p>：</p><ul><li>Python 的多线程性能受限于 GIL，无法充分利用多核 CPU，影响计算密集型任务的效率。</li></ul></li></ol><h4 id=典型性能对比><strong>典型性能对比</strong>
+<a class=anchor href=#%e5%85%b8%e5%9e%8b%e6%80%a7%e8%83%bd%e5%af%b9%e6%af%94>#</a></h4><ul><li><strong>计算密集型任务</strong>：C++ 通常比 Python 快 10~100 倍。</li><li><strong>I/O 密集型任务</strong>：差距较小，但 C++ 仍略占优势。</li><li><strong>优化潜力</strong>：C++ 提供更低级别的优化工具，性能可以进一步提升。</li></ul><hr><h3 id=2-开发效率><strong>2. 开发效率</strong>
+<a class=anchor href=#2-%e5%bc%80%e5%8f%91%e6%95%88%e7%8e%87>#</a></h3><ul><li><p>Python 优势</p><p>：</p><ul><li>简洁的语法，开发效率高。</li><li>动态类型和丰富的标准库适合快速原型开发。</li></ul></li><li><p>C++ 劣势</p><p>：</p><ul><li>语法复杂（如模板、指针管理）。</li><li>手动内存管理增加开发难度。</li></ul></li></ul><hr><h3 id=3-类型系统><strong>3. 类型系统</strong>
+<a class=anchor href=#3-%e7%b1%bb%e5%9e%8b%e7%b3%bb%e7%bb%9f>#</a></h3><ul><li><strong>C++</strong>：静态类型语言，变量类型在编译时确定，提供更好的错误检查和性能优化。</li><li><strong>Python</strong>：动态类型语言，变量类型在运行时确定，灵活性高但容易导致运行时错误。</li></ul><hr><h3 id=4-内存管理><strong>4. 内存管理</strong>
+<a class=anchor href=#4-%e5%86%85%e5%ad%98%e7%ae%a1%e7%90%86>#</a></h3><ul><li><strong>C++</strong>：支持手动内存分配和释放，适合需要精准控制内存的场景，但容易出现内存泄漏或悬挂指针问题。</li><li><strong>Python</strong>：自动垃圾回收，降低了内存管理复杂性，但会带来性能损耗。</li></ul><hr><h3 id=5-库支持><strong>5. 库支持</strong>
+<a class=anchor href=#5-%e5%ba%93%e6%94%af%e6%8c%81>#</a></h3><ul><li><strong>C++</strong>：广泛支持高性能库（如 STL、Boost），适合底层开发。</li><li><strong>Python</strong>：丰富的第三方库，尤其在数据科学（NumPy、Pandas）、机器学习（TensorFlow、PyTorch）领域占据主导地位。</li></ul><hr><h3 id=6-使用场景><strong>6. 使用场景</strong>
+<a class=anchor href=#6-%e4%bd%bf%e7%94%a8%e5%9c%ba%e6%99%af>#</a></h3><h4 id=c-适用场景><strong>C++ 适用场景</strong>
+<a class=anchor href=#c-%e9%80%82%e7%94%a8%e5%9c%ba%e6%99%af>#</a></h4><ul><li>高性能需求：游戏开发、嵌入式系统、操作系统、实时应用。</li><li>硬件控制：与硬件交互的系统。</li></ul><h4 id=python-适用场景><strong>Python 适用场景</strong>
+<a class=anchor href=#python-%e9%80%82%e7%94%a8%e5%9c%ba%e6%99%af>#</a></h4><ul><li>快速开发：脚本工具、原型开发。</li><li>数据科学和机器学习：开发速度比性能更重要。</li><li>自动化任务：如 Web 爬虫和测试。</li></ul><hr><h2 id=性能优化方法><strong>性能优化方法</strong>
+<a class=anchor href=#%e6%80%a7%e8%83%bd%e4%bc%98%e5%8c%96%e6%96%b9%e6%b3%95>#</a></h2><h4 id=1-python-提高性能的方法><strong>1. Python 提高性能的方法</strong>
+<a class=anchor href=#1-python-%e6%8f%90%e9%ab%98%e6%80%a7%e8%83%bd%e7%9a%84%e6%96%b9%e6%b3%95>#</a></h4><ul><li>使用 JIT 编译器（如 PyPy）代替 CPython。</li><li>关键代码用 C/C++ 编写，并通过扩展（如 Cython、SWIG）调用。</li><li>使用并行库（如 multiprocessing）绕过 GIL。</li></ul><h4 id=2-c-提高开发效率的方法><strong>2. C++ 提高开发效率的方法</strong>
+<a class=anchor href=#2-c-%e6%8f%90%e9%ab%98%e5%bc%80%e5%8f%91%e6%95%88%e7%8e%87%e7%9a%84%e6%96%b9%e6%b3%95>#</a></h4><ul><li>使用现代 C++（如 C++11/14/17）特性（如智能指针、自动类型推导）。</li><li>借助库（如 Boost）减少手动开发复杂性。</li></ul><hr><h2 id=总结-1><strong>总结</strong>
+<a class=anchor href=#%e6%80%bb%e7%bb%93-1>#</a></h2><table><thead><tr><th>特性</th><th><strong>C++</strong></th><th><strong>Python</strong></th></tr></thead><tbody><tr><td><strong>性能</strong></td><td>高，适合高性能需求</td><td>较低，适合快速开发</td></tr><tr><td><strong>开发效率</strong></td><td>较低，语法复杂</td><td>高，语法简洁</td></tr><tr><td><strong>类型系统</strong></td><td>静态类型，编译时检查</td><td>动态类型，运行时检查</td></tr><tr><td><strong>内存管理</strong></td><td>手动管理，精准控制</td><td>自动管理，简单易用</td></tr><tr><td><strong>生态系统</strong></td><td>底层开发库丰富，适合高性能应用</td><td>第三方库广泛，适合数据科学与快速开发</td></tr><tr><td><strong>适用场景</strong></td><td>游戏开发、嵌入式系统、实时应用</td><td>数据分析、机器学习、脚本工具</td></tr></tbody></table><p>对于需要<strong>高性能</strong>或与硬件交互的任务，C++ 是更好的选择；而 Python 则适合对开发效率要求较高的场景，如快速原型、数据分析和机器学习。</p></article><footer class=book-footer><div class="flex flex-wrap justify-between"><div><a class="flex align-center" href=https://github.com/alex-shpak/hugo-book/commit/867a96decfd822b12870ebe14a551d1f46c8f43f title='最后修改者 pxhg02 | 二月 20, 2025' target=_blank rel=noopener><img src=/svg/calendar.svg class=book-icon alt>
+<span>二月 20, 2025</span></a></div><div><a class="flex align-center" href=https://github.com/alex-shpak/hugo-book/edit/main/exampleSite/content.zh/docs/Other/Program.md target=_blank rel=noopener><img src=/svg/edit.svg class=book-icon alt>
+<span>编辑本页</span></a></div></div><script>(function(){function e(e){const t=window.getSelection(),n=document.createRange();n.selectNodeContents(e),t.removeAllRanges(),t.addRange(n)}document.querySelectorAll("pre code").forEach(t=>{t.addEventListener("click",function(){if(window.getSelection().toString())return;e(t.parentElement),navigator.clipboard&&navigator.clipboard.writeText(t.parentElement.textContent)})})})()</script></footer><div class=book-comments></div><label for=menu-control class="hidden book-menu-overlay"></label></div><aside class=book-toc><div class=book-toc-content><nav id=TableOfContents><ul><li><a href=#cc>C/C++</a><ul><li><a href=#key-word>key word</a><ul><li><a href=#extern>extern</a></li><li><a href=#register>register</a></li><li><a href=#union>union</a></li><li><a href=#volatile>volatile</a></li><li><a href=#c-only-keywords>C++ only keywords</a></li></ul></li><li><a href=#class>class</a></li><li><a href=#左右值引用>左/右值引用</a><ul><li><a href=#左值引用>左值引用&</a></li><li><a href=#右值引用>右值引用&&</a></li></ul></li><li><a href=#指针>指针</a><ul><li><a href=#野指针和空指针>野指针和空指针</a></li><li><a href=#指针的魅力>指针的魅力</a></li><li><a href=#直接存储对象对象实例>直接存储对象（对象实例）</a></li><li><a href=#存储对象指针>存储对象指针</a></li><li><a href=#选择建议>选择建议</a></li></ul></li><li><a href=#vector数组链表与栈堆>vector&数组&链表与栈&堆</a><ul><li><a href=#数组>数组</a></li><li><a href=#智能指针>智能指针</a></li><li><a href=#内存泄漏悬空指针>内存泄漏&悬空指针</a></li><li><a href=#unique_ptr>unique_ptr</a></li><li><a href=#shared_ptr>shared_ptr</a></li><li><a href=#bugs>Bugs</a></li><li><a href=#参考>参考</a></li></ul></li><li><a href=#堆栈stack和堆heap>堆栈(<strong>Stack</strong>)和堆(Heap)</a><ul><li><a href=#内存分配>内存分配</a></li><li><a href=#数据结构>数据结构</a></li><li><a href=#参考-1>参考</a></li></ul></li><li><a href=#静态和动态链接>静态和动态链接</a><ul><li><a href=#静态链接>静态链接</a></li><li><a href=#动态链接>动态链接</a></li><li><a href=#参考-2>参考</a></li></ul></li><li><a href=#多线程>多线程</a><ul><li><a href=#进程与线程的区别>进程与线程的区别</a></li><li><a href=#并发和并行>并发和并行</a></li><li><a href=#特点-3>特点</a></li><li><a href=#stdthread性能分析>std::thread性能分析</a></li><li><a href=#多线程真的能加速>多线程真的能加速？</a></li><li><a href=#this_thread>this_thread</a></li><li><a href=#多个线程操作同一个变量>多个线程操作同一个变量</a></li><li><a href=#async>async</a></li><li><a href=#多线程与核心>多线程与核心</a></li></ul></li><li><a href=#speedup>speedup</a><ul><li><a href=#分析工具>分析工具</a></li><li><a href=#总结>总结</a></li></ul></li><li><a href=#boost>Boost</a><ul><li><a href=#简介>简介</a></li><li><a href=#参考-3>参考</a></li></ul></li><li><a href=#odb>ODB</a></li><li><a href=#buglist>buglist</a></li></ul></li><li><a href=#systemc>SystemC</a><ul><li><a href=#环境配置>环境配置</a><ul><li><a href=#eda-playground>EDA Playground</a></li><li><a href=#local>Local</a></li><li><a href=#other>other</a></li></ul></li></ul></li><li><a href=#complexity>Complexity</a><ul><li><a href=#time-complexity>Time Complexity</a><ul><li><a href=#举例-4>举例</a></li></ul></li><li><a href=#space-complexity>Space Complexity</a><ul><li><a href=#复杂度分类>复杂度分类</a></li><li><a href=#参考-4>参考</a></li></ul></li></ul></li><li><a href=#python>Python</a><ul><li><a href=#print>print</a></li><li><a href=#class-1>class</a><ul><li><a href=#basic>basic</a></li><li><a href=#reset>reset</a></li><li><a href=#__init__py><code>__init__.py</code></a></li><li><a href=#args-和-kwds><code>*args</code> 和 <code>**kwds</code></a></li></ul></li><li><a href=#pytorch>Pytorch</a><ul><li><a href=#ema>ema</a></li></ul></li><li><a href=#dgl>DGL</a></li><li><a href=#tensorflow>Tensorflow</a><ul><li><a href=#基本操作>基本操作</a></li><li><a href=#自动求导>自动求导</a></li><li><a href=#模型与层>模型与层</a></li><li><a href=#变量的恢复和保存>变量的恢复和保存</a></li><li><a href=#训练过程可视化>训练过程可视化</a></li><li><a href=#gpu使用>GPU使用</a></li><li><a href=#install>install</a></li><li><a href=#reference>reference</a></li></ul></li><li><a href=#collections>collections</a><ul><li><a href=#defaultdict>defaultdict</a></li><li><a href=#nametuple>NameTuple</a></li></ul></li><li><a href=#map>map</a></li></ul></li><li><a href=#tcl>TCL</a><ul><li><a href=#基本知识>基本知识</a><ul><li><a href=#list>list</a></li><li><a href=#关联数组>关联数组</a></li></ul></li><li><a href=#参考-5>参考</a></li></ul></li><li><a href=#cuda>CUDA</a><ul><li><a href=#简介-1>简介</a><ul><li><a href=#什么是cuda>什么是CUDA</a></li><li><a href=#gpu性能指标>GPU性能指标</a></li><li><a href=#架构>架构</a></li><li><a href=#开发环境>开发环境</a></li></ul></li><li><a href=#command>command</a></li><li><a href=#basic-1>basic</a><ul><li><a href=#核函数kernel-function>核函数(Kernel function)</a></li><li><a href=#同步>同步</a></li></ul></li><li><a href=#线程模型>线程模型</a><ul><li><a href=#一维线程模型>一维线程模型</a></li><li><a href=#多维线程模型>多维线程模型</a></li></ul></li><li><a href=#nvcc>nvcc</a><ul><li><a href=#简介-2>简介</a></li><li><a href=#原理-1>原理</a></li><li><a href=#flow>flow</a></li><li><a href=#command-1>command</a></li></ul></li><li><a href=#计算能力>计算能力</a></li><li><a href=#gpu架构>GPU架构</a></li><li><a href=#torch>torch</a><ul><li><a href=#性能对比>性能对比</a></li></ul></li><li><a href=#tutorial>tutorial</a><ul><li><a href=#1-introduction>1. Introduction</a></li><li><a href=#2-programming-model>2. Programming Model</a></li></ul></li><li><a href=#install-1>install</a></li><li><a href=#参考-6>参考</a></li></ul></li><li><a href=#np问题>NP问题</a><ul><li><a href=#基本概念>基本概念：</a></li><li><a href=#p问题>P问题</a></li><li><a href=#np问题-1>NP问题</a></li><li><a href=#np-hard>NP-hard</a></li><li><a href=#np-complete问题-1>NP-Complete问题</a></li></ul></li><li><a href=#python和cc的区别>python和c/c++的区别</a><ul><li><a href=#主要区别><strong>主要区别</strong></a><ul><li><a href=#1-性能><strong>1. 性能</strong></a></li><li><a href=#2-开发效率><strong>2. 开发效率</strong></a></li><li><a href=#3-类型系统><strong>3. 类型系统</strong></a></li><li><a href=#4-内存管理><strong>4. 内存管理</strong></a></li><li><a href=#5-库支持><strong>5. 库支持</strong></a></li><li><a href=#6-使用场景><strong>6. 使用场景</strong></a></li></ul></li><li><a href=#性能优化方法><strong>性能优化方法</strong></a><ul><li></li></ul></li><li><a href=#总结-1><strong>总结</strong></a></li></ul></li></ul></nav></div></aside></main></body></html>

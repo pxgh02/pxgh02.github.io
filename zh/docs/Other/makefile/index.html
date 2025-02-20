@@ -1,0 +1,470 @@
+<!doctype html><html lang=zh dir=ltr><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content="
+  Makefile
+  #
+
+xxx.mk 文件或者 Makefile 都统称为 Makefile 脚本文件
+功能：指导 Make 软件控制 arm-gcc 等工具链去编译工程文件最终得到可执行文件
+
+  
+
+  基础规则
+  #
+
+目标：依赖条件
+	命令	
+拓展
+#.mk-V0
+#根据工作原理，如果只改变其中一个文件，就只会编译这个文件
+hello: main.cpp printhello.cpp factorial.cpp
+	g++ -o hello main.cpp printhello.cpp factorial.cpp
+#.mk-V1
+#使用变量CXX、TARGET 、OBJ，同时采用不同的依赖分别编译
+#根据工作原理，如果只改变其中一个文件，就只会编译这个文件
+CXX = g++
+TARGET = hello 
+OBJ = main.o printhello.o factorial.o
+
+$(TARGET): $(OBJ)
+	$(CXX) -o $(TARGET) $(OBJ)
+
+main.o: main.cpp
+	$(CXX) -c main.cpp
+
+printhello.o: printhello.cpp
+	$(CXX) -c printhello.cpp
+
+factorial.o: factorial.cpp
+	$(CXX) -c factorial.cpp
+##.mk-V2: ALL
+#makefile 默认第一个目标文件为终极目标，生成就跑路，这时候可以用 ALL 来指定终极目标。
+CXX = g++
+TARGET = hello 
+OBJ = main.o printhello.o factorial.o
+
+ALL : $(TARGET)
+
+$(TARGET): $(OBJ)
+	$(CXX) $(OBJ) -o $(TARGET) 
+
+main.o: main.cpp
+	$(CXX) -c main.cpp
+
+printhello.o: printhello.cpp
+	$(CXX) -c printhello.cpp
+
+factorial.o: factorial.cpp
+	$(CXX) -c factorial.cpp
+#.mk-V3: wildcard & patsubst 
+src = $(wildcard ./*.c) #匹配当前工作目录下的所有.c 文件
+obj = $(patsubst %.c, %.o, $(src)) # 将参数 3 中，包含参数 1 的部分，替换为参数 2
+
+###
+CXX = g++
+TARGET = hello 
+src = $(wildcard *.cpp)
+obj = $(patsubst %.cpp, %.o, $(src))
+
+ALL : $(TARGET)
+
+
+main.o: main.cpp
+	$(CXX) -c main.cpp
+
+printhello.o: printhello.cpp
+	$(CXX) -c printhello.cpp
+
+factorial.o: factorial.cpp
+	$(CXX) -c factorial.cpp
+
+$(TARGET): $(obj)
+	$(CXX) $(obj) -o $(TARGET) 
+#.mk-V4: clean
+src = $(wildcard ./*.c) #匹配当前工作目录下的所有.c 文件
+obj = $(patsubst %.c, %.o, $(src)) # 将参数 3 中，包含参数 1 的部分，替换为参数 2
+
+###
+CXX = g++
+TARGET = hello 
+src = $(wildcard *.cpp)
+obj = $(patsubst %.cpp, %.o, $(src))
+
+ALL : $(TARGET)
+
+
+main.o: main.cpp
+	$(CXX) -c main.cpp
+
+printhello.o: printhello.cpp
+	$(CXX) -c printhello.cpp
+
+factorial.o: factorial.cpp
+	$(CXX) -c factorial.cpp
+
+$(TARGET): $(obj)
+	$(CXX) $(obj) -o $(TARGET) 
+
+clean :
+	-rm -rf $(obj) $(TARGET)# “-” ：作用是，删除不存在文件时，不报错。顺序执行结束。
+#.mk-V5: 三个自动变量
+$@	# 在规则的命令中，表示规则中的目标。
+$^	# 在规则的命令中，表示所有依赖条件。组成一个列表，以空格隔开，如果这个列表中有重复项，则去重
+$<	# 在规则的命令中，表示第一个依赖条件。如果将该变量应用在模式规则中，它可将依赖条件列表中的依赖依次取出，套用模式规则。
+
+CXX = g++
+TARGET = hello 
+src = $(wildcard *.cpp)
+obj = $(patsubst %.cpp, %.o, $(src))
+
+ALL : $(TARGET)
+
+
+main.o: main.cpp
+	$(CXX) -c $<
+
+printhello.o: printhello.cpp
+	$(CXX) -c $<
+factorial.o: factorial.cpp
+	$(CXX) -c $<
+
+$(TARGET): $(obj)
+	$(CXX) $^ -o $@ 
+
+clean :
+	-rm -rf $(obj) $(TARGET)
+#.mk-V6: 模式规则
+#要添加一个.cpp文件，不需要在 makefile 里面增加这个文件的 -o 的部分
+
+CXX = g++
+TARGET = hello 
+src = $(wildcard *.cpp)
+obj = $(patsubst %.cpp, %.o, $(src))
+
+ALL : $(TARGET)
+
+
+%.o : %.c
+	$(CXX) -c $< -o $@
+
+$(TARGET): $(obj)
+	$(CXX) $^ -o $@ 
+
+clean :
+	-rm -rf $(obj) $(TARGET)
+#.mk-V7: 静态模式规则？？
+#使用静态模式规则，就是指定模式规则给谁用，这里指定模式规则给 obj 用，以后文件多了，文件集合会有很多个，就需要指定哪个文件集合用什么规则
+
+CXX = g++
+TARGET = hello 
+src = $(wildcard *.cpp)
+obj = $(patsubst %.cpp, %.o, $(src))
+
+ALL : $(TARGET)
+
+
+$(obj) : %.o : %.c
+	$(CXX) -c $< -o $@
+
+$(TARGET): $(obj)
+	$(CXX) $^ -o $@ 
+
+clean :
+	-rm -rf $(obj) $(TARGET)
+#.mk-V8: 伪目标
+#当前文件夹下有 ALL 文件或者 clean 文件时，会导致 makefile 瘫痪，此时使用.PHONY: clean ALL
+.PHONY: clean ALL
+
+CXX = g++
+TARGET = hello 
+
+src = $(wildcard *.cpp)
+obj = $(patsubst %.cpp, %.o, $(src))
+
+ALL : $(TARGET)
+
+
+$(obj) : %.o : %.c
+	$(CXX) -c $< -o $@
+
+$(TARGET): $(obj)
+	$(CXX) $^ -o $@ 
+
+clean :
+	-rm -rf $(obj) $(TARGET)
+#.mk-V9: 文件分类
+#将上述 .cpp 文件都放到 src 目录中，.h 文件都放在 inc 目录中
+CXX = g++
+TARGET = hello
+src = $(wildcard ./src/*.cpp)
+obj = $(patsubst ./src/%.cpp, ./obj/%.o, $(src))
+
+inc_path = ./inc
+CXXFLAGS = -Wall -c -I$(inc_path)
+
+ALL : $(TARGET)
+
+./obj/%.o : ./src/%.cpp
+	$(CXX) $(CXXFLAGS) $< -o $@
+
+$(TARGET): $(obj)
+	$(CXX) $^ -o $@
+
+clean :
+	-rm -rf $(obj) $(TARGET)
+
+.PHONY: clean
+
+  make 的参数
+  #
+
+
+-n：模拟执行 make、 make clean 命令。仅输出执行过程中的命令序列，但并不执行。
+-f：指定文件执行 make 命令。 xxxx.mk
+-j：可以并行构建多个目标，加快构建速度
+-s‌ 或 ‌**&ndash;silent‌ 或 ‌&ndash;quiet**‌：不显示命令。
+
+
+  Makefile 语法
+  #
+
+使用echo进行printf"><meta name=theme-color media="(prefers-color-scheme: light)" content="#ffffff"><meta name=theme-color media="(prefers-color-scheme: dark)" content="#343a40"><meta name=color-scheme content="light dark"><meta property="og:url" content="https://pxgh02.github.io/zh/docs/Other/makefile/"><meta property="og:site_name" content="Pxmmmm"><meta property="og:title" content="Pxmmmm"><meta property="og:description" content="Makefile # xxx.mk 文件或者 Makefile 都统称为 Makefile 脚本文件
+功能：指导 Make 软件控制 arm-gcc 等工具链去编译工程文件最终得到可执行文件
+基础规则 # 目标：依赖条件命令	拓展
+#.mk-V0 #根据工作原理，如果只改变其中一个文件，就只会编译这个文件 hello: main.cpp printhello.cpp factorial.cpp g++ -o hello main.cpp printhello.cpp factorial.cpp #.mk-V1 #使用变量CXX、TARGET 、OBJ，同时采用不同的依赖分别编译 #根据工作原理，如果只改变其中一个文件，就只会编译这个文件 CXX = g++ TARGET = hello OBJ = main.o printhello.o factorial.o $(TARGET): $(OBJ) $(CXX) -o $(TARGET) $(OBJ) main.o: main.cpp $(CXX) -c main.cpp printhello.o: printhello.cpp $(CXX) -c printhello.cpp factorial.o: factorial.cpp $(CXX) -c factorial.cpp ##.mk-V2: ALL #makefile 默认第一个目标文件为终极目标，生成就跑路，这时候可以用 ALL 来指定终极目标。 CXX = g++ TARGET = hello OBJ = main.o printhello.o factorial.o ALL : $(TARGET) $(TARGET): $(OBJ) $(CXX) $(OBJ) -o $(TARGET) main.o: main.cpp $(CXX) -c main.cpp printhello.o: printhello.cpp $(CXX) -c printhello.cpp factorial.o: factorial.cpp $(CXX) -c factorial.cpp #.mk-V3: wildcard & patsubst src = $(wildcard ./*.c) #匹配当前工作目录下的所有.c 文件 obj = $(patsubst %.c, %.o, $(src)) # 将参数 3 中，包含参数 1 的部分，替换为参数 2 ### CXX = g++ TARGET = hello src = $(wildcard *.cpp) obj = $(patsubst %.cpp, %.o, $(src)) ALL : $(TARGET) main.o: main.cpp $(CXX) -c main.cpp printhello.o: printhello.cpp $(CXX) -c printhello.cpp factorial.o: factorial.cpp $(CXX) -c factorial.cpp $(TARGET): $(obj) $(CXX) $(obj) -o $(TARGET) #.mk-V4: clean src = $(wildcard ./*.c) #匹配当前工作目录下的所有.c 文件 obj = $(patsubst %.c, %.o, $(src)) # 将参数 3 中，包含参数 1 的部分，替换为参数 2 ### CXX = g++ TARGET = hello src = $(wildcard *.cpp) obj = $(patsubst %.cpp, %.o, $(src)) ALL : $(TARGET) main.o: main.cpp $(CXX) -c main.cpp printhello.o: printhello.cpp $(CXX) -c printhello.cpp factorial.o: factorial.cpp $(CXX) -c factorial.cpp $(TARGET): $(obj) $(CXX) $(obj) -o $(TARGET) clean : -rm -rf $(obj) $(TARGET)# “-” ：作用是，删除不存在文件时，不报错。顺序执行结束。 #.mk-V5: 三个自动变量 $@	# 在规则的命令中，表示规则中的目标。 $^	# 在规则的命令中，表示所有依赖条件。组成一个列表，以空格隔开，如果这个列表中有重复项，则去重 $<	# 在规则的命令中，表示第一个依赖条件。如果将该变量应用在模式规则中，它可将依赖条件列表中的依赖依次取出，套用模式规则。 CXX = g++ TARGET = hello src = $(wildcard *.cpp) obj = $(patsubst %.cpp, %.o, $(src)) ALL : $(TARGET) main.o: main.cpp $(CXX) -c $< printhello.o: printhello.cpp $(CXX) -c $< factorial.o: factorial.cpp $(CXX) -c $< $(TARGET): $(obj) $(CXX) $^ -o $@ clean : -rm -rf $(obj) $(TARGET) #.mk-V6: 模式规则 #要添加一个.cpp文件，不需要在 makefile 里面增加这个文件的 -o 的部分 CXX = g++ TARGET = hello src = $(wildcard *.cpp) obj = $(patsubst %.cpp, %.o, $(src)) ALL : $(TARGET) %.o : %.c $(CXX) -c $< -o $@ $(TARGET): $(obj) $(CXX) $^ -o $@ clean : -rm -rf $(obj) $(TARGET) #.mk-V7: 静态模式规则？？ #使用静态模式规则，就是指定模式规则给谁用，这里指定模式规则给 obj 用，以后文件多了，文件集合会有很多个，就需要指定哪个文件集合用什么规则 CXX = g++ TARGET = hello src = $(wildcard *.cpp) obj = $(patsubst %.cpp, %.o, $(src)) ALL : $(TARGET) $(obj) : %.o : %.c $(CXX) -c $< -o $@ $(TARGET): $(obj) $(CXX) $^ -o $@ clean : -rm -rf $(obj) $(TARGET) #.mk-V8: 伪目标 #当前文件夹下有 ALL 文件或者 clean 文件时，会导致 makefile 瘫痪，此时使用.PHONY: clean ALL .PHONY: clean ALL CXX = g++ TARGET = hello src = $(wildcard *.cpp) obj = $(patsubst %.cpp, %.o, $(src)) ALL : $(TARGET) $(obj) : %.o : %.c $(CXX) -c $< -o $@ $(TARGET): $(obj) $(CXX) $^ -o $@ clean : -rm -rf $(obj) $(TARGET) #.mk-V9: 文件分类 #将上述 .cpp 文件都放到 src 目录中，.h 文件都放在 inc 目录中 CXX = g++ TARGET = hello src = $(wildcard ./src/*.cpp) obj = $(patsubst ./src/%.cpp, ./obj/%.o, $(src)) inc_path = ./inc CXXFLAGS = -Wall -c -I$(inc_path) ALL : $(TARGET) ./obj/%.o : ./src/%.cpp $(CXX) $(CXXFLAGS) $< -o $@ $(TARGET): $(obj) $(CXX) $^ -o $@ clean : -rm -rf $(obj) $(TARGET) .PHONY: clean make 的参数 # -n：模拟执行 make、 make clean 命令。仅输出执行过程中的命令序列，但并不执行。 -f：指定文件执行 make 命令。 xxxx.mk -j：可以并行构建多个目标，加快构建速度 -s‌ 或 ‌**–silent‌ 或 ‌–quiet**‌：不显示命令。 Makefile 语法 # 使用echo进行printf"><meta property="og:locale" content="zh"><meta property="og:type" content="article"><meta property="article:section" content="docs"><meta property="article:modified_time" content="2025-02-20T08:28:24+00:00"><title>Makefile | Pxmmmm</title>
+<link rel=icon href=/favicon.png><link rel=manifest href=/manifest.json><link rel=canonical href=https://pxgh02.github.io/zh/docs/Other/makefile/><link rel=stylesheet href=/book.min.6c8b9d2a1fc95075ed7da46ca81060b39add8fff6741ac51259f768929281e2c.css integrity="sha256-bIudKh/JUHXtfaRsqBBgs5rdj/9nQaxRJZ92iSkoHiw=" crossorigin=anonymous><script defer src=/fuse.min.js></script><script defer src=/zh.search.min.b08d01413d975a4c380ae1a5bfe3265f5e9c5c6655f82c0481f7d419c7faba49.js integrity="sha256-sI0BQT2XWkw4CuGlv+MmX16cXGZV+CwEgffUGcf6ukk=" crossorigin=anonymous></script><script defer src=/sw.min.6f6f90fcb8eb1c49ec389838e6b801d0de19430b8e516902f8d75c3c8bd98739.js integrity="sha256-b2+Q/LjrHEnsOJg45rgB0N4ZQwuOUWkC+NdcPIvZhzk=" crossorigin=anonymous></script></head><body dir=ltr><input type=checkbox class="hidden toggle" id=menu-control>
+<input type=checkbox class="hidden toggle" id=toc-control><main class="container flex"><aside class=book-menu><div class=book-menu-content><nav><h2 class=book-brand><a class="flex align-center" href=/zh/><span>Pxmmmm</span></a></h2><div class="book-search hidden"><input type=text id=book-search-input placeholder=搜索 aria-label=搜索 maxlength=64 data-hotkeys=s/><div class="book-search-spinner hidden"></div><ul id=book-search-results></ul></div><script>document.querySelector(".book-search").classList.remove("hidden")</script><ul class=book-languages><li><input type=checkbox id=languages class=toggle>
+<label for=languages class="flex justify-between"><a role=button class="flex align-center"><img src=/svg/translate.svg class=book-icon alt=Languages>
+Chinese</a></label><ul><li><a href=/>English</a></li></ul></li></ul><ul><li><input type=checkbox id=section-a7a8fb3cc34544172ff5103ce3adf7cc class=toggle checked>
+<label for=section-a7a8fb3cc34544172ff5103ce3adf7cc class="flex justify-between"><a href=/zh/docs/Other/>Other</a></label><ul><li><a href=/zh/docs/Other/Algorithms/>Algorithms</a></li><li><a href=/zh/docs/Other/git/>Git</a></li><li><a href=/zh/docs/Other/Hardware/>Hardware</a></li><li><a href=/zh/docs/Other/linux/>Linux</a></li><li><a href=/zh/docs/Other/Literature/>Literature</a></li><li><a href=/zh/docs/Other/makefile/ class=active>Makefile</a></li><li><a href=/zh/docs/Other/network/>Network</a></li><li><a href=/zh/docs/Other/Program/>Program</a></li><li><a href=/zh/docs/Other/Tools/>Tools</a></li><li><a href=/zh/docs/Other/window/>Window</a></li><li><a href=/zh/docs/Other/Writing-PPT-Presentation/>Writing Ppt Presentation</a></li></ul></li><li><input type=checkbox id=section-546194909198d851b05dc5d16088b0b9 class=toggle>
+<label for=section-546194909198d851b05dc5d16088b0b9 class="flex justify-between"><a href=/zh/docs/Digtal/>Physical Design</a></label><ul><li><input type=checkbox id=section-9bc128912acae8559e0b27b496b7779b class=toggle>
+<label for=section-9bc128912acae8559e0b27b496b7779b class="flex justify-between"><a href=/zh/docs/Digtal/flow/EDA4PR/>EDA4PR</a></label></li><li><input type=checkbox id=section-50846ac4cdec99c8bd1f8b0417acad9a class=toggle>
+<label for=section-50846ac4cdec99c8bd1f8b0417acad9a class="flex justify-between"><a href=/zh/docs/Digtal/flow/flow/>Flow</a></label></li><li><input type=checkbox id=section-b2241e4da59f24976e354abe344e8d4f class=toggle>
+<label for=section-b2241e4da59f24976e354abe344e8d4f class="flex justify-between"><a href=/zh/docs/Digtal/Placement/placement/>Placement</a></label></li><li><input type=checkbox id=section-259735f9bf2708d778569b162c141df5 class=toggle>
+<label for=section-259735f9bf2708d778569b162c141df5 class="flex justify-between"><a href=/zh/docs/Digtal/Routing/routing2/>Routing</a></label></li><li><input type=checkbox id=section-78b8f069c0c130e55062b802fff78361 class=toggle>
+<label for=section-78b8f069c0c130e55062b802fff78361 class="flex justify-between"><a href=/zh/docs/Digtal/Routing/routing1/>Routing1</a></label></li></ul></li></ul></nav><script>(function(){var e=document.querySelector("aside .book-menu-content");addEventListener("beforeunload",function(){localStorage.setItem("menu.scrollTop",e.scrollTop)}),e.scrollTop=localStorage.getItem("menu.scrollTop")})()</script></div></aside><div class=book-page><header class=book-header><div class="flex align-center justify-between"><label for=menu-control><img src=/svg/menu.svg class=book-icon alt=Menu></label><h3>Makefile</h3><label for=toc-control><img src=/svg/toc.svg class=book-icon alt="Table of Contents"></label></div><aside class="hidden clearfix"><nav id=TableOfContents><ul><li><a href=#makefile>Makefile</a><ul><li><a href=#基础规则>基础规则</a></li><li><a href=#make-的参数>make 的参数</a></li><li><a href=#makefile-语法>Makefile 语法</a></li><li><a href=#makefile-函数>Makefile 函数</a></li><li><a href=#参考>参考</a></li></ul></li><li><a href=#cmake>CMake</a><ul><li><a href=#案例1>案例1</a></li><li><a href=#场景2>场景2</a></li></ul></li></ul></nav></aside></header><article class="markdown book-article"><h1 id=makefile>Makefile
+<a class=anchor href=#makefile>#</a></h1><p><strong>xxx.mk</strong> 文件或者 <strong>Makefile</strong> 都统称为 Makefile 脚本文件</p><p>功能：指导 Make 软件控制 arm-gcc 等工具链去编译工程文件最终得到可执行文件</p><p><img src=C:%5cUsers%5cPxmmmm.DESKTOP-G18CTQU%5cAppData%5cRoaming%5cTypora%5ctypora-user-images%5cimage-20240831224125900.png alt=image-20240831224125900></p><h2 id=基础规则>基础规则
+<a class=anchor href=#%e5%9f%ba%e7%a1%80%e8%a7%84%e5%88%99>#</a></h2><pre tabindex=0><code>目标：依赖条件
+	命令	
+</code></pre><p><strong>拓展</strong></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-makefile data-lang=makefile><span style=display:flex><span><span style=color:#75715e>#.mk-V0
+</span></span></span><span style=display:flex><span><span style=color:#75715e>#根据工作原理，如果只改变其中一个文件，就只会编译这个文件
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#a6e22e>hello</span><span style=color:#f92672>:</span> main.cpp printhello.cpp factorial.cpp
+</span></span><span style=display:flex><span>	g++ -o hello main.cpp printhello.cpp factorial.cpp
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-makefile data-lang=makefile><span style=display:flex><span><span style=color:#75715e>#.mk-V1
+</span></span></span><span style=display:flex><span><span style=color:#75715e>#使用变量CXX、TARGET 、OBJ，同时采用不同的依赖分别编译
+</span></span></span><span style=display:flex><span><span style=color:#75715e>#根据工作原理，如果只改变其中一个文件，就只会编译这个文件
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>CXX <span style=color:#f92672>=</span> g++
+</span></span><span style=display:flex><span>TARGET <span style=color:#f92672>=</span> hello 
+</span></span><span style=display:flex><span>OBJ <span style=color:#f92672>=</span> main.o printhello.o factorial.o
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>$(TARGET)</span><span style=color:#f92672>:</span> <span style=color:#66d9ef>$(</span>OBJ<span style=color:#66d9ef>)</span>
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>$(</span>CXX<span style=color:#66d9ef>)</span> -o <span style=color:#66d9ef>$(</span>TARGET<span style=color:#66d9ef>)</span> <span style=color:#66d9ef>$(</span>OBJ<span style=color:#66d9ef>)</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>main.o</span><span style=color:#f92672>:</span> main.cpp
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>$(</span>CXX<span style=color:#66d9ef>)</span> -c main.cpp
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>printhello.o</span><span style=color:#f92672>:</span> printhello.cpp
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>$(</span>CXX<span style=color:#66d9ef>)</span> -c printhello.cpp
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>factorial.o</span><span style=color:#f92672>:</span> factorial.cpp
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>$(</span>CXX<span style=color:#66d9ef>)</span> -c factorial.cpp
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-makefile data-lang=makefile><span style=display:flex><span><span style=color:#75715e>##.mk-V2: ALL
+</span></span></span><span style=display:flex><span><span style=color:#75715e>#makefile 默认第一个目标文件为终极目标，生成就跑路，这时候可以用 ALL 来指定终极目标。
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>CXX <span style=color:#f92672>=</span> g++
+</span></span><span style=display:flex><span>TARGET <span style=color:#f92672>=</span> hello 
+</span></span><span style=display:flex><span>OBJ <span style=color:#f92672>=</span> main.o printhello.o factorial.o
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>ALL </span><span style=color:#f92672>:</span> <span style=color:#66d9ef>$(</span>TARGET<span style=color:#66d9ef>)</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>$(TARGET)</span><span style=color:#f92672>:</span> <span style=color:#66d9ef>$(</span>OBJ<span style=color:#66d9ef>)</span>
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>$(</span>CXX<span style=color:#66d9ef>)</span> <span style=color:#66d9ef>$(</span>OBJ<span style=color:#66d9ef>)</span> -o <span style=color:#66d9ef>$(</span>TARGET<span style=color:#66d9ef>)</span> 
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>main.o</span><span style=color:#f92672>:</span> main.cpp
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>$(</span>CXX<span style=color:#66d9ef>)</span> -c main.cpp
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>printhello.o</span><span style=color:#f92672>:</span> printhello.cpp
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>$(</span>CXX<span style=color:#66d9ef>)</span> -c printhello.cpp
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>factorial.o</span><span style=color:#f92672>:</span> factorial.cpp
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>$(</span>CXX<span style=color:#66d9ef>)</span> -c factorial.cpp
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-makefile data-lang=makefile><span style=display:flex><span><span style=color:#75715e>#.mk-V3: wildcard &amp; patsubst 
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>src <span style=color:#f92672>=</span> <span style=color:#66d9ef>$(</span>wildcard ./*.c<span style=color:#66d9ef>)</span> <span style=color:#75715e>#匹配当前工作目录下的所有.c 文件</span>
+</span></span><span style=display:flex><span>obj <span style=color:#f92672>=</span> <span style=color:#66d9ef>$(</span>patsubst %.c, %.o, <span style=color:#66d9ef>$(</span>src<span style=color:#66d9ef>))</span> <span style=color:#75715e># 将参数 3 中，包含参数 1 的部分，替换为参数 2</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>###
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>CXX <span style=color:#f92672>=</span> g++
+</span></span><span style=display:flex><span>TARGET <span style=color:#f92672>=</span> hello 
+</span></span><span style=display:flex><span>src <span style=color:#f92672>=</span> <span style=color:#66d9ef>$(</span>wildcard *.cpp<span style=color:#66d9ef>)</span>
+</span></span><span style=display:flex><span>obj <span style=color:#f92672>=</span> <span style=color:#66d9ef>$(</span>patsubst %.cpp, %.o, <span style=color:#66d9ef>$(</span>src<span style=color:#66d9ef>))</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>ALL </span><span style=color:#f92672>:</span> <span style=color:#66d9ef>$(</span>TARGET<span style=color:#66d9ef>)</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>main.o</span><span style=color:#f92672>:</span> main.cpp
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>$(</span>CXX<span style=color:#66d9ef>)</span> -c main.cpp
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>printhello.o</span><span style=color:#f92672>:</span> printhello.cpp
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>$(</span>CXX<span style=color:#66d9ef>)</span> -c printhello.cpp
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>factorial.o</span><span style=color:#f92672>:</span> factorial.cpp
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>$(</span>CXX<span style=color:#66d9ef>)</span> -c factorial.cpp
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>$(TARGET)</span><span style=color:#f92672>:</span> <span style=color:#66d9ef>$(</span>obj<span style=color:#66d9ef>)</span>
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>$(</span>CXX<span style=color:#66d9ef>)</span> <span style=color:#66d9ef>$(</span>obj<span style=color:#66d9ef>)</span> -o <span style=color:#66d9ef>$(</span>TARGET<span style=color:#66d9ef>)</span> 
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-makefile data-lang=makefile><span style=display:flex><span><span style=color:#75715e>#.mk-V4: clean
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>src <span style=color:#f92672>=</span> <span style=color:#66d9ef>$(</span>wildcard ./*.c<span style=color:#66d9ef>)</span> <span style=color:#75715e>#匹配当前工作目录下的所有.c 文件</span>
+</span></span><span style=display:flex><span>obj <span style=color:#f92672>=</span> <span style=color:#66d9ef>$(</span>patsubst %.c, %.o, <span style=color:#66d9ef>$(</span>src<span style=color:#66d9ef>))</span> <span style=color:#75715e># 将参数 3 中，包含参数 1 的部分，替换为参数 2</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>###
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>CXX <span style=color:#f92672>=</span> g++
+</span></span><span style=display:flex><span>TARGET <span style=color:#f92672>=</span> hello 
+</span></span><span style=display:flex><span>src <span style=color:#f92672>=</span> <span style=color:#66d9ef>$(</span>wildcard *.cpp<span style=color:#66d9ef>)</span>
+</span></span><span style=display:flex><span>obj <span style=color:#f92672>=</span> <span style=color:#66d9ef>$(</span>patsubst %.cpp, %.o, <span style=color:#66d9ef>$(</span>src<span style=color:#66d9ef>))</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>ALL </span><span style=color:#f92672>:</span> <span style=color:#66d9ef>$(</span>TARGET<span style=color:#66d9ef>)</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>main.o</span><span style=color:#f92672>:</span> main.cpp
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>$(</span>CXX<span style=color:#66d9ef>)</span> -c main.cpp
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>printhello.o</span><span style=color:#f92672>:</span> printhello.cpp
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>$(</span>CXX<span style=color:#66d9ef>)</span> -c printhello.cpp
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>factorial.o</span><span style=color:#f92672>:</span> factorial.cpp
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>$(</span>CXX<span style=color:#66d9ef>)</span> -c factorial.cpp
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>$(TARGET)</span><span style=color:#f92672>:</span> <span style=color:#66d9ef>$(</span>obj<span style=color:#66d9ef>)</span>
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>$(</span>CXX<span style=color:#66d9ef>)</span> <span style=color:#66d9ef>$(</span>obj<span style=color:#66d9ef>)</span> -o <span style=color:#66d9ef>$(</span>TARGET<span style=color:#66d9ef>)</span> 
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>clean </span><span style=color:#f92672>:</span>
+</span></span><span style=display:flex><span>	-rm -rf <span style=color:#66d9ef>$(</span>obj<span style=color:#66d9ef>)</span> <span style=color:#66d9ef>$(</span>TARGET<span style=color:#66d9ef>)</span><span style=color:#75715e># “-” ：作用是，删除不存在文件时，不报错。顺序执行结束。</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-makefile data-lang=makefile><span style=display:flex><span><span style=color:#75715e>#.mk-V5: 三个自动变量
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#66d9ef>$@</span>	<span style=color:#75715e># 在规则的命令中，表示规则中的目标。
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#960050;background-color:#1e0010>$^</span>	<span style=color:#75715e># 在规则的命令中，表示所有依赖条件。组成一个列表，以空格隔开，如果这个列表中有重复项，则去重
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#66d9ef>$&lt;</span>	<span style=color:#75715e># 在规则的命令中，表示第一个依赖条件。如果将该变量应用在模式规则中，它可将依赖条件列表中的依赖依次取出，套用模式规则。
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>
+</span></span><span style=display:flex><span>CXX <span style=color:#f92672>=</span> g++
+</span></span><span style=display:flex><span>TARGET <span style=color:#f92672>=</span> hello 
+</span></span><span style=display:flex><span>src <span style=color:#f92672>=</span> <span style=color:#66d9ef>$(</span>wildcard *.cpp<span style=color:#66d9ef>)</span>
+</span></span><span style=display:flex><span>obj <span style=color:#f92672>=</span> <span style=color:#66d9ef>$(</span>patsubst %.cpp, %.o, <span style=color:#66d9ef>$(</span>src<span style=color:#66d9ef>))</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>ALL </span><span style=color:#f92672>:</span> <span style=color:#66d9ef>$(</span>TARGET<span style=color:#66d9ef>)</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>main.o</span><span style=color:#f92672>:</span> main.cpp
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>$(</span>CXX<span style=color:#66d9ef>)</span> -c $&lt;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>printhello.o</span><span style=color:#f92672>:</span> printhello.cpp
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>$(</span>CXX<span style=color:#66d9ef>)</span> -c $&lt;
+</span></span><span style=display:flex><span><span style=color:#a6e22e>factorial.o</span><span style=color:#f92672>:</span> factorial.cpp
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>$(</span>CXX<span style=color:#66d9ef>)</span> -c $&lt;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>$(TARGET)</span><span style=color:#f92672>:</span> <span style=color:#66d9ef>$(</span>obj<span style=color:#66d9ef>)</span>
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>$(</span>CXX<span style=color:#66d9ef>)</span> $^ -o $@ 
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>clean </span><span style=color:#f92672>:</span>
+</span></span><span style=display:flex><span>	-rm -rf <span style=color:#66d9ef>$(</span>obj<span style=color:#66d9ef>)</span> <span style=color:#66d9ef>$(</span>TARGET<span style=color:#66d9ef>)</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-makefile data-lang=makefile><span style=display:flex><span><span style=color:#75715e>#.mk-V6: 模式规则
+</span></span></span><span style=display:flex><span><span style=color:#75715e>#要添加一个.cpp文件，不需要在 makefile 里面增加这个文件的 -o 的部分
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>
+</span></span><span style=display:flex><span>CXX <span style=color:#f92672>=</span> g++
+</span></span><span style=display:flex><span>TARGET <span style=color:#f92672>=</span> hello 
+</span></span><span style=display:flex><span>src <span style=color:#f92672>=</span> <span style=color:#66d9ef>$(</span>wildcard *.cpp<span style=color:#66d9ef>)</span>
+</span></span><span style=display:flex><span>obj <span style=color:#f92672>=</span> <span style=color:#66d9ef>$(</span>patsubst %.cpp, %.o, <span style=color:#66d9ef>$(</span>src<span style=color:#66d9ef>))</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>ALL </span><span style=color:#f92672>:</span> <span style=color:#66d9ef>$(</span>TARGET<span style=color:#66d9ef>)</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>%.o </span><span style=color:#f92672>:</span> %.c
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>$(</span>CXX<span style=color:#66d9ef>)</span> -c $&lt; -o $@
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>$(TARGET)</span><span style=color:#f92672>:</span> <span style=color:#66d9ef>$(</span>obj<span style=color:#66d9ef>)</span>
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>$(</span>CXX<span style=color:#66d9ef>)</span> $^ -o $@ 
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>clean </span><span style=color:#f92672>:</span>
+</span></span><span style=display:flex><span>	-rm -rf <span style=color:#66d9ef>$(</span>obj<span style=color:#66d9ef>)</span> <span style=color:#66d9ef>$(</span>TARGET<span style=color:#66d9ef>)</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-makefile data-lang=makefile><span style=display:flex><span><span style=color:#75715e>#.mk-V7: 静态模式规则？？
+</span></span></span><span style=display:flex><span><span style=color:#75715e>#使用静态模式规则，就是指定模式规则给谁用，这里指定模式规则给 obj 用，以后文件多了，文件集合会有很多个，就需要指定哪个文件集合用什么规则
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>
+</span></span><span style=display:flex><span>CXX <span style=color:#f92672>=</span> g++
+</span></span><span style=display:flex><span>TARGET <span style=color:#f92672>=</span> hello 
+</span></span><span style=display:flex><span>src <span style=color:#f92672>=</span> <span style=color:#66d9ef>$(</span>wildcard *.cpp<span style=color:#66d9ef>)</span>
+</span></span><span style=display:flex><span>obj <span style=color:#f92672>=</span> <span style=color:#66d9ef>$(</span>patsubst %.cpp, %.o, <span style=color:#66d9ef>$(</span>src<span style=color:#66d9ef>))</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>ALL </span><span style=color:#f92672>:</span> <span style=color:#66d9ef>$(</span>TARGET<span style=color:#66d9ef>)</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>$(obj) </span><span style=color:#f92672>:</span> %.o : %.c
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>$(</span>CXX<span style=color:#66d9ef>)</span> -c $&lt; -o $@
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>$(TARGET)</span><span style=color:#f92672>:</span> <span style=color:#66d9ef>$(</span>obj<span style=color:#66d9ef>)</span>
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>$(</span>CXX<span style=color:#66d9ef>)</span> $^ -o $@ 
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>clean </span><span style=color:#f92672>:</span>
+</span></span><span style=display:flex><span>	-rm -rf <span style=color:#66d9ef>$(</span>obj<span style=color:#66d9ef>)</span> <span style=color:#66d9ef>$(</span>TARGET<span style=color:#66d9ef>)</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-makefile data-lang=makefile><span style=display:flex><span><span style=color:#75715e>#.mk-V8: 伪目标
+</span></span></span><span style=display:flex><span><span style=color:#75715e>#当前文件夹下有 ALL 文件或者 clean 文件时，会导致 makefile 瘫痪，此时使用.PHONY: clean ALL
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#a6e22e>.PHONY</span><span style=color:#f92672>:</span> clean ALL
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>CXX <span style=color:#f92672>=</span> g++
+</span></span><span style=display:flex><span>TARGET <span style=color:#f92672>=</span> hello 
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>src <span style=color:#f92672>=</span> <span style=color:#66d9ef>$(</span>wildcard *.cpp<span style=color:#66d9ef>)</span>
+</span></span><span style=display:flex><span>obj <span style=color:#f92672>=</span> <span style=color:#66d9ef>$(</span>patsubst %.cpp, %.o, <span style=color:#66d9ef>$(</span>src<span style=color:#66d9ef>))</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>ALL </span><span style=color:#f92672>:</span> <span style=color:#66d9ef>$(</span>TARGET<span style=color:#66d9ef>)</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>$(obj) </span><span style=color:#f92672>:</span> %.o : %.c
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>$(</span>CXX<span style=color:#66d9ef>)</span> -c $&lt; -o $@
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>$(TARGET)</span><span style=color:#f92672>:</span> <span style=color:#66d9ef>$(</span>obj<span style=color:#66d9ef>)</span>
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>$(</span>CXX<span style=color:#66d9ef>)</span> $^ -o $@ 
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>clean </span><span style=color:#f92672>:</span>
+</span></span><span style=display:flex><span>	-rm -rf <span style=color:#66d9ef>$(</span>obj<span style=color:#66d9ef>)</span> <span style=color:#66d9ef>$(</span>TARGET<span style=color:#66d9ef>)</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-makefile data-lang=makefile><span style=display:flex><span><span style=color:#75715e>#.mk-V9: 文件分类
+</span></span></span><span style=display:flex><span><span style=color:#75715e>#将上述 .cpp 文件都放到 src 目录中，.h 文件都放在 inc 目录中
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>CXX <span style=color:#f92672>=</span> g++
+</span></span><span style=display:flex><span>TARGET <span style=color:#f92672>=</span> hello
+</span></span><span style=display:flex><span>src <span style=color:#f92672>=</span> <span style=color:#66d9ef>$(</span>wildcard ./src/*.cpp<span style=color:#66d9ef>)</span>
+</span></span><span style=display:flex><span>obj <span style=color:#f92672>=</span> <span style=color:#66d9ef>$(</span>patsubst ./src/%.cpp, ./obj/%.o, <span style=color:#66d9ef>$(</span>src<span style=color:#66d9ef>))</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>inc_path <span style=color:#f92672>=</span> ./inc
+</span></span><span style=display:flex><span>CXXFLAGS <span style=color:#f92672>=</span> -Wall -c -I<span style=color:#66d9ef>$(</span>inc_path<span style=color:#66d9ef>)</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>ALL </span><span style=color:#f92672>:</span> <span style=color:#66d9ef>$(</span>TARGET<span style=color:#66d9ef>)</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>./obj/%.o </span><span style=color:#f92672>:</span> ./src/%.cpp
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>$(</span>CXX<span style=color:#66d9ef>)</span> <span style=color:#66d9ef>$(</span>CXXFLAGS<span style=color:#66d9ef>)</span> $&lt; -o $@
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>$(TARGET)</span><span style=color:#f92672>:</span> <span style=color:#66d9ef>$(</span>obj<span style=color:#66d9ef>)</span>
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>$(</span>CXX<span style=color:#66d9ef>)</span> $^ -o $@
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>clean </span><span style=color:#f92672>:</span>
+</span></span><span style=display:flex><span>	-rm -rf <span style=color:#66d9ef>$(</span>obj<span style=color:#66d9ef>)</span> <span style=color:#66d9ef>$(</span>TARGET<span style=color:#66d9ef>)</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>.PHONY</span><span style=color:#f92672>:</span> clean
+</span></span></code></pre></div><h2 id=make-的参数>make 的参数
+<a class=anchor href=#make-%e7%9a%84%e5%8f%82%e6%95%b0>#</a></h2><ul><li>-n：模拟执行 make、 make clean 命令。仅输出执行过程中的命令序列，但并不执行。</li><li>-f：指定文件执行 make 命令。 xxxx.mk</li><li>-j：可以并行构建多个目标，加快构建速度</li><li><strong>-s</strong>‌ 或 ‌**&ndash;silent<strong>‌ 或 ‌</strong>&ndash;quiet**‌：不显示命令。</li></ul><h2 id=makefile-语法>Makefile 语法
+<a class=anchor href=#makefile-%e8%af%ad%e6%b3%95>#</a></h2><p>使用echo进行printf</p><p>:= # 即时变量
+= # 延时变量
+?= # 延时变量，如果是第 1 次定义才起效，如果在前面该变量已定义则忽略这句
++= # 附加，他是即时变量还是延时变量取决于前面的定义，中间会有空格，加在后面</p><h2 id=makefile-函数>Makefile 函数
+<a class=anchor href=#makefile-%e5%87%bd%e6%95%b0>#</a></h2><ul><li><p>wildcard 函数 格式： $ (wildcard PATTENR) 展开指定的目录</p></li><li><p>notdir 函数 格式： $ (notdir $ (var) ) 去掉路径。</p></li><li><p>dir 函数: $(dir ) 取出目录</p></li><li><p>patsubst 函数:$(patsubst 原文件，目标文件，文件列表）替换</p></li><li><p>foreach 函数: 格式：$（foreach <var>,<list>,<text>）功能:把参数 <list>中的单词逐一取出放到参数 <var>所指定的变量中，然后再执行 <text>所包含的表达式。每一次 <text>会返回一个字符串</p></li></ul><p>编译标志</p><ul><li><code>-O2</code>：优化代码。</li><li><code>-g</code>：包含调试信息。</li><li><code>-Wall</code>：开启所有警告。</li><li><code>-std=c++11</code>：指定使用 C++11 标准。</li><li><code>-I</code>：指定包含（头文件）搜索路径。</li><li><code>-L</code>：指定库文件搜索路径。</li><li><code>-l</code>：指定链接时使用的库。</li></ul><h2 id=参考>参考
+<a class=anchor href=#%e5%8f%82%e8%80%83>#</a></h2><p><a href=https://blog.csdn.net/m0_48241022/article/details/141422607>makefile文件基本语法-CSDN博客</a></p><h1 id=cmake>CMake
+<a class=anchor href=#cmake>#</a></h1><p>用于生成make文件</p><p>同类产品：XMake</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-cmake data-lang=cmake><span style=display:flex><span>cmake_minimum_required (<span style=color:#e6db74>VERSION</span> <span style=color:#e6db74>2.8</span>)<span style=color:#75715e>#lowest version requirement 
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span> <span style=color:#960050;background-color:#1e0010>
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010></span>project (<span style=color:#e6db74>learn_cmake</span>)   <span style=color:#75715e>#project name
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span> <span style=color:#960050;background-color:#1e0010>
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010></span>add_executable(<span style=color:#e6db74>hello</span> <span style=color:#e6db74>hello.cpp</span>)<span style=color:#75715e>#要生成的可执行文件名为hello，后面的参数是需要的依赖
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#960050;background-color:#1e0010>
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010></span>aux_source_directory(<span style=color:#e6db74>./your_src_dir</span> <span style=color:#e6db74>var</span>)<span style=color:#75715e>#把dir目录中的所有源文件都储存在var变量中, 用“${var}”替换上面的hello.cpp.如果分别在多个文件，那么可以多次使用aux_source_directory
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#960050;background-color:#1e0010>
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010></span>include_directories ( <span style=color:#e6db74>./your_inc_dir</span> )<span style=color:#75715e>#他的作用是 自动去dir目录下寻找头文件，相当于 gcc中的 gcc -I dir
+</span></span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>cmake . <span style=color:#75715e>#执行CMakeLists.txt </span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#之后会生成Makefile</span>
+</span></span><span style=display:flex><span>make <span style=color:#75715e>#执行Makefile</span>
+</span></span></code></pre></div><h2 id=案例1>案例1
+<a class=anchor href=#%e6%a1%88%e4%be%8b1>#</a></h2><p><img src=assets/image-20240927155345991.png alt=image-20240927155345991></p><p><img src=assets/image-20240927155437588.png alt=image-20240927155437588></p><ul><li><strong>PROJECT_BINARY_DIR</strong>是cmake系统变量，意思是执行cmake命令的目录，我们计划<strong>在build目录下执行cmake命令</strong>，所以这个变量也就等同于build目录</li><li><strong>set_target_properties</strong>重新定义了库的输出名称，如果不使用set_target_properties也可以，那么库的名称就是add_library里定义的名称。具体可以参考官方文档</li><li><strong>LIBRARY_OUTPUT_PATH</strong> 是cmake系统变量，项目生成的库文件都放在这个目录下。这里我指定库生成到lib目录。</li></ul><h2 id=场景2>场景2
+<a class=anchor href=#%e5%9c%ba%e6%99%af2>#</a></h2><p><img src=assets/image-20240927160058472.png alt=image-20240927160058472></p><p><img src=assets/image-20240927160106858.png alt=image-20240927160106858></p><p><img src=assets/image-20240927160113890.png alt=image-20240927160113890></p><p><img src=assets/image-20240927160123943.png alt=image-20240927160123943></p></article><footer class=book-footer><div class="flex flex-wrap justify-between"><div><a class="flex align-center" href=https://github.com/alex-shpak/hugo-book/commit/867a96decfd822b12870ebe14a551d1f46c8f43f title='最后修改者 pxhg02 | 二月 20, 2025' target=_blank rel=noopener><img src=/svg/calendar.svg class=book-icon alt>
+<span>二月 20, 2025</span></a></div><div><a class="flex align-center" href=https://github.com/alex-shpak/hugo-book/edit/main/exampleSite/content.zh/docs/Other/makefile.md target=_blank rel=noopener><img src=/svg/edit.svg class=book-icon alt>
+<span>编辑本页</span></a></div></div><script>(function(){function e(e){const t=window.getSelection(),n=document.createRange();n.selectNodeContents(e),t.removeAllRanges(),t.addRange(n)}document.querySelectorAll("pre code").forEach(t=>{t.addEventListener("click",function(){if(window.getSelection().toString())return;e(t.parentElement),navigator.clipboard&&navigator.clipboard.writeText(t.parentElement.textContent)})})})()</script></footer><div class=book-comments></div><label for=menu-control class="hidden book-menu-overlay"></label></div><aside class=book-toc><div class=book-toc-content><nav id=TableOfContents><ul><li><a href=#makefile>Makefile</a><ul><li><a href=#基础规则>基础规则</a></li><li><a href=#make-的参数>make 的参数</a></li><li><a href=#makefile-语法>Makefile 语法</a></li><li><a href=#makefile-函数>Makefile 函数</a></li><li><a href=#参考>参考</a></li></ul></li><li><a href=#cmake>CMake</a><ul><li><a href=#案例1>案例1</a></li><li><a href=#场景2>场景2</a></li></ul></li></ul></nav></div></aside></main></body></html>

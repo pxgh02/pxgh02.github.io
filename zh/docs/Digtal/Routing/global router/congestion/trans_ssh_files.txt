@@ -1,0 +1,2 @@
+scp .\CongestionAwareSteinerTreeOpt.md "pengxuan@202.38.247.106:/home/pengxuan/Project/CongestionOpt/docs"
+scp -r .\assets "pengxuan@202.38.247.106:/home/pengxuan/Project/CongestionOpt/docs"

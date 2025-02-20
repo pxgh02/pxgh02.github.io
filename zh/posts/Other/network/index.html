@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="zh" dir="ltr">
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="
+  基础知识
+  #
+
+
+  IP
+  #
+
+IP地址可唯一标识 IP 网络中的每台设备
+每台主机（计算机、网络设备、外围设备）必须具有唯一的地址
+网络地址 &#43; 主机地址
+
+  子网掩码
+  #
+
+区分主机ID和网络ID
+举例：当子网掩码=255.255.255.0时：
+192.168.100.168（IP地址） = 192.168.1.0 (网络地址) &#43; 0.0.0.168（主机地址）
+用网线直接连接 或 通过 HUB（集线器）、普通交换机链接的计算机必须处于同一网络(网络地址) 并且主机地址必须不一样 才能通信。
+
+  如何判断两个主机在同一网段
+  #
+
+假设有两个主机A和B，它们的IP地址和子网掩码如下：
+主机A的IP地址：192.168.1.2">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#343a40">
+<meta name="color-scheme" content="light dark"><meta property="og:url" content="http://localhost:1313/zh/posts/Other/network/">
+  <meta property="og:site_name" content="Pxmmmm">
+  <meta property="og:title" content="Pxmmmm">
+  <meta property="og:description" content=" 基础知识 # IP # IP地址可唯一标识 IP 网络中的每台设备 每台主机（计算机、网络设备、外围设备）必须具有唯一的地址 网络地址 &#43; 主机地址
+子网掩码 # 区分主机ID和网络ID 举例：当子网掩码=255.255.255.0时： 192.168.100.168（IP地址） = 192.168.1.0 (网络地址) &#43; 0.0.0.168（主机地址） 用网线直接连接 或 通过 HUB（集线器）、普通交换机链接的计算机必须处于同一网络(网络地址) 并且主机地址必须不一样 才能通信。
+如何判断两个主机在同一网段 # 假设有两个主机A和B，它们的IP地址和子网掩码如下：
+主机A的IP地址：192.168.1.2">
+  <meta property="og:locale" content="zh">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+<title>Network | Pxmmmm</title>
+<link rel="icon" href="/favicon.png" >
+<link rel="manifest" href="/manifest.json">
+<link rel="canonical" href="http://localhost:1313/zh/posts/Other/network/">
+<link rel="stylesheet" href="/book.min.6c8b9d2a1fc95075ed7da46ca81060b39add8fff6741ac51259f768929281e2c.css" integrity="sha256-bIudKh/JUHXtfaRsqBBgs5rdj/9nQaxRJZ92iSkoHiw=" crossorigin="anonymous">
+  <script defer src="/fuse.min.js"></script>
+  <script defer src="/zh.search.min.0a35798c78c016e2b218365660d9a17cabc3941c772e735cffb8ebd0a1bcbd84.js" integrity="sha256-CjV5jHjAFuKyGDZWYNmhfKvDlBx3LnNc/7jr0KG8vYQ=" crossorigin="anonymous"></script>
+
+  <script defer src="/sw.min.6f6f90fcb8eb1c49ec389838e6b801d0de19430b8e516902f8d75c3c8bd98739.js" integrity="sha256-b2&#43;Q/LjrHEnsOJg45rgB0N4ZQwuOUWkC&#43;NdcPIvZhzk=" crossorigin="anonymous"></script>
+<!--
+Made with Book Theme
+https://github.com/alex-shpak/hugo-book
+-->
+  
+</head>
+<body dir="ltr">
+  <input type="checkbox" class="hidden toggle" id="menu-control" />
+  <input type="checkbox" class="hidden toggle" id="toc-control" />
+  <main class="container flex">
+    <aside class="book-menu">
+      <div class="book-menu-content">
+        
+  <nav>
+<h2 class="book-brand">
+  <a class="flex align-center" href="/zh/"><span>Pxmmmm</span>
+  </a>
+</h2>
+
+
+<div class="book-search hidden">
+  <input type="text" id="book-search-input" placeholder="搜索" aria-label="搜索" maxlength="64" data-hotkeys="s/" />
+  <div class="book-search-spinner hidden"></div>
+  <ul id="book-search-results"></ul>
+</div>
+<script>document.querySelector(".book-search").classList.remove("hidden")</script>
+
+
+
+  
+
+
+
+  
+    
+  
+
+
+
+<ul class="book-languages">
+  <li>
+    <input type="checkbox" id="languages" class="toggle" />
+    <label for="languages" class="flex justify-between">
+      <a role="button" class="flex align-center">
+        <img src="/svg/translate.svg" class="book-icon" alt="Languages" />
+        Chinese
+      </a>
+    </label>
+
+    <ul>
+      
+      <li>
+        <a href="/">
+          English
+        </a>
+      </li>
+      
+    </ul>
+  </li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <ul>
+    
+  </ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</nav>
+
+
+
+
+  <script>(function(){var e=document.querySelector("aside .book-menu-content");addEventListener("beforeunload",function(){localStorage.setItem("menu.scrollTop",e.scrollTop)}),e.scrollTop=localStorage.getItem("menu.scrollTop")})()</script>
+
+
+ 
+      </div>
+    </aside>
+
+    <div class="book-page">
+      <header class="book-header">
+        
+  <div class="flex align-center justify-between">
+  <label for="menu-control">
+    <img src="/svg/menu.svg" class="book-icon" alt="Menu" />
+  </label>
+
+  <h3>Network</h3>
+
+  <label for="toc-control">
+    
+    <img src="/svg/toc.svg" class="book-icon" alt="Table of Contents" />
+    
+  </label>
+</div>
+
+
+  
+  <aside class="hidden clearfix">
+    
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#基础知识">基础知识</a>
+      <ul>
+        <li><a href="#ip">IP</a></li>
+        <li><a href="#子网掩码">子网掩码</a>
+          <ul>
+            <li><a href="#如何判断两个主机在同一网段">如何判断两个主机在同一网段</a></li>
+            <li><a href="#dhcp">DHCP</a></li>
+            <li><a href="#两个主机通信">两个主机通信</a></li>
+            <li><a href="#软件防火墙和硬件防火墙">软件防火墙和硬件防火墙</a></li>
+            <li><a href="#作用">作用</a></li>
+          </ul>
+        </li>
+        <li><a href="#网关">网关</a></li>
+        <li><a href="#代理">代理</a></li>
+      </ul>
+    </li>
+    <li><a href="#clash">Clash</a>
+      <ul>
+        <li><a href="#特色功能">特色功能</a></li>
+        <li><a href="#桥接和nat">桥接和NAT</a></li>
+      </ul>
+    </li>
+    <li><a href="#ssh">SSH</a>
+      <ul>
+        <li><a href="#通信步骤">通信步骤</a></li>
+        <li><a href="#认证方式">认证方式</a>
+          <ul>
+            <li><a href="#密码">密码</a></li>
+            <li><a href="#密钥">密钥</a></li>
+          </ul>
+        </li>
+        <li><a href="#openssh">OpenSSH</a>
+          <ul>
+            <li><a href="#常用命令">常用命令</a></li>
+            <li><a href="#配置文件">配置文件</a></li>
+            <li><a href="#应用">应用</a></li>
+          </ul>
+        </li>
+        <li><a href="#sftp">sftp</a></li>
+        <li><a href="#telnet">telnet</a></li>
+      </ul>
+    </li>
+    <li><a href="#ftp">FTP</a></li>
+    <li><a href="#x11">X11</a></li>
+    <li><a href="#ssl">SSL</a></li>
+  </ul>
+</nav>
+
+
+
+  </aside>
+  
+ 
+      </header>
+
+      
+      
+<article class="markdown book-post">
+  <h2>
+    Network
+  </h2>
+  
+
+
+  
+
+  
+
+
+  <div class="book-post-content"><h1 id="基础知识">
+  基础知识
+  <a class="anchor" href="#%e5%9f%ba%e7%a1%80%e7%9f%a5%e8%af%86">#</a>
+</h1>
+<h2 id="ip">
+  IP
+  <a class="anchor" href="#ip">#</a>
+</h2>
+<p>IP地址可唯一标识 IP 网络中的每台设备
+每台主机（计算机、网络设备、外围设备）必须具有唯一的地址
+网络地址 + 主机地址</p>
+<h2 id="子网掩码">
+  子网掩码
+  <a class="anchor" href="#%e5%ad%90%e7%bd%91%e6%8e%a9%e7%a0%81">#</a>
+</h2>
+<p>区分主机ID和网络ID
+举例：当子网掩码=255.255.255.0时：
+192.168.100.168（IP地址） = 192.168.1.0 (网络地址) + 0.0.0.168（主机地址）
+用网线直接连接 或 通过 HUB（集线器）、普通交换机链接的计算机必须处于同一网络(网络地址) 并且主机地址必须不一样 才能通信。</p>
+<h3 id="如何判断两个主机在同一网段">
+  如何判断两个主机在同一网段
+  <a class="anchor" href="#%e5%a6%82%e4%bd%95%e5%88%a4%e6%96%ad%e4%b8%a4%e4%b8%aa%e4%b8%bb%e6%9c%ba%e5%9c%a8%e5%90%8c%e4%b8%80%e7%bd%91%e6%ae%b5">#</a>
+</h3>
+<p>假设有两个主机A和B，它们的IP地址和子网掩码如下：</p>
+<p>主机A的IP地址：192.168.1.2</p>
+<p>主机A的子网掩码：255.255.255.0</p>
+<p>主机B的IP地址：192.168.1.5</p>
+<p>主机B的子网掩码：255.255.255.0</p>
+<p>步骤1：应用子网掩码
+对于主机A：</p>
+<p>IP地址：192.168.1.2 转换为二进制是 11000000.10101000.00000001.00000010
+子网掩码：255.255.255.0 转换为二进制是 11111111.11111111.11111111.00000000
+进行AND运算：</p>
+<p>11000000.10101000.00000001.00000010 (IP地址)
+11111111.11111111.11111111.00000000 (子网掩码)
+11000000.10101000.00000001.00000000 (网络地址)
+转换回十进制，网络地址为：192.168.1.0</p>
+<p>对于主机B：</p>
+<p>IP地址：192.168.1.5 转换为二进制是 11000000.10101000.00000001.00000101
+子网掩码：255.255.255.0 转换为二进制是 11111111.11111111.11111111.00000000
+进行AND运算：</p>
+<p>11000000.10101000.00000001.00000101 (IP地址)
+11111111.11111111.11111111.00000000 (子网掩码)
+11000000.10101000.00000001.00000000 (网络地址)
+转换回十进制，网络地址为：192.168.1.0</p>
+<p>步骤2：比较网络地址
+由于两个主机的网络地址都是192.168.1.0，因此它们在同一网段。</p>
+<p>结论
+通过上述步骤，我们可以判断两个主机是否在同一网段。在这个例子中，主机A和主机B都在192.168.1.0/24这个网段中。</p>
+<p>##网关
+连接两个<strong>不同的网络</strong>的设备都可以叫网关设备；网关的作用就是实现两个网络之间进行通讯与控制。
+网关设备可以是 交互机（三层及以上才能跨网络）、路由器、启用了路由协议的服务器、代理服务器、防火墙等
+<strong>网关地址就是网关设备的IP地址</strong></p>
+<p>如果网络A中的主机发现数据包的目的主机不在本地网络中，就把数据包转发给它自己的网关，再由网关转发给网络B的网关
+只有设置好网关的IP地址，TCP/IP协议才能实现不同网络之间的相互通信
+一台主机可以有多个网关。默认网关的意思是一台主机如果找不到可用的网关，就把数据包发给默认指定的网关，由这个网关来处理数据包。现在主机使用的网关，一般指的是默认网关。</p>
+<h3 id="dhcp">
+  DHCP
+  <a class="anchor" href="#dhcp">#</a>
+</h3>
+<p>Dynamic Host Configuration Protocol, 动态主机配置协议
+自动设置就是利用DHCP（Dynamic Host Configuration Protocol, 动态主机配置协议）服务器来自动给网络中的计算机分配IP地址、子网掩码和默认网关 。
+一旦网络的默认网关发生了变化时，只要更改了DHCP服务器中默认网关的设置，那么网络中所有的计算机均获得了新的默认网关的IP地址。这种方法适用于网络规模较大、TCP/IP参数有可能变动的网络。
+另外一种自动获得网关的办法是通过安装代理服务器软件的客户端程序来自动获得，其原理和方法和DHCP有相似之处。</p>
+<h3 id="两个主机通信">
+  两个主机通信
+  <a class="anchor" href="#%e4%b8%a4%e4%b8%aa%e4%b8%bb%e6%9c%ba%e9%80%9a%e4%bf%a1">#</a>
+</h3>
+<h4 id="条件">
+  条件：
+  <a class="anchor" href="#%e6%9d%a1%e4%bb%b6">#</a>
+</h4>
+<ul>
+<li>知道对方ip</li>
+<li>
+  <a href="/zh/#%e5%a6%82%e4%bd%95%e5%88%a4%e6%96%ad%e4%b8%a4%e4%b8%aa%e4%b8%bb%e6%9c%ba%e5%9c%a8%e5%90%8c%e4%b8%80%e7%bd%91%e6%ae%b5">是否双方在同一网段下</a></li>
+<li>在同一网段：arp广播</li>
+<li>不同网段：找网关，若未配置，则无法通行</li>
+<li>通信时是用自己的子网掩码与对方ip相与，因为通信时不知道对方子网掩码</li>
+</ul>
+<p>举例：
+A的IP地址: 192.168.38.100
+A的子网掩码: 255.255.255.128
+B的IP地址: 192.168.38.200
+B的子网掩码: 255.255.255.0
+① A &ndash;&gt; B
+以A的子网掩码为基准
+192.168.38.0110 0100 &amp; 255.255.255.1000 0000=192.168.38.0
+192.168.38.1100 1000 &amp; 255.255.255.1000 0000=192.168.38.128
+ip-A 与 ip-B分别与A主机子网掩码相与，不相同，则不在同一网段
+② B &ndash;&gt; A(以B的子网掩码为基准)
+ 192.168.38.0110 0100 &amp; 255.255.255.0000 0000=192.168.38.0
+ 192.168.38.1100 1000 &amp; 255.255.255.0000 0000=192.168.38.0
+ ip-A 与 ip-B分别与B主机子网掩码相与，相同，则在同一网段
+##DNS
+我们访问一个网站的时候，往往使用的是域名（相对IP来说更加语义清晰、更加容易记忆，例如 
+  <a href="https://www.baidu.com">www.baidu.com</a>)。
+然而计算机之间的通信网络通信是通过IP进行的， 因此需要将域名解析为对应的IP，<strong>DNS就是进行域名解析的服务器</strong>。
+DNS 维护着 域名(domain name)和IP地址 (IP address)的<strong>对照表</strong>表，以解析消息的域名</p>
+<p>1、在浏览器中输入www.qq.com域名，操作系统会先检查自己<strong>本地的hosts文件</strong>是否有这个网址映射关系，如果有，就先调用这个IP地址映射，完成域名解析。</p>
+<p>2、如果hosts里没有这个域名的映射，则查找<strong>本地DNS解析器</strong>缓存，是否有这个网址映射关系，如果有，直接返回，完成域名解析。</p>
+<p>3、如果hosts与本地DNS解析器缓存都没有相应的网址映射关系，首先会找TCP/ip参数中设置的首选DNS服务器，在此我们叫它<strong>本地DNS服务器</strong>，此服务器收到查询时，如果要查询的域名，包含在本地配置区域资源中，则返回解析结果给客户机，完成域名解析，此解析具有权威性。</p>
+<p>4、如果要查询的域名，不由本地DNS服务器区域解析，但该服务器已缓存了此网址映射关系，则调用这个<strong>IP地址映射</strong>，完成域名解析，此解析不具有权威性。</p>
+<p>5、如果本地DNS服务器本地区域文件与缓存解析都失效，则根据本地DNS服务器的设置（是否设置转发器）进行查询，如果未用转发模式，本地DNS就把请求发至<strong>13台根DNS</strong>，根DNS服务器收到请求后会判断这个域名(.com)是谁来授权管理，并会返回一个负责该顶级域名服务器的一个IP。本地DNS服务器收到IP信息后，将会联系负责.com域的这台服务器。这台负责.com域的服务器收到请求后，如果自己无法解析，它就会找一个管理.com域的下一级DNS服务器地址(qq.com)给本地DNS服务器。当本地DNS服务器收到这个地址后，就会找qq.com域服务器，重复上面的动作，进行查询，直至找到www.qq.com主机。</p>
+<p>6、如果用的是<strong>转发模式</strong>，此DNS服务器就会把请求转发至<strong>上一级DNS服务器</strong>，由上一级服务器进行解析，上一级服务器如果不能解析，或找根DNS或把转请求转至上上级，以此循环。不管是本地DNS服务器用是是转发，还是根提示，最后都是把结果返回给本地DNS服务器，由此DNS服务器再返回给客户机</p>
+<p>##路由器</p>
+<p>##防火墙
+防火墙是一个网络安全产品，它是由软件和硬件设备组合而成，<strong>在内网和外网之间、专用网与公共网之间的一种保护屏障</strong>。</p>
+<h3 id="软件防火墙和硬件防火墙">
+  软件防火墙和硬件防火墙
+  <a class="anchor" href="#%e8%bd%af%e4%bb%b6%e9%98%b2%e7%81%ab%e5%a2%99%e5%92%8c%e7%a1%ac%e4%bb%b6%e9%98%b2%e7%81%ab%e5%a2%99">#</a>
+</h3>
+<h3 id="作用">
+  作用
+  <a class="anchor" href="#%e4%bd%9c%e7%94%a8">#</a>
+</h3>
+<ul>
+<li>虽然防火墙本身不充当防病毒软件，但它们通过确保只有授权的数据流经网络，确实有助于防止病毒的安装。</li>
+<li>防止未经授权访问危险的网站。防火墙还可以阻止访问已知会在访问者的计算机上安装恶意软件和病毒的恶意站点。</li>
+<li>阻止未经授权的访问</li>
+</ul>
+<h2 id="网关">
+  网关
+  <a class="anchor" href="#%e7%bd%91%e5%85%b3">#</a>
+</h2>
+<p>客户端数据发出的，在同一网段没找到目标ip，那么就给网关找</p>
+<h2 id="代理">
+  代理
+  <a class="anchor" href="#%e4%bb%a3%e7%90%86">#</a>
+</h2>
+<h1 id="clash">
+  Clash
+  <a class="anchor" href="#clash">#</a>
+</h1>
+<h2 id="特色功能">
+  特色功能
+  <a class="anchor" href="#%e7%89%b9%e8%89%b2%e5%8a%9f%e8%83%bd">#</a>
+</h2>
+<ul>
+<li>入站代理：支持 HTTP、HTTPS、SOCKS5 服务器、TUN 设备等。</li>
+<li>出站代理：支持
+  <a href="https://jiasupanda.com/vultr-ss"> Shadowsocks(R)</a>、
+  <a href="https://jiasupanda.com/vmess-vultr">VMess</a>、
+  <a href="https://jiasupanda.com/vultr-trojan">Trojan</a>、Snell、SOCKS5、HTTP(S)、Wireguard 等。</li>
+<li>基于规则的路由：可以根据动态脚本、域名、IP 地址、进程名称等规则进行路由。</li>
+<li>虚假 IP DNS：可以减少对 DNS 污染的影响，提高网络性能。</li>
+<li>透明代理：可以重定向 TCP 流量以及自动管理路由表和规则。</li>
+<li>代理组：可以自动切换代理、负载均衡或测试延迟。</li>
+<li>远程提供者：可以动态加载远程代理列表。</li>
+<li>RESTful API：可以通过全面的 API 更新配置。</li>
+</ul>
+<h2 id="桥接和nat">
+  桥接和NAT
+  <a class="anchor" href="#%e6%a1%a5%e6%8e%a5%e5%92%8cnat">#</a>
+</h2>
+<p>桥接（Network Address Translation）</p>
+<h1 id="ssh">
+  SSH
+  <a class="anchor" href="#ssh">#</a>
+</h1>
+<p>SSH包含三个组件<strong>ssh,sftp,scp</strong></p>
+<p>Unix、Linux 和 macOS 设备<strong>内置SSH客户端</strong>，允许从终端直接启动SSH连接，还可以使用SSH客户端（如PuTTY）启动连接。</p>
+<p>Windows 设备启动 SSH 连接，则必须使用 OpenSSH 或 PuTTY 等 SSH 客户端来启动连接</p>
+<p>在服务器端，<strong>需要安装 SSH 服务器包，并且需要安装并运行称为 SSH守护进程的服务器端组件</strong>，SSH 守护进程通过侦听 TCP <strong>端口 22</strong> 上的所有连接来检查任何 SSH 连接请求</p>
+<p>如果使用的是 Linux/macOS设备或Windows设备上的SSH客户端，可以输入以下命令从设备终端启动到远程服务器的SSHl连接:<code>ssh &lt;user_name&gt;@&lt;host_name&gt;</code></p>
+<h2 id="通信步骤">
+  通信步骤
+  <a class="anchor" href="#%e9%80%9a%e4%bf%a1%e6%ad%a5%e9%aa%a4">#</a>
+</h2>
+<ol>
+<li>从 SSH 客户端尝试 SSH 会话。</li>
+<li>SSH 客户端会连接到目标服务器。</li>
+<li>SSH 客户端从 SSH 服务器获取公钥，特别是从 .ssh/authorized_keys 文件中获取公钥。</li>
+<li>客户端和服务器协商参数和加密方法，然后使用合适的密钥交换算法制定加密的会话密钥。</li>
+<li>然后，用户使用适当的凭据进行身份验证并登录到目标服务器。</li>
+<li>现在已建立安全连接，用户可以在服务器上执行操作。</li>
+</ol>
+<h2 id="认证方式">
+  认证方式
+  <a class="anchor" href="#%e8%ae%a4%e8%af%81%e6%96%b9%e5%bc%8f">#</a>
+</h2>
+<h3 id="密码">
+  密码
+  <a class="anchor" href="#%e5%af%86%e7%a0%81">#</a>
+</h3>
+<p>密码身份验证是建立SSH连接时更广泛使用的身份验证方法，共享密钥和加密协商完成后，服务器会提示用户输入客户端正在尝试登录的<strong>用户账号的密码。</strong></p>
+<h3 id="密钥">
+  密钥
+  <a class="anchor" href="#%e5%af%86%e9%92%a5">#</a>
+</h3>
+<p>使用SSH密钥的身份验证涉及公私非对称SSH密钥对，在对称加密之后，客户端生成密钥对 ID，<strong>服务器通过查找用户的.ssh/authorized_keys文件来验证这个ID</strong>，如果ID匹配，则使用公钥生成并加密随机数，然后客户端使用其私钥对其解密。</p>
+<p>然后，客户端在对称加密期间使用解密的号码和已建立的共享密钥对号码进行散列处理，并以 MD5 
+  <a href="https://zhida.zhihu.com/search?q=%e5%93%88%e5%b8%8c%e5%80%bc&amp;zhida_source=entity&amp;is_preview=1">哈希值</a>的形式将其发送回服务器，一旦服务器使用相同的共享密钥和数字自行计算 MD5 哈希值并确定其匹配项，身份验证就完成了。</p>
+<p>多层密钥的身份验证成为一种更安全的加密形式，因为不传输服务器的私钥，并且还需要共享密钥来篡改身份验证。</p>
+<h2 id="openssh">
+  OpenSSH
+  <a class="anchor" href="#openssh">#</a>
+</h2>
+<p>提供ssh连接服务</p>
+<h3 id="常用命令">
+  常用命令
+  <a class="anchor" href="#%e5%b8%b8%e7%94%a8%e5%91%bd%e4%bb%a4">#</a>
+</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo apt-get install openssh-client#客户端
+</span></span><span style="display:flex;"><span>sudo apt-get install openssh-server#服务器
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>ssh <span style="color:#f92672">[</span>OPTION<span style="color:#f92672">]</span> <span style="color:#f92672">[</span>hostname<span style="color:#f92672">]</span>@<span style="color:#f92672">[</span>IP<span style="color:#f92672">]</span> <span style="color:#75715e">#连接远程服务器</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#可以增加-v打印详细星系</span>
+</span></span><span style="display:flex;"><span> <span style="color:#75715e"># 链接123.45.67.89这个IP的服务器，然后输入链接密码，验证成功后就可以登陆到服务器了。</span>
+</span></span><span style="display:flex;"><span> $ ssh root@123.45.67.89
+</span></span><span style="display:flex;"><span> <span style="color:#75715e"># 链接到github.com这个服务器，并且打印链接的详细信息。</span>
+</span></span><span style="display:flex;"><span> $ ssh -v git@github.com
+</span></span><span style="display:flex;"><span> 
+</span></span><span style="display:flex;"><span> 
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e">#ssh-keygen命令用于生成、管理密钥。</span>
+</span></span><span style="display:flex;"><span>Usage： ssh-keygen <span style="color:#f92672">[</span>-t rsa|ed25519<span style="color:#f92672">]</span> <span style="color:#f92672">[</span>-b bits<span style="color:#f92672">]</span> <span style="color:#f92672">[</span>-C comment<span style="color:#f92672">]</span> <span style="color:#f92672">[</span>-f output_keyfile<span style="color:#f92672">]</span> 生成新的密钥。
+</span></span><span style="display:flex;"><span>Or： ssh-keygen -c <span style="color:#f92672">[</span>-C comment<span style="color:#f92672">]</span> 修改密钥的备注信息。
+</span></span></code></pre></div><blockquote>
+<ul>
+<li><code>-t rsa|ed25519</code> 选择加密方式。有很多种，这里列举两种最常用的方法。更详细的加密方法件官方SSH手册。</li>
+<li><code>-b bits</code>指定密钥长度。对于
+  <a href="https://zhida.zhihu.com/search?q=RSA%e5%af%86%e9%92%a5&amp;zhida_source=entity&amp;is_preview=1">RSA密钥</a>，最小要求768位，默认是2048位。DSA密钥必须恰好是1024位(FIPS 186-2 标准的要求)。</li>
+<li><code>-C comment</code> 给密钥添加备注。</li>
+<li><code>-c</code> 要求修改密钥的注释。输入选项后，程序会提示输入私钥文件名、密语（如果存在）、新注释。</li>
+<li><code>-f output_keyfile</code> 指定输出的文件。</li>
+</ul>
+</blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e">#ssh-add 命令用于管理密钥。</span>
+</span></span><span style="display:flex;"><span>Usage：ssh-add <span style="color:#f92672">[</span>key_file<span style="color:#f92672">]</span> 添加密钥到密钥管理器中。
+</span></span><span style="display:flex;"><span>or：ssh-add <span style="color:#f92672">[</span>OPTION<span style="color:#f92672">]</span>...
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>eg:
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 将下面三个文件传输到目标主机的home目录中。</span>
+</span></span><span style="display:flex;"><span>$ scp a.cpp b.java c.py root@123.45.67.89:/home
+</span></span></code></pre></div><blockquote>
+<ul>
+<li><code>-l</code> 展示出所有已经添加到密钥管理器其中的密钥对。</li>
+<li><code>-d [key]</code> 将
+  <a href="https://zhida.zhihu.com/search?q=%e6%8c%87%e5%ae%9a%e5%af%86%e9%92%a5%e5%af%b9&amp;zhida_source=entity&amp;is_preview=1">指定密钥对</a>从密钥管理器中移除。</li>
+<li><code>-D</code> 移除密钥管理其中的全部密钥对。</li>
+</ul>
+</blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e">#scp命令</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#全称为“OpenSSH secure file copy”——基于OpenSSH的安全文件复制服务。主要用于终端设备之间的文件传输。</span>
+</span></span><span style="display:flex;"><span>Usage：scp <span style="color:#f92672">[</span>FILE<span style="color:#f92672">]</span>... <span style="color:#f92672">[</span>HOST<span style="color:#f92672">]</span>:<span style="color:#f92672">[</span>DIR<span style="color:#f92672">]</span>
+</span></span></code></pre></div><h3 id="配置文件">
+  配置文件
+  <a class="anchor" href="#%e9%85%8d%e7%bd%ae%e6%96%87%e4%bb%b6">#</a>
+</h3>
+<ul>
+<li>Windows系统：<code>c:/ProgramData/ssh/sshd_config</code></li>
+<li>Linux系统：<code>/etc/ssh/sshd_config</code></li>
+</ul>
+<p>
+  <a href="https://www.jinbuguo.com/openssh/sshd_config.html">sshd_config 中文手册 金步国</a></p>
+<h3 id="应用">
+  应用
+  <a class="anchor" href="#%e5%ba%94%e7%94%a8">#</a>
+</h3>
+<h4 id="免密登录">
+  免密登录
+  <a class="anchor" href="#%e5%85%8d%e5%af%86%e7%99%bb%e5%bd%95">#</a>
+</h4>
+<p>client:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>ssh-keygen -t rsa -b <span style="color:#ae81ff">4096</span> -C <span style="color:#e6db74">&#34;xxx&#34;</span> <span style="color:#75715e">#生成一对密钥#请使用密钥的默认名字：id_rsa，即按三次回车即可</span>
+</span></span><span style="display:flex;"><span>$ scp %homepath%/.ssh/id_rsa.pub root@123.45.67.89:~/.ssh
+</span></span><span style="display:flex;"><span> <span style="color:#75715e">#将上面生成的密钥中的==公钥==传输到你的Linux云服务器上</span>
+</span></span></code></pre></div><p>server:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>vim /etc/ssh/sshd_config#修改sshd_config
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#在该配置文件中，主要修改下面两个配置</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#PubkeyAuthentication yes</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#AuthorizedKeysFile .ssh/authorized_keys .ssh/authorized_keys2</span>
+</span></span><span style="display:flex;"><span>sudo /etc/init.d/ssh restart#重启OpenSSH服务端
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#修改公钥文件名称</span>
+</span></span><span style="display:flex;"><span>cd /root/.ssh
+</span></span><span style="display:flex;"><span>mv id_rsa.pub authorized_keys
+</span></span></code></pre></div><p>client</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>ssh root@123.45.67.89
+</span></span></code></pre></div><h4 id="与git的远程仓库连接">
+  与Git的远程仓库连接
+  <a class="anchor" href="#%e4%b8%8egit%e7%9a%84%e8%bf%9c%e7%a8%8b%e4%bb%93%e5%ba%93%e8%bf%9e%e6%8e%a5">#</a>
+</h4>
+<p>client:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>ssh-keygen -t rsa -b <span style="color:#ae81ff">4096</span> -C <span style="color:#e6db74">&#34;GithubKey&#34;</span><span style="color:#75715e">#请使用密钥的默认名字：id_rsa，即按三次回车即可</span>
+</span></span></code></pre></div><p>git:</p>
+<p>登陆你的Github，然后依次点击：<strong>Setting</strong> -&gt; <strong>SSH and GPG keys</strong> -&gt; <strong>New SSH Key</strong></p>
+<p><strong>点击 New SSH key 后，将 Step 1 中生成的公钥复制到文字框中，最后点击 Add SSH key 即可添加成功。</strong></p>
+<p>client:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>ssh git@github.com
+</span></span></code></pre></div><p>你在此时开着加速器，例如Steam++，运行命令后，你可能会收到如下的报错信息：</p>
+<blockquote>
+<p>kex_exchange_identification: read: Software caused connection abort
+banner exchange: Connection to 127.0.0.1 port 22: Software caused connection abort</p>
+</blockquote>
+<p>此时，只需要退出加速器即可恢复正常。</p>
+<h2 id="sftp">
+  sftp
+  <a class="anchor" href="#sftp">#</a>
+</h2>
+<p>它使用SSH身份验证和加密功能来确保文件在传输过程中的安全</p>
+<h2 id="telnet">
+  telnet
+  <a class="anchor" href="#telnet">#</a>
+</h2>
+<p>也是同来远程登录服务器的，默认端口 23,一种不加密的明文传输协议，现在用的很少</p>
+<h1 id="ftp">
+  FTP
+  <a class="anchor" href="#ftp">#</a>
+</h1>
+<p>进行文件传输时使用的协议，文件传输协议【明文传输不加密】默认<strong>端口21</strong></p>
+<p>SFTP和FTP非常相似，都支持批量传输，文件移动，文件夹/目录创建，文件删除等. FTP 不提供任何安全通道来在主机之间传输文件；而SFTP协议提供了一个安全通道，用于在网络上的主机之间传输文件。</p>
+<h1 id="x11">
+  X11
+  <a class="anchor" href="#x11">#</a>
+</h1>
+<p>X11（X Window System）是一种位图显示的视窗系统，X表示X协议，11是协议版本号。X 协议主要由 X server 和 X client 组成</p>
+<p>术语客户端-服务器——你的终端是&quot;服务器&quot;，而应用程序是 “客户端”——这一概念经常困扰X的新用户。本地的X显示程序提供显示服务，所以它扮演了服务器；远端应用程序使用了该服务，所以它是客户端。</p>
+<p>例如我通过<code>ssh-X</code>来启动X11 forwarding:连接到远程服务器，远程服务器有python程序调用 matplotlib绘制图形，那<strong>这个时候服务器端的程序就是X应用程序</strong>，他通过X协议告诉我们本地的 Xserver如何在我们本地的电脑上显示图形（如果我们本地安装有相应的X11实现的话）。</p>
+<h1 id="ssl">
+  SSL
+  <a class="anchor" href="#ssl">#</a>
+</h1>
+</div>
+</article>
+ 
+      
+
+      <footer class="book-footer">
+        
+  <div class="flex flex-wrap justify-between">
+
+
+
+
+  <div>
+    <a class="flex align-center" href="https://github.com/alex-shpak/hugo-book/edit/main/exampleSite/content.zh/posts/Other/network.md" target="_blank" rel="noopener">
+      <img src="/svg/edit.svg" class="book-icon" alt="" />
+      <span>编辑本页</span>
+    </a>
+  </div>
+
+
+</div>
+
+
+
+  <script>(function(){function e(e){const t=window.getSelection(),n=document.createRange();n.selectNodeContents(e),t.removeAllRanges(),t.addRange(n)}document.querySelectorAll("pre code").forEach(t=>{t.addEventListener("click",function(){if(window.getSelection().toString())return;e(t.parentElement),navigator.clipboard&&navigator.clipboard.writeText(t.parentElement.textContent)})})})()</script>
+
+
+ 
+        
+      </footer>
+
+      
+  
+  <div class="book-comments">
+
+</div>
+  
+ 
+
+      <label for="menu-control" class="hidden book-menu-overlay"></label>
+    </div>
+
+    
+    <aside class="book-toc">
+      <div class="book-toc-content">
+        
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#基础知识">基础知识</a>
+      <ul>
+        <li><a href="#ip">IP</a></li>
+        <li><a href="#子网掩码">子网掩码</a>
+          <ul>
+            <li><a href="#如何判断两个主机在同一网段">如何判断两个主机在同一网段</a></li>
+            <li><a href="#dhcp">DHCP</a></li>
+            <li><a href="#两个主机通信">两个主机通信</a></li>
+            <li><a href="#软件防火墙和硬件防火墙">软件防火墙和硬件防火墙</a></li>
+            <li><a href="#作用">作用</a></li>
+          </ul>
+        </li>
+        <li><a href="#网关">网关</a></li>
+        <li><a href="#代理">代理</a></li>
+      </ul>
+    </li>
+    <li><a href="#clash">Clash</a>
+      <ul>
+        <li><a href="#特色功能">特色功能</a></li>
+        <li><a href="#桥接和nat">桥接和NAT</a></li>
+      </ul>
+    </li>
+    <li><a href="#ssh">SSH</a>
+      <ul>
+        <li><a href="#通信步骤">通信步骤</a></li>
+        <li><a href="#认证方式">认证方式</a>
+          <ul>
+            <li><a href="#密码">密码</a></li>
+            <li><a href="#密钥">密钥</a></li>
+          </ul>
+        </li>
+        <li><a href="#openssh">OpenSSH</a>
+          <ul>
+            <li><a href="#常用命令">常用命令</a></li>
+            <li><a href="#配置文件">配置文件</a></li>
+            <li><a href="#应用">应用</a></li>
+          </ul>
+        </li>
+        <li><a href="#sftp">sftp</a></li>
+        <li><a href="#telnet">telnet</a></li>
+      </ul>
+    </li>
+    <li><a href="#ftp">FTP</a></li>
+    <li><a href="#x11">X11</a></li>
+    <li><a href="#ssl">SSL</a></li>
+  </ul>
+</nav>
+
+
+ 
+      </div>
+    </aside>
+    
+  </main>
+
+  
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
