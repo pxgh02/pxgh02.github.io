@@ -1,0 +1,315 @@
+<!doctype html><html lang=zh dir=ltr><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content='
+  .sh脚本
+  #
+
+
+  shebang开头特殊行
+  #
+
+这行告诉系统应该使用哪个解释器来执行脚本
+#!/bin/bash
+#! 是shebang的标识符，后面跟着解释器的路径
+对于Python脚本#!/usr/bin/env python3.使用 /usr/bin/env 是为了确保系统能够在任何安装了Python的位置找到Python解释器，而不是硬编码路径。
+
+  设置参数
+  #
+
+#!/bin/bash
+
+verisim=/home/public/software/verisim/bin/verisim
+
+if [ "$1" == "--case" ]; then
+	if [ -n "$2" ]; then
+		Case=$2;
+	else
+		echo "Error! No case at provided after --case"
+		exit 1
+	fi
+else
+	echo "run without appoint testcase"
+	#Case=../testcase/gate_2000_2000_100.v
+	#Case=../testcase/gate_1000_1000_50.v
+	#Case=../testcase/gate_500_500_50.v
+	#Case=../testcase/gate_200_200_20.v
+	#Case=../testcase/gate_100_100_20.v
+	#Case=../testcase/gate_40_40_10.v
+	#Case=../testcase/gate_30_30_10.v
+	#Case=../testcase/gate_20_20_10.v
+	Case=../testcase/gate_20_20_5.v
+fi
+
+export Case
+#设为环境变量，这样就可以在代码里面获得，eg: char *env_name = getenv("Case");  //get case from env_var
+
+
+
+#以下是关于这个项目的编译的相关指令，无关
+CFile=setUpSystemFunc_verisim.cpp
+PliMap=../code/systf.tab
+
+
+rm -rf verisim_history.db verisim.env verisim.db verisim_work verisim.log
+
+${verisim} +acc+c ${Case} -P ${PliMap} ${CFile}  -no-mold
+
+rm -rf verisim_history.zdb verisim.env verisim.zdb verisim_work verisim.log
+
+#eg:
+./run.sh --case ../testcase/gate_100_100_20.v 
+
+  输出重定向
+  #
+
+
+
+
+
+  循环
+  #
+
+#!/bin/bash
+
+export PATH=IVERILOG_PATH/bin:${PATH}
+VPI=myvpi
+
+# 定义一个包含所有测试案例的数组
+cases=(
+    "../testcase/test.v"
+    "../testcase/gate_20_20_5.v"
+    "../testcase/gate_20_20_10.v"
+    "../testcase/gate_30_30_10.v"
+    "../testcase/gate_40_40_10.v"
+    "../testcase/gate_100_100_20.v"
+    "../testcase/gate_200_200_20.v"
+    "../testcase/gate_500_500_50.v"
+    "../testcase/gate_1000_1000_50.v"
+)
+
+# 循环遍历所有的测试案例
+for Case in "${cases[@]}"; do
+    echo "Running case: $Case"
+    
+    # 清理之前的文件
+    rm -rf *.vvp *.vpi obj_dir *.o myvpi.c
+    
+    # 触摸VPI的C文件
+    touch ${VPI}.c
+    
+    # 编译Verilog文件和VPI文件
+    iverilog "$Case" -o testcase.vvp
+    iverilog-vpi -L. ${VPI}.c ./setUpSystemFunc_iverilog.cpp ./loopchecker.h -o testcase.vvp
+    
+    # 运行模拟
+    vvp -M. -m ${VPI} testcase.vvp
+    
+    # 清理生成的文件
+    rm -rf *.vvp *.vpi obj_dir *.o ${VPI}.c
+done
+
+echo "All cases have been run."
+
+  提升权限直接运行
+  #
+
+#查看脚本权限
+ls -l yourscript.sh
+
+#改变权限
+chmod +x yourscript.sh
+chmod 755 yourscript.sh
+7 代表 rwx（读、写、执行）
+6 代表 rw-（读、写）
+5 代表 r-x（读、执行）
+4 代表 r&ndash;（读）'><meta name=theme-color media="(prefers-color-scheme: light)" content="#ffffff"><meta name=theme-color media="(prefers-color-scheme: dark)" content="#343a40"><meta name=color-scheme content="light dark"><meta property="og:url" content="https://pxgh02.github.io/zh/docs/Other/Other/linux/"><meta property="og:site_name" content="Pxmmmm"><meta property="og:title" content="Pxmmmm"><meta property="og:description" content='.sh脚本 # shebang开头特殊行 # 这行告诉系统应该使用哪个解释器来执行脚本
+#!/bin/bash #! 是shebang的标识符，后面跟着解释器的路径
+对于Python脚本#!/usr/bin/env python3.使用 /usr/bin/env 是为了确保系统能够在任何安装了Python的位置找到Python解释器，而不是硬编码路径。
+设置参数 # #!/bin/bash verisim=/home/public/software/verisim/bin/verisim if [ "$1" == "--case" ]; then if [ -n "$2" ]; then Case=$2; else echo "Error! No case at provided after --case" exit 1 fi else echo "run without appoint testcase" #Case=../testcase/gate_2000_2000_100.v #Case=../testcase/gate_1000_1000_50.v #Case=../testcase/gate_500_500_50.v #Case=../testcase/gate_200_200_20.v #Case=../testcase/gate_100_100_20.v #Case=../testcase/gate_40_40_10.v #Case=../testcase/gate_30_30_10.v #Case=../testcase/gate_20_20_10.v Case=../testcase/gate_20_20_5.v fi export Case #设为环境变量，这样就可以在代码里面获得，eg: char *env_name = getenv("Case"); //get case from env_var #以下是关于这个项目的编译的相关指令，无关 CFile=setUpSystemFunc_verisim.cpp PliMap=../code/systf.tab rm -rf verisim_history.db verisim.env verisim.db verisim_work verisim.log ${verisim} +acc+c ${Case} -P ${PliMap} ${CFile} -no-mold rm -rf verisim_history.zdb verisim.env verisim.zdb verisim_work verisim.log #eg: ./run.sh --case ../testcase/gate_100_100_20.v 输出重定向 # 循环 # #!/bin/bash export PATH=IVERILOG_PATH/bin:${PATH} VPI=myvpi # 定义一个包含所有测试案例的数组 cases=( "../testcase/test.v" "../testcase/gate_20_20_5.v" "../testcase/gate_20_20_10.v" "../testcase/gate_30_30_10.v" "../testcase/gate_40_40_10.v" "../testcase/gate_100_100_20.v" "../testcase/gate_200_200_20.v" "../testcase/gate_500_500_50.v" "../testcase/gate_1000_1000_50.v" ) # 循环遍历所有的测试案例 for Case in "${cases[@]}"; do echo "Running case: $Case" # 清理之前的文件 rm -rf *.vvp *.vpi obj_dir *.o myvpi.c # 触摸VPI的C文件 touch ${VPI}.c # 编译Verilog文件和VPI文件 iverilog "$Case" -o testcase.vvp iverilog-vpi -L. ${VPI}.c ./setUpSystemFunc_iverilog.cpp ./loopchecker.h -o testcase.vvp # 运行模拟 vvp -M. -m ${VPI} testcase.vvp # 清理生成的文件 rm -rf *.vvp *.vpi obj_dir *.o ${VPI}.c done echo "All cases have been run." 提升权限直接运行 # #查看脚本权限 ls -l yourscript.sh #改变权限 chmod +x yourscript.sh chmod 755 yourscript.sh 7 代表 rwx（读、写、执行） 6 代表 rw-（读、写） 5 代表 r-x（读、执行） 4 代表 r–（读）'><meta property="og:locale" content="zh"><meta property="og:type" content="article"><meta property="article:section" content="docs"><meta property="article:modified_time" content="2025-02-26T11:34:54+00:00"><title>Linux | Pxmmmm</title>
+<link rel=icon href=/favicon.png><link rel=manifest href=/manifest.json><link rel=canonical href=https://pxgh02.github.io/zh/docs/Other/Other/linux/><link rel=stylesheet href=/book.min.6c8b9d2a1fc95075ed7da46ca81060b39add8fff6741ac51259f768929281e2c.css integrity="sha256-bIudKh/JUHXtfaRsqBBgs5rdj/9nQaxRJZ92iSkoHiw=" crossorigin=anonymous><script defer src=/fuse.min.js></script><script defer src=/zh.search.min.8eafbac7697c4856301cceaa115ee72ef60019c2c45132b637d7543a267762ca.js integrity="sha256-jq+6x2l8SFYwHM6qEV7nLvYAGcLEUTK2N9dUOiZ3Yso=" crossorigin=anonymous></script><script defer src=/sw.min.6f6f90fcb8eb1c49ec389838e6b801d0de19430b8e516902f8d75c3c8bd98739.js integrity="sha256-b2+Q/LjrHEnsOJg45rgB0N4ZQwuOUWkC+NdcPIvZhzk=" crossorigin=anonymous></script></head><body dir=ltr><input type=checkbox class="hidden toggle" id=menu-control>
+<input type=checkbox class="hidden toggle" id=toc-control><main class="container flex"><aside class=book-menu><div class=book-menu-content><nav><h2 class=book-brand><a class="flex align-center" href=/zh/><span>Pxmmmm</span></a></h2><div class="book-search hidden"><input type=text id=book-search-input placeholder=搜索 aria-label=搜索 maxlength=64 data-hotkeys=s/><div class="book-search-spinner hidden"></div><ul id=book-search-results></ul></div><script>document.querySelector(".book-search").classList.remove("hidden")</script><ul class=book-languages><li><input type=checkbox id=languages class=toggle>
+<label for=languages class="flex justify-between"><a role=button class="flex align-center"><img src=/svg/translate.svg class=book-icon alt=Languages>
+Chinese</a></label><ul><li><a href=/>English</a></li></ul></li></ul><ul><li><input type=checkbox id=section-a7a8fb3cc34544172ff5103ce3adf7cc class=toggle checked>
+<label for=section-a7a8fb3cc34544172ff5103ce3adf7cc class="flex justify-between"><a href=/zh/docs/Other/>Other</a></label><ul><li><input type=checkbox id=section-0f93294ac0398c75569110d47f22a323 class=toggle checked>
+<label for=section-0f93294ac0398c75569110d47f22a323 class="flex justify-between"><a href=/zh/docs/Other/Other/>Other</a></label><ul><li><a href=/zh/docs/Other/Other/Algorithms/>Algorithms</a></li><li><a href=/zh/docs/Other/Other/Hardware/>Hardware</a></li><li><a href=/zh/docs/Other/Other/linux/ class=active>Linux</a></li><li><a href=/zh/docs/Other/Other/Literature/>Literature</a></li><li><a href=/zh/docs/Other/Other/network/>Network</a></li><li><a href=/zh/docs/Other/Other/Program/>Program</a></li><li><a href=/zh/docs/Other/Other/software/>Software</a></li><li><a href=/zh/docs/Other/Other/Tools/>Tools</a></li><li><a href=/zh/docs/Other/Other/window/>Window</a></li></ul></li><li><a href=/zh/docs/Other/Algorithms/>Algorithms</a></li><li><a href=/zh/docs/Other/git/>Git</a></li><li><a href=/zh/docs/Other/Hardware/>Hardware</a></li><li><a href=/zh/docs/Other/linux/>Linux</a></li><li><a href=/zh/docs/Other/Literature/>Literature</a></li><li><a href=/zh/docs/Other/makefile/>Makefile</a></li><li><a href=/zh/docs/Other/network/>Network</a></li><li><a href=/zh/docs/Other/Program/>Program</a></li><li><a href=/zh/docs/Other/Tools/>Tools</a></li><li><a href=/zh/docs/Other/window/>Window</a></li><li><a href=/zh/docs/Other/Writing-PPT-Presentation/>Writing Ppt Presentation</a></li></ul></li><li><input type=checkbox id=section-546194909198d851b05dc5d16088b0b9 class=toggle>
+<label for=section-546194909198d851b05dc5d16088b0b9 class="flex justify-between"><a href=/zh/docs/Digtal/>Physical Design</a></label><ul><li><input type=checkbox id=section-50bd8d8e06f01bc507cff9ec875d9670 class=toggle>
+<label for=section-50bd8d8e06f01bc507cff9ec875d9670 class="flex justify-between"><a href=/zh/docs/Digtal/Digtal/>Physical Design</a></label><ul><li><input type=checkbox id=section-eb886ad00a6041494cd8a2d37b9502c1 class=toggle>
+<label for=section-eb886ad00a6041494cd8a2d37b9502c1 class="flex justify-between"><a href=/zh/docs/Digtal/Digtal/flow/EDA4PR/>EDA4PR</a></label></li><li><input type=checkbox id=section-56ecf627e9a5b7dcba2f2eeea116f5c8 class=toggle>
+<label for=section-56ecf627e9a5b7dcba2f2eeea116f5c8 class="flex justify-between"><a href=/zh/docs/Digtal/Digtal/flow/EDA4PR-Digtal/>EDA4PR-Digtal</a></label></li><li><input type=checkbox id=section-531f953e4132641abe87a288f8c87537 class=toggle>
+<label for=section-531f953e4132641abe87a288f8c87537 class="flex justify-between"><a href=/zh/docs/Digtal/Digtal/flow/flow/>Flow</a></label></li><li><input type=checkbox id=section-dd416fec3c1dfa9abc7052d958fac1fb class=toggle>
+<label for=section-dd416fec3c1dfa9abc7052d958fac1fb class="flex justify-between"><a href=/zh/docs/Digtal/Digtal/Placement/placement/>Placement</a></label></li><li><input type=checkbox id=section-edb5a12c4e85a0cb8ad856bb96d3a791 class=toggle>
+<label for=section-edb5a12c4e85a0cb8ad856bb96d3a791 class="flex justify-between"><a href=/zh/docs/Digtal/Digtal/Routing/routing2/>Routing</a></label></li><li><input type=checkbox id=section-85e7c64a7f59a04958f475e43f62710b class=toggle>
+<label for=section-85e7c64a7f59a04958f475e43f62710b class="flex justify-between"><a href=/zh/docs/Digtal/Digtal/Routing/routing1/>Routing1</a></label></li></ul></li><li><input type=checkbox id=section-9bc128912acae8559e0b27b496b7779b class=toggle>
+<label for=section-9bc128912acae8559e0b27b496b7779b class="flex justify-between"><a href=/zh/docs/Digtal/flow/EDA4PR/>EDA4PR</a></label></li><li><input type=checkbox id=section-50846ac4cdec99c8bd1f8b0417acad9a class=toggle>
+<label for=section-50846ac4cdec99c8bd1f8b0417acad9a class="flex justify-between"><a href=/zh/docs/Digtal/flow/flow/>Flow</a></label></li><li><input type=checkbox id=section-b2241e4da59f24976e354abe344e8d4f class=toggle>
+<label for=section-b2241e4da59f24976e354abe344e8d4f class="flex justify-between"><a href=/zh/docs/Digtal/Placement/placement/>Placement</a></label></li><li><input type=checkbox id=section-259735f9bf2708d778569b162c141df5 class=toggle>
+<label for=section-259735f9bf2708d778569b162c141df5 class="flex justify-between"><a href=/zh/docs/Digtal/Routing/routing2/>Routing</a></label></li><li><input type=checkbox id=section-78b8f069c0c130e55062b802fff78361 class=toggle>
+<label for=section-78b8f069c0c130e55062b802fff78361 class="flex justify-between"><a href=/zh/docs/Digtal/Routing/routing1/>Routing1</a></label></li></ul></li></ul></nav><script>(function(){var e=document.querySelector("aside .book-menu-content");addEventListener("beforeunload",function(){localStorage.setItem("menu.scrollTop",e.scrollTop)}),e.scrollTop=localStorage.getItem("menu.scrollTop")})()</script></div></aside><div class=book-page><header class=book-header><div class="flex align-center justify-between"><label for=menu-control><img src=/svg/menu.svg class=book-icon alt=Menu></label><h3>Linux</h3><label for=toc-control><img src=/svg/toc.svg class=book-icon alt="Table of Contents"></label></div><aside class="hidden clearfix"><nav id=TableOfContents><ul><li><a href=#sh脚本>.sh脚本</a><ul><li><a href=#shebang开头特殊行>shebang开头特殊行</a></li><li><a href=#设置参数>设置参数</a></li><li><a href=#输出重定向>输出重定向</a></li><li><a href=#循环>循环</a></li><li><a href=#提升权限直接运行>提升权限直接运行</a></li></ul></li><li><a href=#环境变量>环境变量</a><ul><li><a href=#种类>种类</a></li><li><a href=#查看环境变量><strong>查看环境变量</strong></a></li><li><a href=#设置环境变量>设置环境变量</a><ul><li><a href=#设置系统环境变量>设置系统环境变量</a></li><li><a href=#设置用户环境变量>设置用户环境变量</a></li></ul></li><li><a href=#path>PATH</a></li><li><a href=#ld_library_path>LD_LIBRARY_PATH</a></li><li><a href=#参考>参考</a></li></ul></li><li><a href=#安装方式的不同>安装方式的不同</a><ul><li><a href=#pip和pip3>pip和pip3</a></li></ul></li><li><a href=#远程方法>远程方法</a><ul><li><a href=#xrdp>xrdp</a></li><li><a href=#vnc>vnc</a><ul><li></li></ul></li><li><a href=#mobaxterm启用x-server>mobaxterm启用X server</a><ul><li><a href=#wsl>WSL</a></li></ul></li><li><a href=#pycharm设置display>pycharm设置DISPLAY</a></li><li><a href=#将本地文件复制到另一台服务器>将本地文件复制到另一台服务器</a></li></ul></li><li><a href=#bsub>bsub</a></li></ul></nav></aside></header><article class="markdown book-article"><h1 id=sh脚本>.sh脚本
+<a class=anchor href=#sh%e8%84%9a%e6%9c%ac>#</a></h1><h2 id=shebang开头特殊行>shebang开头特殊行
+<a class=anchor href=#shebang%e5%bc%80%e5%a4%b4%e7%89%b9%e6%ae%8a%e8%a1%8c>#</a></h2><p>这行告诉系统应该使用哪个解释器来执行脚本</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#75715e>#!/bin/bash
+</span></span></span></code></pre></div><p><code>#!</code> 是shebang的标识符，后面跟着解释器的路径</p><p>对于Python脚本<code>#!/usr/bin/env python3</code>.使用 <code>/usr/bin/env</code> 是为了确保系统能够在任何安装了Python的位置找到Python解释器，而不是硬编码路径。</p><h2 id=设置参数>设置参数
+<a class=anchor href=#%e8%ae%be%e7%bd%ae%e5%8f%82%e6%95%b0>#</a></h2><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#75715e>#!/bin/bash
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>
+</span></span><span style=display:flex><span>verisim<span style=color:#f92672>=</span>/home/public/software/verisim/bin/verisim
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>if</span> <span style=color:#f92672>[</span> <span style=color:#e6db74>&#34;</span>$1<span style=color:#e6db74>&#34;</span> <span style=color:#f92672>==</span> <span style=color:#e6db74>&#34;--case&#34;</span> <span style=color:#f92672>]</span>; <span style=color:#66d9ef>then</span>
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>if</span> <span style=color:#f92672>[</span> -n <span style=color:#e6db74>&#34;</span>$2<span style=color:#e6db74>&#34;</span> <span style=color:#f92672>]</span>; <span style=color:#66d9ef>then</span>
+</span></span><span style=display:flex><span>		Case<span style=color:#f92672>=</span>$2;
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>else</span>
+</span></span><span style=display:flex><span>		echo <span style=color:#e6db74>&#34;Error! No case at provided after --case&#34;</span>
+</span></span><span style=display:flex><span>		exit <span style=color:#ae81ff>1</span>
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>fi</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>else</span>
+</span></span><span style=display:flex><span>	echo <span style=color:#e6db74>&#34;run without appoint testcase&#34;</span>
+</span></span><span style=display:flex><span>	<span style=color:#75715e>#Case=../testcase/gate_2000_2000_100.v</span>
+</span></span><span style=display:flex><span>	<span style=color:#75715e>#Case=../testcase/gate_1000_1000_50.v</span>
+</span></span><span style=display:flex><span>	<span style=color:#75715e>#Case=../testcase/gate_500_500_50.v</span>
+</span></span><span style=display:flex><span>	<span style=color:#75715e>#Case=../testcase/gate_200_200_20.v</span>
+</span></span><span style=display:flex><span>	<span style=color:#75715e>#Case=../testcase/gate_100_100_20.v</span>
+</span></span><span style=display:flex><span>	<span style=color:#75715e>#Case=../testcase/gate_40_40_10.v</span>
+</span></span><span style=display:flex><span>	<span style=color:#75715e>#Case=../testcase/gate_30_30_10.v</span>
+</span></span><span style=display:flex><span>	<span style=color:#75715e>#Case=../testcase/gate_20_20_10.v</span>
+</span></span><span style=display:flex><span>	Case<span style=color:#f92672>=</span>../testcase/gate_20_20_5.v
+</span></span><span style=display:flex><span><span style=color:#66d9ef>fi</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>export Case
+</span></span><span style=display:flex><span><span style=color:#75715e>#设为环境变量，这样就可以在代码里面获得，eg: char *env_name = getenv(&#34;Case&#34;);  //get case from env_var</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#以下是关于这个项目的编译的相关指令，无关</span>
+</span></span><span style=display:flex><span>CFile<span style=color:#f92672>=</span>setUpSystemFunc_verisim.cpp
+</span></span><span style=display:flex><span>PliMap<span style=color:#f92672>=</span>../code/systf.tab
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>rm -rf verisim_history.db verisim.env verisim.db verisim_work verisim.log
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#e6db74>${</span>verisim<span style=color:#e6db74>}</span> +acc+c <span style=color:#e6db74>${</span>Case<span style=color:#e6db74>}</span> -P <span style=color:#e6db74>${</span>PliMap<span style=color:#e6db74>}</span> <span style=color:#e6db74>${</span>CFile<span style=color:#e6db74>}</span>  -no-mold
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>rm -rf verisim_history.zdb verisim.env verisim.zdb verisim_work verisim.log
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#eg:</span>
+</span></span><span style=display:flex><span>./run.sh --case ../testcase/gate_100_100_20.v 
+</span></span></code></pre></div><h2 id=输出重定向>输出重定向
+<a class=anchor href=#%e8%be%93%e5%87%ba%e9%87%8d%e5%ae%9a%e5%90%91>#</a></h2><blockquote><blockquote></blockquote></blockquote><h2 id=循环>循环
+<a class=anchor href=#%e5%be%aa%e7%8e%af>#</a></h2><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#75715e>#!/bin/bash
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>
+</span></span><span style=display:flex><span>export PATH<span style=color:#f92672>=</span>IVERILOG_PATH/bin:<span style=color:#e6db74>${</span>PATH<span style=color:#e6db74>}</span>
+</span></span><span style=display:flex><span>VPI<span style=color:#f92672>=</span>myvpi
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 定义一个包含所有测试案例的数组</span>
+</span></span><span style=display:flex><span>cases<span style=color:#f92672>=(</span>
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;../testcase/test.v&#34;</span>
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;../testcase/gate_20_20_5.v&#34;</span>
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;../testcase/gate_20_20_10.v&#34;</span>
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;../testcase/gate_30_30_10.v&#34;</span>
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;../testcase/gate_40_40_10.v&#34;</span>
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;../testcase/gate_100_100_20.v&#34;</span>
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;../testcase/gate_200_200_20.v&#34;</span>
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;../testcase/gate_500_500_50.v&#34;</span>
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;../testcase/gate_1000_1000_50.v&#34;</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>)</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 循环遍历所有的测试案例</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>for</span> Case in <span style=color:#e6db74>&#34;</span><span style=color:#e6db74>${</span>cases[@]<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>; <span style=color:#66d9ef>do</span>
+</span></span><span style=display:flex><span>    echo <span style=color:#e6db74>&#34;Running case: </span>$Case<span style=color:#e6db74>&#34;</span>
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#75715e># 清理之前的文件</span>
+</span></span><span style=display:flex><span>    rm -rf *.vvp *.vpi obj_dir *.o myvpi.c
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#75715e># 触摸VPI的C文件</span>
+</span></span><span style=display:flex><span>    touch <span style=color:#e6db74>${</span>VPI<span style=color:#e6db74>}</span>.c
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#75715e># 编译Verilog文件和VPI文件</span>
+</span></span><span style=display:flex><span>    iverilog <span style=color:#e6db74>&#34;</span>$Case<span style=color:#e6db74>&#34;</span> -o testcase.vvp
+</span></span><span style=display:flex><span>    iverilog-vpi -L. <span style=color:#e6db74>${</span>VPI<span style=color:#e6db74>}</span>.c ./setUpSystemFunc_iverilog.cpp ./loopchecker.h -o testcase.vvp
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#75715e># 运行模拟</span>
+</span></span><span style=display:flex><span>    vvp -M. -m <span style=color:#e6db74>${</span>VPI<span style=color:#e6db74>}</span> testcase.vvp
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#75715e># 清理生成的文件</span>
+</span></span><span style=display:flex><span>    rm -rf *.vvp *.vpi obj_dir *.o <span style=color:#e6db74>${</span>VPI<span style=color:#e6db74>}</span>.c
+</span></span><span style=display:flex><span><span style=color:#66d9ef>done</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>echo <span style=color:#e6db74>&#34;All cases have been run.&#34;</span>
+</span></span></code></pre></div><h2 id=提升权限直接运行>提升权限直接运行
+<a class=anchor href=#%e6%8f%90%e5%8d%87%e6%9d%83%e9%99%90%e7%9b%b4%e6%8e%a5%e8%bf%90%e8%a1%8c>#</a></h2><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#75715e>#查看脚本权限</span>
+</span></span><span style=display:flex><span>ls -l yourscript.sh
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#改变权限</span>
+</span></span><span style=display:flex><span>chmod +x yourscript.sh
+</span></span><span style=display:flex><span>chmod <span style=color:#ae81ff>755</span> yourscript.sh
+</span></span></code></pre></div><p>7 代表 rwx（读、写、执行）
+6 代表 rw-（读、写）
+5 代表 r-x（读、执行）
+4 代表 r&ndash;（读）</p><h1 id=环境变量>环境变量
+<a class=anchor href=#%e7%8e%af%e5%a2%83%e5%8f%98%e9%87%8f>#</a></h1><p>程序（操作系统命令和应用程序）的执行都需要运行环境，这个环境是由多个环境变量组成的</p><h2 id=种类>种类
+<a class=anchor href=#%e7%a7%8d%e7%b1%bb>#</a></h2><p>系统环境变量：公共的，对全部的用户都生效。</p><p>用户环境变量：用户私有的、自定义的个性化设置，只对该用户生效。</p><p>永久环境变量：在环境变量脚本文件中配置，用户每次登录时会自动执行这些脚本，相当于永久生效。</p><p>临时环境变量：使用时在Shell中临时定义，退出Shell后失效</p><h2 id=查看环境变量><strong>查看环境变量</strong>
+<a class=anchor href=#%e6%9f%a5%e7%9c%8b%e7%8e%af%e5%a2%83%e5%8f%98%e9%87%8f>#</a></h2><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>env	<span style=color:#75715e>#查看所有环境变量</span>
+</span></span><span style=display:flex><span>env|grep relate_name <span style=color:#75715e>#用grep筛选和relate_name相关的环境变量</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#75715e>#常用的</span>
+</span></span><span style=display:flex><span>echo $LD_LIBRARY_PATH <span style=color:#75715e>#C/C++语言动态链接库文件搜索的目录，它不是Linux缺省的环境变量，但对C/C++程序员来说非常重要</span>
+</span></span><span style=display:flex><span>echo $LANG <span style=color:#75715e>#Linux系统的语言、地区、字符集</span>
+</span></span><span style=display:flex><span>echo $SHELL<span style=color:#75715e>#用户当前使用的Shell解析器。通常为/bin/bash</span>
+</span></span><span style=display:flex><span>echo $HOSTNAME<span style=color:#75715e>#106服务器是 user_super_server</span>
+</span></span><span style=display:flex><span>echo $HISTSIZE<span style=color:#75715e>#保存历史命令的数目</span>
+</span></span><span style=display:flex><span>echo $USER
+</span></span><span style=display:flex><span>echo $PWD<span style=color:#75715e>#当前工作目录</span>
+</span></span><span style=display:flex><span>echo $CLASSPATH<span style=color:#75715e>#JAVA语言库文件搜索的目录，它也不是Linux缺省的环境变量，但对JAVA程序员来说非常重要</span>
+</span></span></code></pre></div><h2 id=设置环境变量>设置环境变量
+<a class=anchor href=#%e8%ae%be%e7%bd%ae%e7%8e%af%e5%a2%83%e5%8f%98%e9%87%8f>#</a></h2><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>export var
+</span></span><span style=display:flex><span>var<span style=color:#f92672>=</span><span style=color:#e6db74>&#39;值&#39;</span> 
+</span></span><span style=display:flex><span><span style=color:#75715e>#或export var=&#39;值&#39;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#在.bashrc等文件中写了后，需要source再能生效</span>
+</span></span></code></pre></div><p>如果环境变量的值没有空格等特殊符号，可以不用单引号包含。</p><p>采用export设置的环境变量，在退出Shell后就会失效，下次登录时需要重新设置。如果希望环境变量永久生效，需要在登录脚本文件中配置。</p><pre tabindex=0><code>变量名=&#39;值&#39; 
+
+export 变量名
+或export 变量名=&#39;值&#39;
+</code></pre><h3 id=设置系统环境变量>设置系统环境变量
+<a class=anchor href=#%e8%ae%be%e7%bd%ae%e7%b3%bb%e7%bb%9f%e7%8e%af%e5%a2%83%e5%8f%98%e9%87%8f>#</a></h3><h4 id=在etcprofile文件中设置>在/etc/profile文件中设置
+<a class=anchor href=#%e5%9c%a8etcprofile%e6%96%87%e4%bb%b6%e4%b8%ad%e8%ae%be%e7%bd%ae>#</a></h4><p>用户登录时执行/etc/profile文件中设置系统的环境变量。但是，Linux不建议在/etc/profile文件中设置系统环境变量。</p><h4 id=在etcprofiled目录下设置>在/etc/profile.d目录下设置
+<a class=anchor href=#%e5%9c%a8etcprofiled%e7%9b%ae%e5%bd%95%e4%b8%8b%e8%ae%be%e7%bd%ae>#</a></h4><p>可以对不同的项目用.sh/.csh文件设置环境变量</p><p>这是Linux推荐的方法，不想要什么变量直接删除 /etc/profile.d下对应的 shell 脚本即可</p><h4 id=在etcbashrc文件中设置环境变量>在/etc/bashrc文件中设置环境变量
+<a class=anchor href=#%e5%9c%a8etcbashrc%e6%96%87%e4%bb%b6%e4%b8%ad%e8%ae%be%e7%bd%ae%e7%8e%af%e5%a2%83%e5%8f%98%e9%87%8f>#</a></h4><p>该文件配置的环境变量将会影响全部用户使用的bash shell。但是，Linux也不建议在/etc/bashrc文件中设置系统环境变量。</p><h3 id=设置用户环境变量>设置用户环境变量
+<a class=anchor href=#%e8%ae%be%e7%bd%ae%e7%94%a8%e6%88%b7%e7%8e%af%e5%a2%83%e5%8f%98%e9%87%8f>#</a></h3><ul><li>.bash_profile<ul><li>当用户登录时执行，每个用户都可以使用该文件来配置专属于自己的环境变量。</li><li>但是现在没了？</li></ul></li><li>.bashrc<ul><li>当用户登录时以及每次打开新的Shell时该文件都将被读取，不推荐在里面配置用户专用的环境变量，因为<strong>每开一个Shell，该文件都会被读取一次</strong>，效率肯定受影响。</li><li>但是现在都这么做0.0</li></ul></li></ul><h2 id=path>PATH
+<a class=anchor href=#path>#</a></h2><ul><li>可执行程序的搜索目录，可执行程序包括Linux系统命令和用户的应用程序。如果可执行程序的目录不在PATH指定的目录中，执行时需要指定目录。</li><li>PATH环境变量存放的是目录列表，目录之间用冒号:分隔</li><li>最后的圆点.表示当前目录(加入了当前补录到PATH),如果PATH变量中没有包含圆点.，执行当前目录下的程序需要加./或使用绝对路径</li><li>PATH缺省包含了Linux系统命令所在的目录（/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin），如果不包含这些目录，Linux的常用命令也无法执行（要输入绝对路径才能执行）<ul><li><img src=D:%5cMyNotes%5cOther%5cassets%5cimage-20240912114400865.png alt=image-20240912114400865></li><li>/usr/bin里面有很多可执行文件</li></ul></li><li>在用户的.bashrc文件中，会对PATH进行扩充<ul><li>比如：<code>export PATH=$PATH:$HOME/bin</code></li></ul></li></ul><h2 id=ld_library_path>LD_LIBRARY_PATH
+<a class=anchor href=#ld_library_path>#</a></h2><p>C/C++语言<strong>动态链接库文件搜索的目录</strong></p><p>与PATH的格式相同</p><h2 id=参考>参考
+<a class=anchor href=#%e5%8f%82%e8%80%83>#</a></h2><p><a href=https://www.cnblogs.com/wusl123/p/18009598>linux环境变量 - a龙 - 博客园 (cnblogs.com)</a></p><h1 id=安装方式的不同>安装方式的不同
+<a class=anchor href=#%e5%ae%89%e8%a3%85%e6%96%b9%e5%bc%8f%e7%9a%84%e4%b8%8d%e5%90%8c>#</a></h1><ol><li><p>使用<code>apt</code>：</p><p>更新软件包列表：<code>sudo apt update</code></p><p>安装软件包：<code>sudo apt install package_name</code></p><p>卸载软件包：<code>sudo apt remove package_name</code></p><p>查看安装过的包：<code>apt list --installed</code></p></li><li><p>使用<code>apt-get</code>（较旧的Ubuntu版本中常用）：</p><p>更新软件包列表：<code>sudo apt-get update</code></p><p>安装软件包：<code>sudo apt-get install package_name</code></p><p>卸载软件包：<code>sudo apt-get remove package_name</code></p></li><li><p>使用<code>dpkg</code>（直接操作<code>.deb</code>包）：</p><p>安装<code>.deb</code>文件：<code>sudo dpkg -i package_name.deb</code></p><p>卸载软件包：<code>sudo dpkg -r package_name</code></p></li><li><p>使用<code>pip</code>（Python包管理工具）：</p><p>安装Python包：<code>sudo pip install package_name</code></p><p>卸载Python包：<code>sudo pip uninstall package_name</code></p></li><li><p>使用<code>make</code>和源代码（用于安装从源代码编译的软件）：</p><p>通常需要先<code>./configure</code>，然后<code>make</code>，最后<code>sudo make install</code></p></li></ol><h2 id=pip和pip3>pip和pip3
+<a class=anchor href=#pip%e5%92%8cpip3>#</a></h2><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>pip install <span style=color:#f92672>[</span>package-name<span style=color:#f92672>]</span>              <span style=color:#75715e># 安装名为[package-name]的包</span>
+</span></span><span style=display:flex><span>pip install <span style=color:#f92672>[</span>package-name<span style=color:#f92672>]==</span>X.X         <span style=color:#75715e># 安装名为[package-name]的包并指定版本X.X</span>
+</span></span><span style=display:flex><span>pip install <span style=color:#f92672>[</span>package-name<span style=color:#f92672>]</span> --proxy<span style=color:#f92672>=</span>代理服务器IP:端口号         <span style=color:#75715e># 使用代理服务器安装</span>
+</span></span><span style=display:flex><span>pip install <span style=color:#f92672>[</span>package-name<span style=color:#f92672>]</span> --upgrade    <span style=color:#75715e># 更新名为[package-name]的包</span>
+</span></span><span style=display:flex><span>pip uninstall <span style=color:#f92672>[</span>package-name<span style=color:#f92672>]</span>            <span style=color:#75715e># 删除名为[package-name]的包</span>
+</span></span><span style=display:flex><span>pip list                                <span style=color:#75715e># 列出当前环境下已安装的所有包</span>
+</span></span></code></pre></div><h1 id=远程方法>远程方法
+<a class=anchor href=#%e8%bf%9c%e7%a8%8b%e6%96%b9%e6%b3%95>#</a></h1><h2 id=xrdp>xrdp
+<a class=anchor href=#xrdp>#</a></h2><p><a href=https://developer.baidu.com/article/details/3281892>利用xrdp实现Windows远程连接Kali Linux桌面-百度开发者中心 (baidu.com)</a></p><p>日志输出在 /var/log/xrdp.log 和 /var/log/xrdp-sesman.log。</p><p>sudo ufw allow from your_ip/24 to any port 3389</p><h2 id=vnc>vnc
+<a class=anchor href=#vnc>#</a></h2><p><a href=https://www.cnblogs.com/dkblogs/p/15955305.html>windows环境安装VNC及远程连接linux(centos7) - 银河星光 - 博客园 (cnblogs.com)</a></p><h4 id=vnc和ssh的区别>vnc和ssh的区别
+<a class=anchor href=#vnc%e5%92%8cssh%e7%9a%84%e5%8c%ba%e5%88%ab>#</a></h4><p>主要<strong>区别：VNC</strong>服务器<strong>和SSH</strong>服务器有一些显著的区别。 首先，VN<strong>C</strong>服务器提供图形界面的远程访问和控制，可以让用户直观地操作计算机。 而<strong>SSH</strong>服务器主要用于远程命令行访问和文件传输，对于不需要图形界面的操作更为适用。 其次，<strong>VN</strong>C服务器在传输图形界面时消耗较多的网络带宽，因为它需要传输图像数据。 相比之下，<strong>SSH</strong>服务器的传输开销较小，因为它主要传输文本和命令。 此外，<strong>SSH</strong>服务器采用了加密和身份验证机制，提供了更高的安全性，而<strong>VN</strong>C服务器的安全性相对较弱，需要通过额外的措施来增强其安全性。 使用场景：<strong>VN</strong>C服务器适合需要通过图形界面进行远程操作的场景，例如远程协助、远程教学和讲座、远程演示等</p><h2 id=mobaxterm启用x-server>mobaxterm启用X server
+<a class=anchor href=#mobaxterm%e5%90%af%e7%94%a8x-server>#</a></h2><h3 id=wsl>WSL
+<a class=anchor href=#wsl>#</a></h3><p>MobaXterm上默认设置就好，根据提示在设置中开启一个东西。。</p><p>MobaXterm的Xserver是在win上的，而WSL的ip和win不一样，所以不能通过直接设置<code>DISPLAY=0.0</code>或者<code>DISPLAY=localhost:0.0</code>来指定Xserver</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#75715e>#bashrc</span>
+</span></span><span style=display:flex><span>export windows_host<span style=color:#f92672>=</span><span style=color:#e6db74>`</span>ipconfig.exe | grep -n4 WSL  | tail -n <span style=color:#ae81ff>1</span> | awk -F<span style=color:#e6db74>&#34;:&#34;</span> <span style=color:#e6db74>&#39;{ print $2 }&#39;</span> | sed <span style=color:#e6db74>&#39;s/^[ \r\n\t]*//;s/[ \r\n\t]*$//&#39;</span><span style=color:#e6db74>`</span>
+</span></span><span style=display:flex><span>export DISPLAY<span style=color:#f92672>=</span>$windows_host:0
+</span></span><span style=display:flex><span><span style=color:#75715e>#也可以直接export DISPLAY=${window_ip}:0</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#比如export DISPALY=192.168.1.28:0.0 # 192.168.1.28为windows当前ip，下次重连网络可能会变动</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#还看到以下这个，没验证过</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#export DISPLAY=$(awk &#39;/nameserver / {print $2; exit}&#39; /etc/resolv.conf 2&gt;/dev/null):0 # in WSL 2</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#export LIBGL_ALWAYS_INDIRECT=1</span>
+</span></span></code></pre></div><h2 id=pycharm设置display>pycharm设置DISPLAY
+<a class=anchor href=#pycharm%e8%ae%be%e7%bd%aedisplay>#</a></h2><p><img src=/image-20241022194814099.png alt=image-20241022194814099></p><p><img src=/image-20241022194903224.png alt=image-20241022194903224></p><h2 id=将本地文件复制到另一台服务器>将本地文件复制到另一台服务器
+<a class=anchor href=#%e5%b0%86%e6%9c%ac%e5%9c%b0%e6%96%87%e4%bb%b6%e5%a4%8d%e5%88%b6%e5%88%b0%e5%8f%a6%e4%b8%80%e5%8f%b0%e6%9c%8d%e5%8a%a1%e5%99%a8>#</a></h2><p><a href=https://ismc.yuque.com/kldg3t/nrg97r/dnmutswe6lnfuqor>【教程】通过SFTP将本地文件复制到另一台服务器</a></p><h1 id=bsub>bsub
+<a class=anchor href=#bsub>#</a></h1><p><code>bsub</code> 是一个在许多 Unix-like 系统中用于提交作业到批处理系统（如 LSF、PBS 或 Slurm）的命令。它允许用户在后台运行程序，而不会占用终端。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>bsub &lt; job_script.sh <span style=color:#75715e>#提交任务</span>
+</span></span><span style=display:flex><span>bsub -n <span style=color:#ae81ff>4</span> &lt; job_script.sh	<span style=color:#75715e>#指定使用的节点数</span>
+</span></span><span style=display:flex><span>bsub -R <span style=color:#e6db74>&#34;span[hosts=1]&#34;</span> &lt; job_script.sh <span style=color:#75715e>#指定使用的CPU核心数</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>bkill &lt;job_id&gt; <span style=color:#75715e>#终止</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>bjobs 	<span style=color:#75715e>#查看作业状态</span>
+</span></span><span style=display:flex><span>bjobs -l	<span style=color:#75715e>#详细信息</span>
+</span></span><span style=display:flex><span>bqueues <span style=color:#75715e>#查看队列状态</span>
+</span></span><span style=display:flex><span>bhosts	<span style=color:#75715e>#查看系统资源</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>bsub -W 01:00 &lt; job_script.sh <span style=color:#75715e>#设置作业的运行时间限制</span>
+</span></span></code></pre></div></article><footer class=book-footer><div class="flex flex-wrap justify-between"><div><a class="flex align-center" href=https://github.com/alex-shpak/hugo-book/commit/558fe9e6a91fcab8fceb5cf8e0e72df4b2de59b9 title='最后修改者 pxhg02 | 二月 26, 2025' target=_blank rel=noopener><img src=/svg/calendar.svg class=book-icon alt>
+<span>二月 26, 2025</span></a></div><div><a class="flex align-center" href=https://github.com/alex-shpak/hugo-book/edit/main/exampleSite/content.zh/docs/Other/Other/linux.md target=_blank rel=noopener><img src=/svg/edit.svg class=book-icon alt>
+<span>编辑本页</span></a></div></div><script>(function(){function e(e){const t=window.getSelection(),n=document.createRange();n.selectNodeContents(e),t.removeAllRanges(),t.addRange(n)}document.querySelectorAll("pre code").forEach(t=>{t.addEventListener("click",function(){if(window.getSelection().toString())return;e(t.parentElement),navigator.clipboard&&navigator.clipboard.writeText(t.parentElement.textContent)})})})()</script></footer><div class=book-comments></div><label for=menu-control class="hidden book-menu-overlay"></label></div><aside class=book-toc><div class=book-toc-content><nav id=TableOfContents><ul><li><a href=#sh脚本>.sh脚本</a><ul><li><a href=#shebang开头特殊行>shebang开头特殊行</a></li><li><a href=#设置参数>设置参数</a></li><li><a href=#输出重定向>输出重定向</a></li><li><a href=#循环>循环</a></li><li><a href=#提升权限直接运行>提升权限直接运行</a></li></ul></li><li><a href=#环境变量>环境变量</a><ul><li><a href=#种类>种类</a></li><li><a href=#查看环境变量><strong>查看环境变量</strong></a></li><li><a href=#设置环境变量>设置环境变量</a><ul><li><a href=#设置系统环境变量>设置系统环境变量</a></li><li><a href=#设置用户环境变量>设置用户环境变量</a></li></ul></li><li><a href=#path>PATH</a></li><li><a href=#ld_library_path>LD_LIBRARY_PATH</a></li><li><a href=#参考>参考</a></li></ul></li><li><a href=#安装方式的不同>安装方式的不同</a><ul><li><a href=#pip和pip3>pip和pip3</a></li></ul></li><li><a href=#远程方法>远程方法</a><ul><li><a href=#xrdp>xrdp</a></li><li><a href=#vnc>vnc</a><ul><li></li></ul></li><li><a href=#mobaxterm启用x-server>mobaxterm启用X server</a><ul><li><a href=#wsl>WSL</a></li></ul></li><li><a href=#pycharm设置display>pycharm设置DISPLAY</a></li><li><a href=#将本地文件复制到另一台服务器>将本地文件复制到另一台服务器</a></li></ul></li><li><a href=#bsub>bsub</a></li></ul></nav></div></aside></main></body></html>

@@ -1,0 +1,473 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Physical Design on Pxmmmm</title><link>https://pxgh02.github.io/zh/docs/Digtal/Digtal/</link><description>Recent content in Physical Design on Pxmmmm</description><generator>Hugo</generator><language>zh</language><atom:link href="https://pxgh02.github.io/zh/docs/Digtal/Digtal/index.xml" rel="self" type="application/rss+xml"/><item><title>bs24</title><link>https://pxgh02.github.io/zh/docs/Digtal/Digtal/Routing/global-router/congestion/%E5%9F%BA%E4%BA%8E%E5%9B%BE%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E7%9A%84%E9%A2%84%E8%B7%AF%E7%94%B1%E6%8B%A5%E5%A1%9E%E9%A2%84%E6%B5%8B%E7%A0%94%E7%A9%B6/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://pxgh02.github.io/zh/docs/Digtal/Digtal/Routing/global-router/congestion/%E5%9F%BA%E4%BA%8E%E5%9B%BE%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E7%9A%84%E9%A2%84%E8%B7%AF%E7%94%B1%E6%8B%A5%E5%A1%9E%E9%A2%84%E6%B5%8B%E7%A0%94%E7%A9%B6/</guid><description>&lt;p>基于图神经网络的EDA预路由拥塞预测研究&lt;/p>
+&lt;p>课题描述:&lt;/p>
+&lt;p>​	近年来随着数字芯片使用越来越小的工艺制程和芯片内包含越来越多的逻辑单元，使其设计更新迭代优化的难度越来越大。由于数字后端中的布局(Placement)布线(路由, Route)流程属于是NP-Hard的算法优化问题，EDA(Electronic Design Automation)工具在这一阶段往往及其费时，导致更长的物理设计周期。&lt;/p>
+&lt;p>​	在数字电路优化过程中，布线拥塞是用于物理设计过程迭代优化的重要指标。某些区域的布线密度过高，导致无法继续进行有效的布线，进而导致时序与设计规则违例等问题。为此，许多现代综合与布局工具利用拥塞数据，以尽量减少最终物理设计中的拥塞影响。通过布线的拥塞数据，布局布线工具将相应地优化相关的可移动单元位置，以减少线长度、拥塞和违例，进行迭代，直到收敛，从而产生更优的布线结果。精确的拥塞预测在电路布线中起着至关重要的作用，不幸的是，直到设计周期的后期，也就是缓慢的布局和布线流程，精确的拥塞结果才被准确地知道。&lt;/p>
+&lt;p>​	这启发我们设计一个跨设计阶段(Cross-stage)的拥塞预测方法，在设计初期进行布局布线优化，从而加速优化迭代流程。多个先前的工作尝试在利用布局数据预测详细路由(Detail Route)拥塞，以优化放置解决方案的可达性，如：RUDY、GTL、POLAR 2.0等。这些基于专家经验的方法往往预测精度较低。近年来，随着图神经网络(Graph Neural Network, GNN)在学习图结构和挖掘图信息方面展示出了卓越的效果。由于电路结构可以自然地表示为图，图神经网络在电子设计自动化领域受到了越来越多的关注。GNN 模型可以端到端的方式学习全局指标而无需额外的特征工程比传统深度学习方法更高的准确度。&lt;/p>
+&lt;p>​	因此，本课题将设计实现基于图神经网络的EDA预路由拥塞预测任务，给定电路布局结果，或仅仅根据电路网表内容，实现对布线后的拥塞结果预测。&lt;/p>
+&lt;p>内容&lt;/p>
+&lt;ul>
+&lt;li>学习DeepLearning框架(Pytorch/Tensorflow)的使用, 环境的搭建, 图神经网络模型(GNN, Graph Neural Network)的搭建，综述调研&lt;/li>
+&lt;li>学习并掌握一款工具的使用(OpenROAD(推荐)/Candance/Innovus). 并且利用工具获取相关数据集&lt;/li>
+&lt;li>学习与复现相关论文，基于所学内容设计基于GNN的预路由拥塞预测架构, 实现拥塞预测.&lt;/li>
+&lt;li>设计创新点, 改进模型性能, 实现结果分析, 结果可视化, 模型对比实验(精度/推理速度/内存占用等), 消融实验等.&lt;/li>
+&lt;/ul>
+&lt;p>参考资料以及说明&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>
+ &lt;a href="https://github.com/wangyouze/GNN-algorithms">图神经网络相关算法详述及实现&lt;/a>:一个GNN教程&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>
+ &lt;a href="https://past.date-conference.com/proceedings-archive/2007/DATE07/PDFFILES/08.7_1.PDF">RUDY：Fast and Accurate Routing Demand Estimation for Efficient Routability-driven Placement&lt;/a> ：一个基于布局结果的快速路由拥塞估计器&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>
+ &lt;a href="https://dl.acm.org/doi/abs/10.1145/1837274.1837422">GTL:Detecting tangled logic structures in VLSI netlists&lt;/a>: 一种基于图结构直接从网表中估计拥塞的方法&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>
+ &lt;a href="https://ieeexplore.ieee.org/document/6881450">POLAR 2.0: An effective routability-driven placer&lt;/a>：一个基于拥塞预测与可达性的布局工具&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>
+ &lt;a href="http://www.lib.scut.edu.cn/wwsjk/list.htm">华南理工大学图书馆数据库&lt;/a>：可免费下载各大国内外期刊文章&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>
+ &lt;a href="https://scholar.google.com/">Google Scholar&lt;/a>: 一个学术论文搜索引擎&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>
+ &lt;a href="https://www.connectedpapers.com/">Connected Papers | Find and explore academic papers&lt;/a>: 一个基于图相关性论文搜索引擎&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>
+ &lt;a href="https://ai4eda.github.io/">Awesome AI for EDA&lt;/a>：EDA研究中现有AI方向的高质量高影响力论文列表网站&lt;/p></description></item><item><title>eda+gnn</title><link>https://pxgh02.github.io/zh/docs/Digtal/Digtal/flow/notebak/EDA+GNN/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://pxgh02.github.io/zh/docs/Digtal/Digtal/flow/notebak/EDA+GNN/</guid><description>&lt;h1 id="survey">
+ Survey
+ &lt;a class="anchor" href="#survey">#&lt;/a>
+&lt;/h1>
+&lt;h2 id="background--intro">
+ Background &amp;amp; Intro
+ &lt;a class="anchor" href="#background--intro">#&lt;/a>
+&lt;/h2>
+&lt;p>只有在物理验证和签名(sign off)以及测试期间，才能衡量设计在功率、性能和面积 (PPA) 方面的质量。通常需要在中间步骤中进行纠正修改，这会导致设计的多次迭代。因此，在设计的早期阶段对 PPA 的估计将减少所需的迭代次数，增加设计的可靠性，同时深入研究flow，并最终提高结果质量 (QoR)&lt;/p>
+&lt;h3 id="np-complete">
+ NP-complete
+ &lt;a class="anchor" href="#np-complete">#&lt;/a>
+&lt;/h3>
+&lt;p>EDA 工具通常面临 &lt;strong>NP-complete&lt;/strong> 问题，机器学习 (ML) 方法可以更好更快地解决这些问题&lt;/p>
+&lt;p>&lt;strong>NP问题&lt;/strong>是一类可以通过非确定性图灵机( Non-deterministic Turing Machine)在多项式时间(Polynomial time)内解决的决策问题集合。&lt;/p>
+&lt;p>NP问题中最困难的问题称之为NP完全问题(NP-complete)&lt;/p>
+&lt;h3 id="ml">
+ ML
+ &lt;a class="anchor" href="#ml">#&lt;/a>
+&lt;/h3>
+&lt;p>&lt;strong>ML 已集成到 EDA 中，尤其是逻辑综合、布局、布线、测试和验证 [23]&lt;/strong>
+ML 用于预测传统方法的最佳配置。其次，ML 学习模型的特征及其性能来预测看不见的设计的行为，而无需运行昂贵的综合步骤。此外，在优化 PPA 的同时，可以通过 ML 进行设计空间探索。最后，&lt;strong>强化学习 (RL)&lt;/strong> 探索设计空间、学习策略并执行转换，以通过“人工智能辅助设计流程”获得展望未来的最佳设计。
+在 EDA 中使用 ML 的一个促成因素是 &lt;strong>EDA 工具在设计过程中生成的大量数据&lt;/strong>。
+&lt;strong>欧几里得数据&lt;/strong>&lt;/p>
+&lt;h2 id="eda">
+ EDA
+ &lt;a class="anchor" href="#eda">#&lt;/a>
+&lt;/h2>
+&lt;h3 id="flow">
+ flow
+ &lt;a class="anchor" href="#flow">#&lt;/a>
+&lt;/h3>
+&lt;h4 id="逻辑综合">
+ &lt;strong>逻辑综合&lt;/strong>
+ &lt;a class="anchor" href="#%e9%80%bb%e8%be%91%e7%bb%bc%e5%90%88">#&lt;/a>
+&lt;/h4>
+&lt;p>&lt;strong>逻辑综合&lt;/strong>将 HDL 中的 RTL 块映射到从&lt;strong>给定技术库&lt;/strong>中选择的&lt;strong>门组合&lt;/strong>，同时针对不同目标优化设计。通常，这种优化涉及&lt;strong>时序收敛、面积和功耗之间的权衡&lt;/strong>。&lt;/p>
+&lt;p>描述硬件设计的 RTL 模块被映射到技术库中的逻辑单元。&lt;strong>此映射必须满足时序约束&lt;/strong>，以在所需时钟速率下运行，&lt;strong>同时考虑面积和功耗&lt;/strong>。因此，&lt;strong>综合是一个可以应用 ML 的复杂优化问题&lt;/strong>。例如，&lt;strong>提供更早的 QoR 预测以避免耗时的合成步骤的多次运行&lt;/strong>&lt;/p></description></item><item><title>EDA4PR</title><link>https://pxgh02.github.io/zh/docs/Digtal/Digtal/flow/EDA4PR/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://pxgh02.github.io/zh/docs/Digtal/Digtal/flow/EDA4PR/</guid><description>&lt;h1 id="研究背景">
+ 研究背景
+ &lt;a class="anchor" href="#%e7%a0%94%e7%a9%b6%e8%83%8c%e6%99%af">#&lt;/a>
+&lt;/h1>
+&lt;p>**典型的芯片设计流程是先做前端、后端设计，再去验证性能、功耗和面积。**但由于流程太长，在前端设计的时候，无法保证后端设计的效果，所以很多时候需要进行跨环节建模，在早期设计环节预测后续环节的求解质量，这当中就很适合AI算法来进行辅助。&lt;/p>
+&lt;p>除了建模之外，另外一个关键问题是优化。EDA中经常要求解各种各样的组合优化问题。这些问题往往是 NP难题，比如经典的旅行商问题。传统上，我们会通过一些启发探索的方法来求解。但随着规模不断增大、设计约束越来越多，这种探索往往遇到效率瓶颈，所以我们需要通过机器学习技术进行辅助，寻找有效策略，提高效率。&lt;/p>
+&lt;p>
+ &lt;img src="https://pxgh02.github.io/image-20250105141458960.png" alt="image-20250105141458960" />&lt;/p>
+&lt;h1 id="难点">
+ 难点
+ &lt;a class="anchor" href="#%e9%9a%be%e7%82%b9">#&lt;/a>
+&lt;/h1>
+&lt;p>
+ &lt;img src="https://pxgh02.github.io/image-20241013184936794.png" alt="image-20241013184936794" />&lt;/p>
+&lt;ol>
+&lt;li>大图&amp;ndash;&amp;gt;&lt;/li>
+&lt;li>数据集&amp;ndash;&amp;gt;&lt;/li>
+&lt;li>泛化能力&amp;ndash;&amp;gt;&lt;/li>
+&lt;li>非DAG?&lt;/li>
+&lt;li>route: 3D，45°，30°&lt;/li>
+&lt;li>先进的工艺：7nm&lt;/li>
+&lt;li>很多Placer and Router还是有很多人工定义的超参数？（不general）&lt;/li>
+&lt;li>现在真的还有必要把Router分成Global 和Detail 吗？&lt;/li>
+&lt;li>GR: total maze routing&lt;/li>
+&lt;li>GR: Consider timing and power consumption&lt;/li>
+&lt;/ol>
+&lt;h1 id="研究方向">
+ 研究方向
+ &lt;a class="anchor" href="#%e7%a0%94%e7%a9%b6%e6%96%b9%e5%90%91">#&lt;/a>
+&lt;/h1>
+&lt;h2 id="digtal">
+ Digtal
+ &lt;a class="anchor" href="#digtal">#&lt;/a>
+&lt;/h2>
+&lt;p>详细查看
+ &lt;a href="https://pxgh02.github.io/zh/docs/Digtal/Digtal/flow/EDA4PR-Digtal/">EDA4PR-Digtal&lt;/a>&lt;/p>
+&lt;h1 id="相关数据集">
+ 相关数据集
+ &lt;a class="anchor" href="#%e7%9b%b8%e5%85%b3%e6%95%b0%e6%8d%ae%e9%9b%86">#&lt;/a>
+&lt;/h1>
+&lt;h2 id="only-rtl">
+ only rtl
+ &lt;a class="anchor" href="#only-rtl">#&lt;/a>
+&lt;/h2>
+&lt;h3 id="home--opencores">
+ 
+ &lt;a href="https://opencores.org/">Home :: OpenCores&lt;/a>
+ &lt;a class="anchor" href="#home--opencores">#&lt;/a>
+&lt;/h3>
+&lt;p>
+ &lt;img src="https://pxgh02.github.io/image-20241116140649477.png" alt="image-20241116140649477" />&lt;/p>
+&lt;h3 id="iwls-2005-benchmarks">
+ 
+ &lt;a href="https://iwls.org/iwls2005/benchmarks.html">IWLS 2005 Benchmarks&lt;/a>
+ &lt;a class="anchor" href="#iwls-2005-benchmarks">#&lt;/a>
+&lt;/h3>
+&lt;p>
+ &lt;img src="https://pxgh02.github.io/image-20241116140821429.png" alt="image-20241116140821429" />&lt;/p>
+&lt;p>
+ &lt;img src="https://pxgh02.github.io/image-20241116140834409.png" alt="image-20241116140834409" />&lt;/p>
+&lt;h3 id="openlane-examples-examples-from-the-openlane-repository">
+ 
+ &lt;a href="https://github.com/klasnordmark/openlane-examples">openlane-examples: Examples from the Openlane repository&lt;/a>
+ &lt;a class="anchor" href="#openlane-examples-examples-from-the-openlane-repository">#&lt;/a>
+&lt;/h3>
+&lt;p>
+ &lt;img src="https://pxgh02.github.io/image-20241118160109426.png" alt="image-20241118160109426" />&lt;/p>
+&lt;h2 id="global-route">
+ Global route
+ &lt;a class="anchor" href="#global-route">#&lt;/a>
+&lt;/h2>
+&lt;h3 id="ispd-2007">
+ ISPD-2007
+ &lt;a class="anchor" href="#ispd-2007">#&lt;/a>
+&lt;/h3>
+&lt;p>
+ &lt;img src="https://pxgh02.github.io/image-20250209155834613.png" alt="image-20250209155834613" />&lt;/p></description></item><item><title>EDA4PR-Digtal</title><link>https://pxgh02.github.io/zh/docs/Digtal/Digtal/flow/EDA4PR-Digtal/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://pxgh02.github.io/zh/docs/Digtal/Digtal/flow/EDA4PR-Digtal/</guid><description>&lt;h1 id="cross-stage-prediction">
+ Cross-Stage Prediction
+ &lt;a class="anchor" href="#cross-stage-prediction">#&lt;/a>
+&lt;/h1>
+&lt;h2 id="congestion">
+ congestion
+ &lt;a class="anchor" href="#congestion">#&lt;/a>
+&lt;/h2>
+&lt;h3 id="background">
+ background
+ &lt;a class="anchor" href="#background">#&lt;/a>
+&lt;/h3>
+&lt;ul>
+&lt;li>
+&lt;p>Routing congestion can overwhelm routing resources and lead to low cell utilization and routing detours&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>congestion is not known accurately until late in the design cycle, after placement and routing.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Many modern placement and synthesis tools leverage congestion estimation in their cost analysis in order to minimize the effects of congestion in the final physical design&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>
+ &lt;img src="https://pxgh02.github.io/image-20241101193119582.png" alt="image-20241101193119582" />&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>It is known that the total net length can be a good proxy for congestion&lt;/p></description></item><item><title>Flow</title><link>https://pxgh02.github.io/zh/docs/Digtal/Digtal/flow/flow/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://pxgh02.github.io/zh/docs/Digtal/Digtal/flow/flow/</guid><description>&lt;h1 id="ai-4-science">
+ AI 4 Science
+ &lt;a class="anchor" href="#ai-4-science">#&lt;/a>
+&lt;/h1>
+&lt;p>
+ &lt;img src="https://pxgh02.github.io/image-20241213120306409.png" alt="image-20241213120306409" />&lt;/p>
+&lt;p>
+ &lt;img src="https://pxgh02.github.io/image-20241213120350716.png" alt="image-20241213120350716" />&lt;/p>
+&lt;p>
+ &lt;img src="https://pxgh02.github.io/image-20241213120425645.png" alt="image-20241213120425645" />&lt;/p>
+&lt;h1 id="数字集成电路后端设计整体流程">
+ 数字集成电路后端设计整体流程
+ &lt;a class="anchor" href="#%e6%95%b0%e5%ad%97%e9%9b%86%e6%88%90%e7%94%b5%e8%b7%af%e5%90%8e%e7%ab%af%e8%ae%be%e8%ae%a1%e6%95%b4%e4%bd%93%e6%b5%81%e7%a8%8b">#&lt;/a>
+&lt;/h1>
+&lt;p>在完成前端设计、逻辑综合和时序分析后，后端设计阶段开始&lt;/p>
+&lt;p>
+ &lt;img src="https://pxgh02.github.io/image-20241210110751568.png" alt="image-20241210110751568" />&lt;/p>
+&lt;p>
+ &lt;img src="https://pxgh02.github.io/image-20241210024517847.png" alt="image-20241210024517847" />&lt;/p>
+&lt;p>（1）布局规划（Floorplan）： 在布局规划阶段，设计团队确定芯片的大致布局，包括模块位置、互连和电源网络的布局。这个阶段的主要目标是确保设计满足所有功能需求和制造约束，同时优化芯片的性能和成本。&lt;/p>
+&lt;p>（2）宏块和标准单元布局（Placement）： 此阶段中，具体摆放包括宏模块和标准单元。算法将尝试在保持功能和电气性能的前提下，最小化连线长度和延迟，优化布局密度。&lt;/p>
+&lt;p>（3）时钟树合成（Clock Tree Synthesis，CTS）： 布局完成后，进行时钟树合成。CTS 的目的是构建一个时钟网络，以最小化芯片上不同部分之间的时钟偏差，并确保整个芯片的同步运行。&lt;/p>
+&lt;p>（4）布线（Routing）： 在 CTS 之后，进行布线阶段，此阶段建立电子连接，以实现设计中的所有逻辑互联。布线需要解决路径规划和信号完整性问题，确保信号在整个芯片上无干扰地传递。&lt;/p>
+&lt;p>（5）验证和测评： 最后，进行布局与布线后的验证工作，包括电路验证、时序分析和功耗分析等。&lt;/p>
+&lt;p>
+ &lt;img src="https://pxgh02.github.io/image-20241116193848706.png" alt="image-20241116193848706" />&lt;/p>
+&lt;p>
+ &lt;img src="https://pxgh02.github.io/image-20241116142815434.png" alt="image-20241116142815434" />&lt;/p>
+&lt;p>
+ &lt;img src="https://pxgh02.github.io/image-20241116142826799.png" alt="image-20241116142826799" />&lt;/p>
+&lt;h2 id="floorplanning布图">
+ Floorplanning（布图)
+ &lt;a class="anchor" href="#floorplanning%e5%b8%83%e5%9b%be">#&lt;/a>
+&lt;/h2>
+&lt;ul>
+&lt;li>确定核心和外围区域：定义芯片的核心逻辑区和外围接口区。
+&lt;ul>
+&lt;li>&lt;strong>核心区域&lt;/strong>：这是用于放置 
+ &lt;a href="https://zhida.zhihu.com/search?content_id=233534347&amp;amp;content_type=Article&amp;amp;match_order=1&amp;amp;q=%e9%80%bb%e8%be%91%e9%97%a8&amp;amp;zhida_source=entity">逻辑门&lt;/a>、触发器等基础元件的区域。&lt;/li>
+&lt;li>&lt;strong>外围区域&lt;/strong>：这里通常用于放置 I/O pads，电源和地引脚。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>确定 IP Blocks 的位置：IP（Intellectual Property）模块的大致位置和尺寸。
+&lt;ul>
+&lt;li>硬宏（Hard Macros）：例如存储器、
+ &lt;a href="https://zhida.zhihu.com/search?content_id=233534347&amp;amp;content_type=Article&amp;amp;match_order=1&amp;amp;q=%e6%a8%a1%e6%95%b0%e8%bd%ac%e6%8d%a2%e5%99%a8&amp;amp;zhida_source=entity">模数转换器&lt;/a>（ADCs）等，通常有固定的大小和形状。&lt;/li>
+&lt;li>软宏（Soft Macros）：通常是可以重新合成的逻辑模块，如处理器核心、
+ &lt;a href="https://zhida.zhihu.com/search?content_id=233534347&amp;amp;content_type=Article&amp;amp;match_order=1&amp;amp;q=DSP%e5%8d%95%e5%85%83&amp;amp;zhida_source=entity">DSP 单元&lt;/a> 等。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>初步 Power Planning：设计初步的电源网格和地网。
+&lt;ul>
+&lt;li>&lt;strong>
+ &lt;a href="https://zhida.zhihu.com/search?content_id=233534347&amp;amp;content_type=Article&amp;amp;match_order=1&amp;amp;q=%e7%94%b5%e6%ba%90%e7%bd%91%e6%a0%bc%e8%ae%be%e8%ae%a1&amp;amp;zhida_source=entity">电源网格设计&lt;/a>&lt;/strong>：创建电源和地网格来提供电流和参考电压。&lt;/li>
+&lt;li>&lt;strong>电源环（Power Rings）&lt;/strong>：在芯片外围设计电源环，用于电源和地的分发。&lt;/li>
+&lt;li>&lt;strong>电源铺垫（Power Pads）&lt;/strong>：确定用于外部电源连接的电源和地铺垫的位置。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>I/O Planning：规划输入/输出引脚的位置。
+&lt;ul>
+&lt;li>&lt;strong>引脚位置&lt;/strong>：根据接口要求（如 GPIO、DDR 接口等）确定 I/O 引脚的位置。&lt;/li>
+&lt;li>&lt;strong>引脚电特性&lt;/strong>：确定每个 I/O 引脚的电性能需求，如驱动能力、接受阈值等。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>设置约束：设置时序、面积和功耗的约束。（各种 view, block)
+&lt;ul>
+&lt;li>&lt;strong>
+ &lt;a href="https://zhida.zhihu.com/search?content_id=233534347&amp;amp;content_type=Article&amp;amp;match_order=1&amp;amp;q=%e6%97%b6%e5%ba%8f%e7%ba%a6%e6%9d%9f&amp;amp;zhida_source=entity">时序约束&lt;/a>&lt;/strong>：定义时钟域、时钟频率和时序要求。&lt;/li>
+&lt;li>&lt;strong>面积约束&lt;/strong>：如果有面积限制，需要明确这一点。&lt;/li>
+&lt;li>&lt;strong>功耗约束&lt;/strong>：设定功耗上限或优化目标。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h2 id="placement布局">
+ Placement（布局）
+ &lt;a class="anchor" href="#placement%e5%b8%83%e5%b1%80">#&lt;/a>
+&lt;/h2>
+&lt;p>设计的所有逻辑元件（例如标准单元、触发器、门等）和预定义的 IP 块（例如硬宏）被物理地放置在芯片的核心区域内&lt;/p></description></item><item><title>Placement</title><link>https://pxgh02.github.io/zh/docs/Digtal/Digtal/Placement/placement/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://pxgh02.github.io/zh/docs/Digtal/Digtal/Placement/placement/</guid><description>&lt;h1 id="介绍">
+ 介绍
+ &lt;a class="anchor" href="#%e4%bb%8b%e7%bb%8d">#&lt;/a>
+&lt;/h1>
+&lt;p>
+ &lt;img src="https://pxgh02.github.io/image-20241211164703395.png" alt="image-20241211164703395" />&lt;/p>
+&lt;p>
+ &lt;img src="https://pxgh02.github.io/image-20241211165044145.png" alt="image-20241211165044145" />&lt;/p>
+&lt;p>
+ &lt;img src="https://pxgh02.github.io/image-20241211165212711.png" alt="image-20241211165212711" />&lt;/p>
+&lt;h1 id="placement">
+ Placement
+ &lt;a class="anchor" href="#placement">#&lt;/a>
+&lt;/h1>
+&lt;p>良好的布局会带来更好的芯片面积利用率、时序性能和可达性，而较差的布局会影响芯片的性能，甚至使其无法制造&lt;/p>
+&lt;p>布局可以看作是具有几何约束的&lt;strong>二维装箱问题&lt;/strong>的一个更为复杂的变化。后者被认为是 
+ &lt;a href="https://so.csdn.net/so/search?q=NP-hard&amp;amp;spm=1001.2101.3001.7020">NP-hard&lt;/a> 问题。&lt;/p>
+&lt;p>布局与电路设计的逻辑互连和逻辑元件的几何位置有关。由于在布线之前无法准确评估放置解决方案的质量，导致设计流程中的&lt;strong>反馈循环很长&lt;/strong>，因此现代布局需要在早期阶段减少布线&lt;strong>拥塞(Congestion)&lt;strong>并提高&lt;/strong>可达性(Routebility)&lt;/strong>&lt;/p>
+&lt;h2 id="wl估计方法">
+ WL估计方法
+ &lt;a class="anchor" href="#wl%e4%bc%b0%e8%ae%a1%e6%96%b9%e6%b3%95">#&lt;/a>
+&lt;/h2>
+&lt;p>
+ &lt;img src="https://pxgh02.github.io/image-20241211170024405.png" alt="image-20241211170024405" />&lt;/p>
+&lt;p>
+ &lt;img src="https://pxgh02.github.io/image-20241211170041005.png" alt="image-20241211170041005" />&lt;/p>
+&lt;p>
+ &lt;img src="https://pxgh02.github.io/image-20241211170300719.png" alt="image-20241211170300719" />&lt;/p>
+&lt;h1 id="global-placement">
+ Global Placement
+ &lt;a class="anchor" href="#global-placement">#&lt;/a>
+&lt;/h1>
+&lt;p>通常，全局布局（Global Placement）涉及宏布局（Macro Placement）和标准单元布局（Standard Cell Placement）。&lt;/p>
+&lt;p>输入:网表&lt;/p>
+&lt;p>优化目标:HPWL线长最小(最基本)…&lt;/p>
+&lt;p>
+ &lt;img src="https://pxgh02.github.io/image-20241101174133908.png" alt="image-20241101174133908" />&lt;/p>
+&lt;p>
+ &lt;img src="https://pxgh02.github.io/image-20241101174410136.png" alt="image-20241101174410136" />&lt;/p>
+&lt;h1 id="detail-placement">
+ Detail Placement
+ &lt;a class="anchor" href="#detail-placement">#&lt;/a>
+&lt;/h1>
+&lt;p>详细布局（Detailed Placement）包括合法化（legalization），线长（wirelength）和可达性的细化（routability refinement）&lt;/p>
+&lt;p>
+ &lt;img src="https://pxgh02.github.io/image-20241101174441633.png" alt="image-20241101174441633" />&lt;/p>
+&lt;h1 id="history">
+ history
+ &lt;a class="anchor" href="#history">#&lt;/a>
+&lt;/h1>
+&lt;p>
+ &lt;img src="https://pxgh02.github.io/image-20241211165402430.png" alt="image-20241211165402430" />&lt;/p>
+&lt;p>
+ &lt;img src="https://pxgh02.github.io/image-20241211165447667.png" alt="image-20241211165447667" />&lt;/p>
+&lt;h1 id="参考">
+ 参考
+ &lt;a class="anchor" href="#%e5%8f%82%e8%80%83">#&lt;/a>
+&lt;/h1>
+&lt;ul>
+&lt;li>
+ 
+ &lt;a href="2021-Place-YuBei-slice.pdf">2021-Place-YuBei-slice.pdf&lt;/a>&lt;/li>
+&lt;/ul></description></item><item><title>Routing</title><link>https://pxgh02.github.io/zh/docs/Digtal/Digtal/Routing/routing2/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://pxgh02.github.io/zh/docs/Digtal/Digtal/Routing/routing2/</guid><description>&lt;h1 id="简介">
+ 简介
+ &lt;a class="anchor" href="#%e7%ae%80%e4%bb%8b">#&lt;/a>
+&lt;/h1>
+&lt;h2 id="gr--dr">
+ GR &amp;amp; DR
+ &lt;a class="anchor" href="#gr--dr">#&lt;/a>
+&lt;/h2>
+&lt;p>Routing is a critical yet complex phase in the implementation process of integrated circuits (ICs), often necessitating considerable time and effort. Given its complexity, the routing process is typically divided into two stages: global routing and detailed routing. &lt;code>Global routing&lt;/code>, the initial stage, establishes coarse-grained wire paths for signal nets, thereby providing valuable &lt;strong>guidance&lt;/strong> for the subsequent detailed routing stage, enhancing its efficiency. &lt;code>Detailed routing&lt;/code>, on the other hand, focuses on identifying valid physical paths, primarily within the routing guides set by global routing, while taking into account design rule constraints&lt;/p></description></item><item><title>Routing1</title><link>https://pxgh02.github.io/zh/docs/Digtal/Digtal/Routing/routing1/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://pxgh02.github.io/zh/docs/Digtal/Digtal/Routing/routing1/</guid><description>&lt;h1 id="介绍">
+ 介绍
+ &lt;a class="anchor" href="#%e4%bb%8b%e7%bb%8d">#&lt;/a>
+&lt;/h1>
+&lt;p>随着IP复用，业界一度试图使用IP内部资源进行布线，但此举可能引发噪声和转换电压过大，因此&lt;strong>绕障策略&lt;/strong>在布线算法中发挥着重要的作用。&lt;/p>
+&lt;h2 id="曼哈顿结构以及非曼哈顿结构">
+ 曼哈顿结构以及非曼哈顿结构
+ &lt;a class="anchor" href="#%e6%9b%bc%e5%93%88%e9%a1%bf%e7%bb%93%e6%9e%84%e4%bb%a5%e5%8f%8a%e9%9d%9e%e6%9b%bc%e5%93%88%e9%a1%bf%e7%bb%93%e6%9e%84">#&lt;/a>
+&lt;/h2>
+&lt;p>总体布线的布线算法主要基于&lt;strong>曼哈顿结构以及非曼哈顿结构&lt;/strong>两种，非曼哈顿结构因其更强的布线优化能力受到越来越多研究人员的关注。布线互连结构可分为曼哈顿结构和非曼哈顿结构。曼哈顿结构的布线方向只能是&lt;strong>水平走线和垂直走&lt;/strong>线两种,而非曼哈顿结构的布线方向则更为多样化,主要包括走线方向为 **0°、90°和士45°**的X结构以及走线方向为 &lt;strong>0°、60°和 120°&lt;strong>的Y结构。随着系统级芯片(System-on-a-Chip,SoC)设计概念的出现和&lt;/strong>制造工艺的不断发展&lt;/strong>,**互连线的延迟对 VLSI设计的影响越来越大,同时互连线的不断增长会降低芯片的速度,造成过高的功耗以及增大噪声,**这要求更有效的互连线线长优化和更强的电路性能。但基于曼哈顿结构的相关物理设计阶段在优化互连线线长时限制了相关策略的优化能力。为优化芯片的整体性能,相关研究人员开始尝试基于非曼哈顿结构的布线。&lt;/p>
+&lt;p>非曼哈顿结构的数学基础是&lt;strong>λ-几何学理论&lt;/strong>&lt;/p>
+&lt;blockquote>
+&lt;p>(1)当λ=2时,布线的方向为ix/2,走线方向包括 0°和 90°,对应传统的曼哈顿结构,亦称为直角结构。
+(2)当λ=3时,布线的方向为 iπ/3,走线方向包括 0°、60°和120°,称为Y结构。
+(3)当λ=4时,布线的方向为 i/4,走线方向包括0°、90°和士45°,称为&lt;strong>X结构。已经得到工艺支持&lt;/strong>&lt;/p>&lt;/blockquote>
+&lt;h1 id="意义">
+ 意义
+ &lt;a class="anchor" href="#%e6%84%8f%e4%b9%89">#&lt;/a>
+&lt;/h1>
+&lt;p>物理设计过程是EDA的主要处理对象，是&lt;strong>人工最易出错&lt;/strong>的&lt;/p>
+&lt;p>当前,超大规模集成电路(Very Large Scale Integration Circuit,VLSI)设计在许多高科技电子电路的发展中起着至关重要的作用。当前集成电路(IntegratedCircuit,IC)产业向超深亚微米工艺不断推进,芯片的集成度进一步提高,一块芯片上所能集成的电路元件越来越多,VLSI是将数百万个品体管集成到单个芯片中形成 IC 的过程。这一市场趋势对**物理设计(Physical Design,PD)和物理验证(Physical Verification,PV)**提出了许多挑战。以 VLSI为基础的电子信息产业的发展,对我国国民经济的发展、产业技术创新能力的提高以及现代国防建设都具有极其重要的意义。&lt;/p>
+&lt;p>物理设计是VLSI构建流程中最为耗时的,其设计好坏将影响芯片的最终性能,包括时延特性,电能消耗、电路稳定性等。&lt;/p>
+&lt;p>近年来 ，集成电路领域发展越来越迅猛 ，晶体管数量随集成电路制造⼯艺发展逐年增加 ，芯片内包含的逻辑门数量急剧提升 ，这给集成电路设计带来了巨大的难题。由于超大规模集成电路（very-largescale integration circuit，VLSI）逻辑的高度复杂性 ，其物理设计往往需要使用计算机辅助设计⼯具来完成。这就向电子设计自动化（electronic design automation，EDA）⼯具提出了严峻挑战&lt;/p>
+&lt;p>在物理设计过程中 ，布线是极其重要的一环 。布线⼯作占据了 EDA 过程的&lt;strong>大部分时间&lt;/strong> ，甚至在大部分情况下 ，自动布线的结果还需要设计人员在&lt;strong>后期手⼯调整&lt;/strong>。具备优秀的布线速度及高布线质量的布线器对缩短芯片设计周==期有着至关重要==的作用 。&lt;/p>
+&lt;h1 id="布线">
+ 布线
+ &lt;a class="anchor" href="#%e5%b8%83%e7%ba%bf">#&lt;/a>
+&lt;/h1>
+&lt;p>在物理设计中需要采用&lt;strong>电路划分&lt;/strong>方法将复杂庞大的电路系统分解至合理小的电路子系统;其次,在电路划分后,&lt;strong>布图规划&lt;/strong>和&lt;strong>布局&lt;/strong>步骤则是将不同形状和大小的单元或模块合理地放置到芯片的不同布线区域,同时满足芯片固有的一些相关几何约束;再次,布局阶段确定模块和引脚各自的位置,在此基础上经&lt;strong>总体布线&lt;/strong>后,将每条待绕线的线网的各部分合理分配到芯片中的各个布线通道区;最后,由&lt;strong>详细布线&lt;/strong>得到各个布线通道区的实际绕线。&lt;/p>
+&lt;h2 id="模型输入输出">
+ 模型输入输出
+ &lt;a class="anchor" href="#%e6%a8%a1%e5%9e%8b%e8%be%93%e5%85%a5%e8%be%93%e5%87%ba">#&lt;/a>
+&lt;/h2>
+&lt;h3 id="输入">
+ 输入
+ &lt;a class="anchor" href="#%e8%be%93%e5%85%a5">#&lt;/a>
+&lt;/h3>
+&lt;ul>
+&lt;li>cell, pin&amp;rsquo;s position&lt;/li>
+&lt;li>netlist graph(connection relation)&lt;/li>
+&lt;li>设计工艺：多少层，via几何形状信息，各种drc&lt;/li>
+&lt;li>部分关键线网延时信息&lt;/li>
+&lt;li>wire和via的电气特性&lt;/li>
+&lt;/ul>
+&lt;h3 id="输出">
+ 输出
+ &lt;a class="anchor" href="#%e8%be%93%e5%87%ba">#&lt;/a>
+&lt;/h3>
+&lt;p>一个尽可能满足约束条件并更少得需要人⼯调整线网的布线结果&lt;/p></description></item><item><title>Synthesis</title><link>https://pxgh02.github.io/zh/docs/Digtal/Digtal/Synthesis/synthesis/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://pxgh02.github.io/zh/docs/Digtal/Digtal/Synthesis/synthesis/</guid><description>&lt;h1 id="基本概念">
+ 基本概念
+ &lt;a class="anchor" href="#%e5%9f%ba%e6%9c%ac%e6%a6%82%e5%bf%b5">#&lt;/a>
+&lt;/h1>
+&lt;ul>
+&lt;li>
+&lt;p>逻辑函数:二级逻辑和多级逻辑。二级逻辑又包含两种 规范式，分别称为与或两级规范形式(sum-of-products two-level form, SOP)和或 与两级规范形式(product-of-sums form, POS)[19]。其中或与形式的第一级均为或 项，第二级均为与项，而与或形式刚好相反。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>AIG&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>And-Inverter Graphs)的文件格式的代称&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>ASCII格式的AIG文件第一行由字符串aag 开始，aag是ASCII AIG的缩写；然后是以空格分隔5个非负整数，分别由M, I, L, O, A 表示。&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>M = 最大变量下标 maximum variable index
+I = 输入个数 number of inputs
+L = 锁存器个数 number of latches
+O = 输出个数 number of outputs
+A = 与门个数 number of AND gate&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;pre tabindex="0">&lt;code>&lt;/code>&lt;/pre>&lt;/li>
+&lt;/ul>
+&lt;p>aag 3 2 0 1 1
+2 input 0
+4 input 1
+6 output 0
+6 2 4 AND gate 0 1&amp;amp;2&lt;/p></description></item><item><title>verify</title><link>https://pxgh02.github.io/zh/docs/Digtal/Digtal/Verify/verify/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://pxgh02.github.io/zh/docs/Digtal/Digtal/Verify/verify/</guid><description>&lt;h1 id="背景">
+ 背景
+ &lt;a class="anchor" href="#%e8%83%8c%e6%99%af">#&lt;/a>
+&lt;/h1>
+&lt;p>随着集成电路技术的迅速发展，&lt;code>电迁移（Electromigration, EM）&lt;/code>和&lt;code>热迁移（Thermomigration, TM）&lt;/code>已经成为影响现代集成电路互连线可靠性的两大主要问题。在电子设计自动化（Electronic Design Automation, EDA）的后端设计中，物理验证环节需要对EM和TM产生的&lt;code>应力&lt;/code>进行评估，以确保电路符合可靠性规范。传统的应力计算方法依赖于复杂的&lt;code>偏微分方程（PDE）&lt;/code>求解，&lt;strong>不仅计算量大、耗时长&lt;/strong>，而且在处理大规模电路时往往难以保证精度。&lt;/p>
+&lt;h2 id="电迁移electromigration-em">
+ &lt;strong>电迁移（Electromigration, EM）&lt;/strong>
+ &lt;a class="anchor" href="#%e7%94%b5%e8%bf%81%e7%a7%bbelectromigration-em">#&lt;/a>
+&lt;/h2>
+&lt;ul>
+&lt;li>由于电子流动引起的现象&lt;/li>
+&lt;li>当导线中电子快速移动时，电子与&lt;strong>金属原子&lt;/strong>间的动量交换会导致金属原子从阴极向阳极迁移。随着时间的推移，这种迁移会导致导线中的&lt;code>空洞（voids）&lt;/code>或&lt;code>突起（hillocks）&lt;/code>，这种金属的&lt;strong>分布不均&lt;/strong>导致了应力的产生。当应力达到一定阈值时，会导致&lt;strong>导线断裂或短路&lt;/strong>，从而影响电路的&lt;strong>可靠性&lt;/strong>，最终引发电路失效。&lt;/li>
+&lt;li>VLSI: 这种现象在&lt;strong>小尺寸&lt;/strong>导线和高电流密度条件下尤为显著，特别是在&lt;strong>纳米尺度的VLSI系统&lt;/strong>中。&lt;/li>
+&lt;li>
+ &lt;img src="https://pxgh02.github.io/image-20241220135603117.png" alt="image-20241220135603117" />&lt;/li>
+&lt;/ul>
+&lt;h2 id="热迁移thermomigration-tm">
+ &lt;strong>热迁移（Thermomigration, TM）&lt;/strong>
+ &lt;a class="anchor" href="#%e7%83%ad%e8%bf%81%e7%a7%bbthermomigration-tm">#&lt;/a>
+&lt;/h2>
+&lt;ul>
+&lt;li>由导线中的&lt;strong>温度梯度&lt;/strong>引起&lt;/li>
+&lt;li>当导线的不同区域存在&lt;strong>温度差异&lt;/strong>时，高温区的金属原子会向低温区移动，这同样会导致&lt;strong>导线中的应力积累和材料变形&lt;/strong>&lt;/li>
+&lt;li>VLSI: 随着半导体工艺的进步，集成电路的功率密度逐渐增大，热效应越来越严重，热迁移问题成为影响导线可靠性的重要因素。&lt;/li>
+&lt;/ul>
+&lt;h1 id="相关研究">
+ 相关研究
+ &lt;a class="anchor" href="#%e7%9b%b8%e5%85%b3%e7%a0%94%e7%a9%b6">#&lt;/a>
+&lt;/h1>
+&lt;h2 id="emgraph-first-gnn-dac-2021-gnn-university-of-california">
+ 
+ &lt;a href="https://par.nsf.gov/servlets/purl/10301043">EMGraph-First GNN-DAC-2021-GNN-University of California&lt;/a>
+ &lt;a class="anchor" href="#emgraph-first-gnn-dac-2021-gnn-university-of-california">#&lt;/a>
+&lt;/h2>
+&lt;h3 id="background">
+ background
+ &lt;a class="anchor" href="#background">#&lt;/a>
+&lt;/h3>
+&lt;ul>
+&lt;li>随着VLSI技术进入纳米级，EM已成为影响芯片可靠性的重要问题。&lt;strong>电迁移主要通过应力来进行描述&lt;/strong>。&lt;strong>传统的电迁移分析方法依赖于复杂的物理模型和数值求解&lt;/strong>，如有限元法，但这些方法&lt;strong>计算成本高且难以扩展至大规模互连结构。&lt;/strong>&lt;/li>
+&lt;li>现有的&lt;code>生成对抗网络（GAN）&lt;/code>在固定尺寸的图像上进行预测，但不能很好地适应复杂和&lt;strong>动态变化&lt;/strong>的多段互连电路结构针对这一问题。&lt;code>EMGraph&lt;/code>将多段互连电路结构建模成&lt;strong>图&lt;/strong>结构，在节点和边上&lt;strong>同时进行&lt;/strong>EM应力预测，有效地在多段互连结构上进行电迁移分析。&lt;/li>
+&lt;/ul>
+&lt;h3 id="contribution">
+ contribution
+ &lt;a class="anchor" href="#contribution">#&lt;/a>
+&lt;/h3>
+&lt;ul>
+&lt;li>transferable knowledg&lt;/li>
+&lt;li>first GNN in EM&lt;/li>
+&lt;li>A novel graph&lt;code> convolution-decoder structure&lt;/code> is employed&lt;/li>
+&lt;/ul>
+&lt;h3 id="task">
+ Task
+ &lt;a class="anchor" href="#task">#&lt;/a>
+&lt;/h3>
+&lt;p>node-edge regression for EM stress&lt;/p>
+&lt;h3 id="data">
+ data
+ &lt;a class="anchor" href="#data">#&lt;/a>
+&lt;/h3>
+&lt;p>数据由&lt;code>COMSOL&lt;/code>,&lt;code>SPICE(生成电流密度)&lt;/code>生成&lt;/p>
+&lt;p>resulting dataset contains &lt;strong>2500&lt;/strong> unique designs （2125/375）&lt;/p></description></item></channel></rss>

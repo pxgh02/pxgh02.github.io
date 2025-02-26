@@ -1,0 +1,459 @@
+<!doctype html><html lang=zh dir=ltr><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content="
+  研究背景
+  #
+
+**典型的芯片设计流程是先做前端、后端设计，再去验证性能、功耗和面积。**但由于流程太长，在前端设计的时候，无法保证后端设计的效果，所以很多时候需要进行跨环节建模，在早期设计环节预测后续环节的求解质量，这当中就很适合AI算法来进行辅助。
+除了建模之外，另外一个关键问题是优化。EDA中经常要求解各种各样的组合优化问题。这些问题往往是 NP难题，比如经典的旅行商问题。传统上，我们会通过一些启发探索的方法来求解。但随着规模不断增大、设计约束越来越多，这种探索往往遇到效率瓶颈，所以我们需要通过机器学习技术进行辅助，寻找有效策略，提高效率。
+
+  
+
+  难点
+  #
+
+
+  
+
+大图&ndash;>
+数据集&ndash;>
+泛化能力&ndash;>
+非DAG?
+route: 3D，45°，30°
+先进的工艺：7nm
+很多Placer and Router还是有很多人工定义的超参数？（不general）
+现在真的还有必要把Router分成Global 和Detail 吗？
+GR: total maze routing
+GR: Consider timing and power consumption
+
+
+  研究方向
+  #
+
+
+  Digtal
+  #
+
+详细查看
+  EDA4PR-Digtal
+
+  相关数据集
+  #
+
+
+  only rtl
+  #
+
+
+  
+  Home :: OpenCores
+  #
+
+
+  
+
+  
+  IWLS 2005 Benchmarks
+  #
+
+
+  
+
+  
+
+  
+  openlane-examples: Examples from the Openlane repository
+  #
+
+
+  
+
+  Global route
+  #
+
+
+  ISPD-2007
+  #
+
+
+  "><meta name=theme-color media="(prefers-color-scheme: light)" content="#ffffff"><meta name=theme-color media="(prefers-color-scheme: dark)" content="#343a40"><meta name=color-scheme content="light dark"><meta property="og:url" content="https://pxgh02.github.io/zh/docs/Digtal/Digtal/flow/EDA4PR/"><meta property="og:site_name" content="Pxmmmm"><meta property="og:title" content="EDA4PR"><meta property="og:description" content="研究背景 # **典型的芯片设计流程是先做前端、后端设计，再去验证性能、功耗和面积。**但由于流程太长，在前端设计的时候，无法保证后端设计的效果，所以很多时候需要进行跨环节建模，在早期设计环节预测后续环节的求解质量，这当中就很适合AI算法来进行辅助。
+除了建模之外，另外一个关键问题是优化。EDA中经常要求解各种各样的组合优化问题。这些问题往往是 NP难题，比如经典的旅行商问题。传统上，我们会通过一些启发探索的方法来求解。但随着规模不断增大、设计约束越来越多，这种探索往往遇到效率瓶颈，所以我们需要通过机器学习技术进行辅助，寻找有效策略，提高效率。
+难点 # 大图–> 数据集–> 泛化能力–> 非DAG? route: 3D，45°，30° 先进的工艺：7nm 很多Placer and Router还是有很多人工定义的超参数？（不general） 现在真的还有必要把Router分成Global 和Detail 吗？ GR: total maze routing GR: Consider timing and power consumption 研究方向 # Digtal # 详细查看 EDA4PR-Digtal
+相关数据集 # only rtl # Home :: OpenCores # IWLS 2005 Benchmarks # openlane-examples: Examples from the Openlane repository # Global route # ISPD-2007 #"><meta property="og:locale" content="zh"><meta property="og:type" content="article"><meta property="article:section" content="docs"><meta property="article:modified_time" content="2025-02-26T11:34:54+00:00"><title>EDA4PR | Pxmmmm</title>
+<link rel=icon href=/favicon.png><link rel=manifest href=/manifest.json><link rel=canonical href=https://pxgh02.github.io/zh/docs/Digtal/Digtal/flow/EDA4PR/><link rel=stylesheet href=/book.min.6c8b9d2a1fc95075ed7da46ca81060b39add8fff6741ac51259f768929281e2c.css integrity="sha256-bIudKh/JUHXtfaRsqBBgs5rdj/9nQaxRJZ92iSkoHiw=" crossorigin=anonymous><script defer src=/fuse.min.js></script><script defer src=/zh.search.min.8eafbac7697c4856301cceaa115ee72ef60019c2c45132b637d7543a267762ca.js integrity="sha256-jq+6x2l8SFYwHM6qEV7nLvYAGcLEUTK2N9dUOiZ3Yso=" crossorigin=anonymous></script><script defer src=/sw.min.6f6f90fcb8eb1c49ec389838e6b801d0de19430b8e516902f8d75c3c8bd98739.js integrity="sha256-b2+Q/LjrHEnsOJg45rgB0N4ZQwuOUWkC+NdcPIvZhzk=" crossorigin=anonymous></script></head><body dir=ltr><input type=checkbox class="hidden toggle" id=menu-control>
+<input type=checkbox class="hidden toggle" id=toc-control><main class="container flex"><aside class=book-menu><div class=book-menu-content><nav><h2 class=book-brand><a class="flex align-center" href=/zh/><span>Pxmmmm</span></a></h2><div class="book-search hidden"><input type=text id=book-search-input placeholder=搜索 aria-label=搜索 maxlength=64 data-hotkeys=s/><div class="book-search-spinner hidden"></div><ul id=book-search-results></ul></div><script>document.querySelector(".book-search").classList.remove("hidden")</script><ul class=book-languages><li><input type=checkbox id=languages class=toggle>
+<label for=languages class="flex justify-between"><a role=button class="flex align-center"><img src=/svg/translate.svg class=book-icon alt=Languages>
+Chinese</a></label><ul><li><a href=/>English</a></li></ul></li></ul><ul><li><input type=checkbox id=section-a7a8fb3cc34544172ff5103ce3adf7cc class=toggle>
+<label for=section-a7a8fb3cc34544172ff5103ce3adf7cc class="flex justify-between"><a href=/zh/docs/Other/>Other</a></label><ul><li><input type=checkbox id=section-0f93294ac0398c75569110d47f22a323 class=toggle>
+<label for=section-0f93294ac0398c75569110d47f22a323 class="flex justify-between"><a href=/zh/docs/Other/Other/>Other</a></label><ul><li><a href=/zh/docs/Other/Other/Algorithms/>Algorithms</a></li><li><a href=/zh/docs/Other/Other/Hardware/>Hardware</a></li><li><a href=/zh/docs/Other/Other/linux/>Linux</a></li><li><a href=/zh/docs/Other/Other/Literature/>Literature</a></li><li><a href=/zh/docs/Other/Other/network/>Network</a></li><li><a href=/zh/docs/Other/Other/Program/>Program</a></li><li><a href=/zh/docs/Other/Other/software/>Software</a></li><li><a href=/zh/docs/Other/Other/Tools/>Tools</a></li><li><a href=/zh/docs/Other/Other/window/>Window</a></li></ul></li><li><a href=/zh/docs/Other/Algorithms/>Algorithms</a></li><li><a href=/zh/docs/Other/git/>Git</a></li><li><a href=/zh/docs/Other/Hardware/>Hardware</a></li><li><a href=/zh/docs/Other/linux/>Linux</a></li><li><a href=/zh/docs/Other/Literature/>Literature</a></li><li><a href=/zh/docs/Other/makefile/>Makefile</a></li><li><a href=/zh/docs/Other/network/>Network</a></li><li><a href=/zh/docs/Other/Program/>Program</a></li><li><a href=/zh/docs/Other/Tools/>Tools</a></li><li><a href=/zh/docs/Other/window/>Window</a></li><li><a href=/zh/docs/Other/Writing-PPT-Presentation/>Writing Ppt Presentation</a></li></ul></li><li><input type=checkbox id=section-546194909198d851b05dc5d16088b0b9 class=toggle checked>
+<label for=section-546194909198d851b05dc5d16088b0b9 class="flex justify-between"><a href=/zh/docs/Digtal/>Physical Design</a></label><ul><li><input type=checkbox id=section-50bd8d8e06f01bc507cff9ec875d9670 class=toggle checked>
+<label for=section-50bd8d8e06f01bc507cff9ec875d9670 class="flex justify-between"><a href=/zh/docs/Digtal/Digtal/>Physical Design</a></label><ul><li><input type=checkbox id=section-eb886ad00a6041494cd8a2d37b9502c1 class=toggle checked>
+<label for=section-eb886ad00a6041494cd8a2d37b9502c1 class="flex justify-between"><a href=/zh/docs/Digtal/Digtal/flow/EDA4PR/ class=active>EDA4PR</a></label></li><li><input type=checkbox id=section-56ecf627e9a5b7dcba2f2eeea116f5c8 class=toggle>
+<label for=section-56ecf627e9a5b7dcba2f2eeea116f5c8 class="flex justify-between"><a href=/zh/docs/Digtal/Digtal/flow/EDA4PR-Digtal/>EDA4PR-Digtal</a></label></li><li><input type=checkbox id=section-531f953e4132641abe87a288f8c87537 class=toggle>
+<label for=section-531f953e4132641abe87a288f8c87537 class="flex justify-between"><a href=/zh/docs/Digtal/Digtal/flow/flow/>Flow</a></label></li><li><input type=checkbox id=section-dd416fec3c1dfa9abc7052d958fac1fb class=toggle>
+<label for=section-dd416fec3c1dfa9abc7052d958fac1fb class="flex justify-between"><a href=/zh/docs/Digtal/Digtal/Placement/placement/>Placement</a></label></li><li><input type=checkbox id=section-edb5a12c4e85a0cb8ad856bb96d3a791 class=toggle>
+<label for=section-edb5a12c4e85a0cb8ad856bb96d3a791 class="flex justify-between"><a href=/zh/docs/Digtal/Digtal/Routing/routing2/>Routing</a></label></li><li><input type=checkbox id=section-85e7c64a7f59a04958f475e43f62710b class=toggle>
+<label for=section-85e7c64a7f59a04958f475e43f62710b class="flex justify-between"><a href=/zh/docs/Digtal/Digtal/Routing/routing1/>Routing1</a></label></li></ul></li><li><input type=checkbox id=section-9bc128912acae8559e0b27b496b7779b class=toggle>
+<label for=section-9bc128912acae8559e0b27b496b7779b class="flex justify-between"><a href=/zh/docs/Digtal/flow/EDA4PR/>EDA4PR</a></label></li><li><input type=checkbox id=section-50846ac4cdec99c8bd1f8b0417acad9a class=toggle>
+<label for=section-50846ac4cdec99c8bd1f8b0417acad9a class="flex justify-between"><a href=/zh/docs/Digtal/flow/flow/>Flow</a></label></li><li><input type=checkbox id=section-b2241e4da59f24976e354abe344e8d4f class=toggle>
+<label for=section-b2241e4da59f24976e354abe344e8d4f class="flex justify-between"><a href=/zh/docs/Digtal/Placement/placement/>Placement</a></label></li><li><input type=checkbox id=section-259735f9bf2708d778569b162c141df5 class=toggle>
+<label for=section-259735f9bf2708d778569b162c141df5 class="flex justify-between"><a href=/zh/docs/Digtal/Routing/routing2/>Routing</a></label></li><li><input type=checkbox id=section-78b8f069c0c130e55062b802fff78361 class=toggle>
+<label for=section-78b8f069c0c130e55062b802fff78361 class="flex justify-between"><a href=/zh/docs/Digtal/Routing/routing1/>Routing1</a></label></li></ul></li></ul></nav><script>(function(){var e=document.querySelector("aside .book-menu-content");addEventListener("beforeunload",function(){localStorage.setItem("menu.scrollTop",e.scrollTop)}),e.scrollTop=localStorage.getItem("menu.scrollTop")})()</script></div></aside><div class=book-page><header class=book-header><div class="flex align-center justify-between"><label for=menu-control><img src=/svg/menu.svg class=book-icon alt=Menu></label><h3>EDA4PR</h3><label for=toc-control><img src=/svg/toc.svg class=book-icon alt="Table of Contents"></label></div><aside class="hidden clearfix"><nav id=TableOfContents><ul><li><a href=#研究背景>研究背景</a></li><li><a href=#难点>难点</a></li><li><a href=#研究方向>研究方向</a><ul><li><a href=#digtal>Digtal</a></li></ul></li><li><a href=#相关数据集>相关数据集</a><ul><li><a href=#only-rtl>only rtl</a><ul><li><a href=#home--opencores><a href=https://opencores.org/>Home :: OpenCores</a></a></li><li><a href=#iwls-2005-benchmarks><a href=https://iwls.org/iwls2005/benchmarks.html>IWLS 2005 Benchmarks</a></a></li><li><a href=#openlane-examples-examples-from-the-openlane-repository><a href=https://github.com/klasnordmark/openlane-examples>openlane-examples: Examples from the Openlane repository</a></a></li></ul></li><li><a href=#global-route>Global route</a><ul><li><a href=#ispd-2007>ISPD-2007</a></li><li><a href=#ispd-2008>ISPD-2008</a></li><li><a href=#iccad-2019>ICCAD-2019</a></li><li><a href=#ispd-2024>ISPD-2024</a></li><li><a href=#ispd-2025>ISPD-2025</a></li></ul></li><li><a href=#detail-route>Detail Route</a><ul><li><a href=#ispd-20182019>ISPD-2018/2019</a></li></ul></li><li><a href=#congestiondrcir-droptiming>congestion/DRC/IR drop/timing</a></li></ul></li><li><a href=#相关会议期刊>相关会议/期刊</a><ul><li><a href=#会议>会议</a></li><li><a href=#期刊>期刊</a></li><li><a href=#参考>参考</a></li></ul></li><li><a href=#相关科研实验室>相关科研实验室</a><ul><li><a href=#清华>清华</a></li><li><a href=#北大-无锡eda研究院>北大-无锡EDA研究院</a></li><li><a href=#复旦>复旦</a></li><li><a href=#北航>北航</a></li><li><a href=#港中文-eda-center>港中文-EDA Center</a></li><li><a href=#中科大>中科大</a></li><li><a href=#福大>福大</a></li><li><a href=#上海交大>上海交大</a></li><li><a href=#东南大学-国家asic工程中心>东南大学-国家ASIC工程中心</a></li><li><a href=#华中科技大学>华中科技大学</a></li><li><a href=#西安电子科技大学>西安电子科技大学</a></li><li><a href=#广东工业大学>广东工业大学</a></li><li><a href=#国立清华大学>国立清华大学</a></li><li><a href=#university-of-california>University of California</a></li></ul></li><li><a href=#相关企业机构>相关企业/机构</a><ul><li><a href=#华为诺亚方舟--海思>华为诺亚方舟 & 海思</a></li><li><a href=#eda国创中心>EDA国创中心</a></li><li><a href=#芯行纪><a href=https://www.xtimes-da.com/>芯行纪</a></a><ul><li><a href=#amazesys>AmazeSys</a></li><li><a href=#amazefp>AmazeFP</a></li><li><a href=#amazefp-me>AmazeFP-ME</a></li><li><a href=#amazedrclite>AmazeDRCLite</a></li><li><a href=#云>云</a></li></ul></li><li><a href=#华大九天>华大九天</a><ul><li><a href=#pyaether>PyAether</a></li></ul></li><li><a href=#概伦电子>概伦电子</a></li><li><a href=#鸿芯微纳>鸿芯微纳</a></li><li><a href=#华芯巨数>华芯巨数</a></li><li><a href=#嘉立创>嘉立创</a></li></ul></li><li><a href=#相关竞赛>相关竞赛</a><ul><li><a href=#cadathloniccad>CADathlon@ICCAD</a></li><li><a href=#contestispd>Contest@ISPD</a></li><li><a href=#cad-contesticcad>CAD Contest@ICCAD</a><ul><li><a href=#历年相关赛题>历年相关赛题</a></li></ul></li><li><a href=#侠客岛>侠客岛</a></li><li><a href=#eda精英挑战赛>EDA精英挑战赛</a></li><li><a href=#tau-contest>TAU Contest</a></li><li><a href=#programming-contestiwls><a href=https://www.iwls.org/contest/>Programming Contest@IWLS</a></a></li><li><a href=#全国大学生集成电路创新创业大赛的华大九天赛道>“全国大学生集成电路创新创业大赛”的华大九天赛道</a></li><li><a href=#llm4hwdesign-contest>LLM4HWDesign Contest</a></li><li><a href=#dac-system-design-contest><a href=https://pku-sec-lab.github.io/dac-sdc-2024/><strong>DAC System Design Contest</strong></a></a></li><li><a href=#参考-1>参考</a></li></ul></li><li><a href=#相关pdk>相关PDK</a></li></ul></nav></aside></header><article class="markdown book-article"><h1 id=研究背景>研究背景
+<a class=anchor href=#%e7%a0%94%e7%a9%b6%e8%83%8c%e6%99%af>#</a></h1><p>**典型的芯片设计流程是先做前端、后端设计，再去验证性能、功耗和面积。**但由于流程太长，在前端设计的时候，无法保证后端设计的效果，所以很多时候需要进行跨环节建模，在早期设计环节预测后续环节的求解质量，这当中就很适合AI算法来进行辅助。</p><p>除了建模之外，另外一个关键问题是优化。EDA中经常要求解各种各样的组合优化问题。这些问题往往是 NP难题，比如经典的旅行商问题。传统上，我们会通过一些启发探索的方法来求解。但随着规模不断增大、设计约束越来越多，这种探索往往遇到效率瓶颈，所以我们需要通过机器学习技术进行辅助，寻找有效策略，提高效率。</p><p><img src=/image-20250105141458960.png alt=image-20250105141458960></p><h1 id=难点>难点
+<a class=anchor href=#%e9%9a%be%e7%82%b9>#</a></h1><p><img src=/image-20241013184936794.png alt=image-20241013184936794></p><ol><li>大图&ndash;></li><li>数据集&ndash;></li><li>泛化能力&ndash;></li><li>非DAG?</li><li>route: 3D，45°，30°</li><li>先进的工艺：7nm</li><li>很多Placer and Router还是有很多人工定义的超参数？（不general）</li><li>现在真的还有必要把Router分成Global 和Detail 吗？</li><li>GR: total maze routing</li><li>GR: Consider timing and power consumption</li></ol><h1 id=研究方向>研究方向
+<a class=anchor href=#%e7%a0%94%e7%a9%b6%e6%96%b9%e5%90%91>#</a></h1><h2 id=digtal>Digtal
+<a class=anchor href=#digtal>#</a></h2><p>详细查看
+<a href=/zh/docs/Digtal/Digtal/flow/EDA4PR-Digtal/>EDA4PR-Digtal</a></p><h1 id=相关数据集>相关数据集
+<a class=anchor href=#%e7%9b%b8%e5%85%b3%e6%95%b0%e6%8d%ae%e9%9b%86>#</a></h1><h2 id=only-rtl>only rtl
+<a class=anchor href=#only-rtl>#</a></h2><h3 id=home--opencores><a href=https://opencores.org/>Home :: OpenCores</a>
+<a class=anchor href=#home--opencores>#</a></h3><p><img src=/image-20241116140649477.png alt=image-20241116140649477></p><h3 id=iwls-2005-benchmarks><a href=https://iwls.org/iwls2005/benchmarks.html>IWLS 2005 Benchmarks</a>
+<a class=anchor href=#iwls-2005-benchmarks>#</a></h3><p><img src=/image-20241116140821429.png alt=image-20241116140821429></p><p><img src=/image-20241116140834409.png alt=image-20241116140834409></p><h3 id=openlane-examples-examples-from-the-openlane-repository><a href=https://github.com/klasnordmark/openlane-examples>openlane-examples: Examples from the Openlane repository</a>
+<a class=anchor href=#openlane-examples-examples-from-the-openlane-repository>#</a></h3><p><img src=/image-20241118160109426.png alt=image-20241118160109426></p><h2 id=global-route>Global route
+<a class=anchor href=#global-route>#</a></h2><h3 id=ispd-2007>ISPD-2007
+<a class=anchor href=#ispd-2007>#</a></h3><p><img src=/image-20250209155834613.png alt=image-20250209155834613></p><ul><li>the first published multilayer global routing benchmarks and the sizes of these benchmarks are large enough as compared to real industry cases</li><li>has a two-layer and a six-layer version.</li><li></li></ul><h3 id=ispd-2008>ISPD-2008
+<a class=anchor href=#ispd-2008>#</a></h3><h3 id=iccad-2019>ICCAD-2019
+<a class=anchor href=#iccad-2019>#</a></h3><p><a href=https://www.iccad-contest.org/2019/problems.html>2019 CAD Contest @ ICCAD</a></p><p><img src=/image-20241116171011534.png alt=image-20241116171011534></p><p><img src=/image-20241116170739017.png alt=image-20241116170739017></p><p><img src=/image-20241116170857585.png alt=image-20241116170857585></p><p><img src=/image-20241116171107825.png alt=image-20241116171107825></p><h3 id=ispd-2024>ISPD-2024
+<a class=anchor href=#ispd-2024>#</a></h3><p>Dockerfile无法创建镜像了，401，Github也找不到benchmarks</p><p><img src=/image-20241116211927308.png alt=image-20241116211927308></p><h3 id=ispd-2025>ISPD-2025
+<a class=anchor href=#ispd-2025>#</a></h3><h2 id=detail-route>Detail Route
+<a class=anchor href=#detail-route>#</a></h2><h3 id=ispd-20182019>ISPD-2018/2019
+<a class=anchor href=#ispd-20182019>#</a></h3><p><a href=https://www.ispd.cc/contests/18/>Initial Detailed Routing Contest at ISPD 2018</a></p><p><a href=https://ispd.cc/contests/19/#finalfiles>Initial Detailed Routing Contest at ISPD 2019</a></p><p><a href=https://github.com/nithyashreesenguttuvan/Handling-the-ISPD19-benchmark-dataset>一个别人写的parse脚本：Handling-the-ISPD19-benchmark-dataset</a></p><p><a href=https://ispd.cc/contests/19/ispd19eval.tgz>https://ispd.cc/contests/19/ispd19eval.tgz</a>：一个结果验证工具</p><p><img src=/image-20241116172911319.png alt=image-20241116172911319></p><p><img src=/image-20241116173011828.png alt=image-20241116173011828></p><p>还可以看看被人的结果</p><p><img src=/image-20241116173156258.png alt=image-20241116173156258></p><h2 id=congestiondrcir-droptiming>congestion/DRC/IR drop/timing
+<a class=anchor href=#congestiondrcir-droptiming>#</a></h2><p><a href=https://github.com/circuitnet/CircuitNet>circuitnet/CircuitNet: CircuitNet: An Open-Source Dataset for Machine Learning Applications in Electronic Design Automation (EDA)</a></p><p>背景：</p><ul><li><a href=https://f.daixianiu.cn/csdn/14209355328255857.html>f.daixianiu.cn/csdn/14209355328255857.html</a>在研究过程中，我们发现AI+EDA的研究常常受限于公开数据集，不像计算机视觉领域有ImageNet这样的大数据集可以很方便地验证算法。针对这一问题，我们近期跟黄如院士、王润声教授等合作，发布了首个致力于芯片设计AI for EDA应用的开源数据集——CircuitNet，包含1万以上的数据样本，涵盖从实际制造工艺PDK下数字设计流程不同阶段中提取到的各类特征。</li></ul><p><img src=/image-20241119154735598.png alt=image-20241119154735598></p><p><img src=/image-20241116141127587.png alt=image-20241116141127587></p><p><a href=https://github.com/TimingPredict/TimingPredict>TimingPredict/TimingPredict: Official open source repository for &ldquo;A Timing Engine Inspired Graph Neural Network Model for Pre-Routing Slack Prediction&rdquo; (DAC 2022)</a></p><p><img src=/image-20241116141000835.png alt=image-20241116141000835></p><h1 id=相关会议期刊>相关会议/期刊
+<a class=anchor href=#%e7%9b%b8%e5%85%b3%e4%bc%9a%e8%ae%ae%e6%9c%9f%e5%88%8a>#</a></h1><h2 id=会议>会议
+<a class=anchor href=#%e4%bc%9a%e8%ae%ae>#</a></h2><p><a href=http://www.dac.com/>DAC</a>:</p><ul><li>每年举办一次学术论坛和工业贸易展览</li><li>一般11月截止</li></ul><p><a href=http://www.iccad.com/>ICCAD</a>：</p><ul><li>International Conference on Computer-Aided Design</li><li>由电气电子工程师学会（IEEE）和美国计算机学会（ACM）共同举办的国际计算机辅助设计会议（ICCAD）被公认为EDA领域最重要的会议之一，享有很高的国际学术地位和广泛的影响力。该会议是探索EDA研究领域新挑战、展示前沿创新解决方案和识别新兴技术的重要论坛，涵盖了从器件和电路级到系统级的所有设计与自动化主题、以及后CMOS设计等新型方向。着重于学术研究，论文涉及专门的算法的研究进展。</li><li>一般4月截止</li></ul><p><a href=https://www.date-conference.com/>DATE 2025</a></p><ul><li>Design, Automation and Test in Europe Conference</li><li>欧洲设计自动化和测试会议</li><li>一般9月截止</li></ul><p><a href=https://www.aspdac.com/aspdac/>ASP-DAC</a></p><ul><li>亚洲、南太平洋设计自动化会议</li><li>一般7月截止</li></ul><p><a href=https://ispd.cc>ISPD</a>：</p><ul><li><p>International Symposium on Physical Design</p></li><li><p>国际<strong>物理设计</strong>会议。是专注集成电路<strong>物理设计</strong>的国际研讨会，主题涵盖从ASIC和FPGA的传统物理设计到新兴半导体技术的物理设计<strong>自动化方法</strong>。</p></li><li><p>CCF-C. 9月份左右</p></li><li><p>每年ISPD会议同步举办国际物理设计竞赛，通常由国际知名芯片企业命题和组织，竞赛历时3个多月，结果在ISPD会议上揭晓。</p></li></ul><p><a href=https://www.glsvlsi.org/>GLSVLSI</a></p><ul><li>CCF-C</li><li>大湖区超大规模集成电路设计国际会议</li><li>一般2月截止</li><li>25年为第35届</li></ul><p><img src=/image-20250209205712219.png alt=image-20250209205712219></p><p><a href=https://www.vlsisymposium.org/>VLSI</a>:</p><ul><li>有个DTCO?</li><li>一般1月</li></ul><p><img src=/image-20250209213619851.png alt=image-20250209213619851></p><p><a href=https://www.eda2.com/iseda/index.html>ISEDA</a>:</p><ul><li>由IEEE和ACM主办，EDA²和CIE EDA委员会联合主办的ISEDA （EDA国际研讨会）是一个致力于VLSI设计自动化的年度顶级论坛。研讨会旨在探索新的挑战，展示前沿技术，并为EDA社区提供预测EDA研究领域未来发展方向的机会。ISEDA涵盖了从器件和电路级到系统级的所有EDA主题，从模拟到数字设计以及制造。会议的形式旨在培养富有成效和新颖</li><li>二月</li><li>25年第三届</li><li><img src=/image-20241210024033587.png alt=image-20241210024033587></li><li><img src=/image-20241210023830404.png alt=image-20241210023830404></li><li>不在CCF, 论文质量好像一般</li></ul><p><a href=https://ieee-cas.org/event/conference/2024-ieee-asia-pacific-conference-circuits-and-systems#documents>APCCAS</a></p><ul><li>E Asia Pacific Conference on Circuits and Systems</li><li><img src=/image-20250224112009790.png alt=image-20250224112009790></li><li>ddl: 6-7月</li><li>不在CCF, 论文质量好像一般</li></ul><p>[ISCAS](
+<a href="https://ieeesystemscouncil.org/event/symposium/2025-ieee-international-symposium-circuits-and-systems#:~:text=The">https://ieeesystemscouncil.org/event/symposium/2025-ieee-international-symposium-circuits-and-systems#:~:text=The</a> IEEE International Symposium on Circuits and Systems,theory%2C design and implementation of circuits and systems.)</p><ul><li>International Symposium on Circuits and Systems</li><li>计算机体系结构/并行与分布计算/存储系统</li><li>ddl: 10月</li><li>CCF-C</li></ul><p>ICML</p><p>NeurIPS</p><h2 id=期刊>期刊
+<a class=anchor href=#%e6%9c%9f%e5%88%8a>#</a></h2><p><a href=https://ieeexplore.ieee.org/document/10186100>TCAD</a></p><ul><li>由美国电器电子工程师学会（IEEE）出版(就是Trans?)</li></ul><p><a href=https://dl.acm.org/journal/todaes>TODAES</a></p><ul><li>由美国计算机学会（ACM）出版的电子系统设计自动化汇刊</li><li>It publishes innovative work documenting significant research and development advances on the specification, design, analysis, simulation, testing, and evaluation of electronic systems, emphasizing a computer science/engineering orientation. Design automation for machine learning/AI and machine learning/AI for design automation are very much welcomed. For topics of interest please see
+<a href=https://dl.acm.org/journal/todaes/about>https://dl.acm.org/journal/todaes/about</a>.</li></ul><h2 id=参考>参考
+<a class=anchor href=#%e5%8f%82%e8%80%83>#</a></h2><ul><li><a href="https://www.zhihu.com/question/559252881/answer/2849452833?utm_campaign=shareopn&amp;utm_medium=social&amp;utm_psn=1875695916662534144&amp;utm_source=wechat_session">(99+ 封私信 / 81 条消息) 集成电路设计的学术会议含金量排名如何？ - 知乎</a></li><li></li></ul><h1 id=相关科研实验室>相关科研实验室
+<a class=anchor href=#%e7%9b%b8%e5%85%b3%e7%a7%91%e7%a0%94%e5%ae%9e%e9%aa%8c%e5%ae%a4>#</a></h1><h2 id=清华>清华
+<a class=anchor href=#%e6%b8%85%e5%8d%8e>#</a></h2><p>清华大学是国内较早从事EDA研究的高校，<strong>洪先龙教授</strong>和<strong>边计年教授</strong>做<code>物理实现</code>和<code>逻辑综合</code>，两位老先生的学生大部分去了三大EDA公司</p><h2 id=北大-无锡eda研究院>北大-无锡EDA研究院
+<a class=anchor href=#%e5%8c%97%e5%a4%a7-%e6%97%a0%e9%94%a1eda%e7%a0%94%e7%a9%b6%e9%99%a2>#</a></h2><p><a href=http://pkueda.org.cn/index.htm>无锡北京大学电子设计自动化研究院</a></p><p><a href=http://pkueda.org.cn/xgzy/dwfw/open.htm>北京大学无锡电子设计自动化研究院-开源工具整合</a></p><p><img src=/image-20250105135331192.png alt=image-20250105135331192></p><p>北京大学集成电路学院成立了国内唯一聚焦EDA技术的“设计自动化与计算系统系”，打造先进的教学与人才培养体系，并与国内外领先的企业深入合作，部分成果已经成功得到转化应用，相关技术是业内目前唯一的解决方案；近期依托院系新成立了<code>无锡北京大学EDA研究院</code>，加上此前与EDA及设计方向头部企业共建的多个联合实验室，形成了教育、科技和人才三位一体的布局。</p><p>研究方向包括<code>布局布线</code>、<code>FPGA设计自动化的可重构算法</code></p><p>林亦波
+<a href=https://yibolin.com/>Yibo Lin</a>:yibolin@pku.edu.cn</p><ul><li><p><code>Contest@ISPD 2024第一名</code>指导的本科生赵春源提出的高效<code>GPU异构并行布线算法</code></p></li><li><p><code>CADathlon@ICCAD 2024第一名</code>指导<strong>郭资政（毕设开源项目作者）、麦景</strong>。在9小时内，运用自己的编码和分析技巧来解决6道集成电路与系统中电子设计自动化问题</p></li><li><p><code>CAD Contest@ICCAD第一名</code>指导<strong>杜宇凡、郭资政</strong>。C赛题《Scalable Logic Gate Sizing Using ML Techniques and GPU Acceleration》</p></li><li><p><code>DreamPlace</code>, <code>Limbo</code>开源项目作者</p></li><li><p>相关采访
+<a href=https://blog.csdn.net/BAAIBeijing/article/details/126944929>北大林亦波：探索AI+EDA新路径 | 青源专栏 2022-09</a></p></li><li><p><img src=/image-20250105141555651.png alt=image-20250105141555651></p></li><li><p>一个现象：</p><p><img src=/image-20250207165145656.png alt=image-20250207165145656></p></li></ul><p><img src=/ec7d7183c0dd379cccae82cd8354620.jpg alt=ec7d7183c0dd379cccae82cd8354620></p><h2 id=复旦>复旦
+<a class=anchor href=#%e5%a4%8d%e6%97%a6>#</a></h2><p>集成芯片与系统国家重点实验室</p><p>研究方向包括<code>物理实现</code>、<code>参数提取</code>、<code>逻辑综合</code>、<code>可制造性设计</code>等方向</p><p>陈建利教授</p><ul><li>指导蔡志杰、魏民、邹鹏，ISPD 2024 contest 第三名</li></ul><h2 id=北航>北航
+<a class=anchor href=#%e5%8c%97%e8%88%aa>#</a></h2><p><img src=/image-20241116114923595.png alt=image-20241116114923595></p><h2 id=港中文-eda-center>港中文-EDA Center
+<a class=anchor href=#%e6%b8%af%e4%b8%ad%e6%96%87-eda-center>#</a></h2><p><a href=https://cueda-center.github.io/index.html>CUHK EDA Center官网</a></p><p><a href=https://github.com/cuhk-eda>CUHK EDA Github</a></p><p><a href=https://www.cse.cuhk.edu.hk/~byu/>Bei Yu(余备)@CUHK-CSE</a></p><ul><li><p><a href=mailto:byu@cse.cuhk.edu.hk>byu@cse.cuhk.edu.hk</a></p></li><li><p><a href=https://www.cse.cuhk.edu.hk/~byu/topics.html>Research Topics</a></p></li><li><p><code>CAD Contest@ICCAD 2012</code>第二名获得者</p></li><li><p><a href=https://lusica1031.github.io/>Siting Liu(刘思婷)@CUHK-CSE</a></p></li><li><p><a href=mailto:lusicaliu@outlook.com>lusicaliu@outlook.com</a></p></li></ul><p><a href=https://www.cse.cuhk.edu.hk/~fyyoung/>F.Y. Young</a></p><p><img src=/image-20250209204835789.png alt=image-20250209204835789></p><ul><li>Jinwei Liu</li></ul><p><a href=https://sse.cuhk.edu.cn/en/faculty/chentinghuan>陈廷欢CHEN, Tinghuan</a></p><ul><li>方向：VLSI CAD and deep learning accelerators for edge devices</li><li><a href=mailto:chentinghuan@cuhk.edu.cn>chentinghuan@cuhk.edu.cn</a></li></ul><h2 id=中科大>中科大
+<a class=anchor href=#%e4%b8%ad%e7%a7%91%e5%a4%a7>#</a></h2><p>USTC</p><p>School of Computer Science and Technology, School of Data Science</p><h2 id=福大>福大
+<a class=anchor href=#%e7%a6%8f%e5%a4%a7>#</a></h2><p>中国科学院网络计算与智能信息处理重点实验室(Key Laboratory of Network Computing and Intelligent Information Processing)</p><p>福州大学早期EDA研究始于<strong>范更华教授</strong>和<strong>朱文兴教授</strong>，当前的研究方向主要是<strong>物理实现</strong>。福州大学团队曾连续三年在<code>CAD Contest@ICCAD</code>夺冠。</p><p><code>福州大学团队</code>在<code>CAD Contest@ICCAD</code>大赛中提出的<code>6T&amp;6T PPNN单元布局方法</code>已转让给<code>华大九天</code></p><p>林智锋教授</p><ul><li>指导陈忆鹭、吴昭怡， ISPD 2024 contest 第三名</li></ul><p><a href=https://ccds.fzu.edu.cn/info/1207/8297.htm>刘耿耿</a></p><h2 id=上海交大>上海交大
+<a class=anchor href=#%e4%b8%8a%e6%b5%b7%e4%ba%a4%e5%a4%a7>#</a></h2><p><a href=https://www.shlab.org.cn/>首页_上海人工智能实验室</a></p><h2 id=东南大学-国家asic工程中心>东南大学-国家ASIC工程中心
+<a class=anchor href=#%e4%b8%9c%e5%8d%97%e5%a4%a7%e5%ad%a6-%e5%9b%bd%e5%ae%b6asic%e5%b7%a5%e7%a8%8b%e4%b8%ad%e5%bf%83>#</a></h2><p>研究方向是<code>亚阈值和近阈值相关的时序分析</code></p><p><code>CAD Contest@ICCAD 2017第一名</code>获奖者福州大学的<strong>朱自然</strong>（Ziran Zhu）毕业后任教于<code>东南大学ASIC</code>中心</p><p>2020年和<strong>国微集团</strong>成立<strong>EDA联合实验室</strong>，瞄准EDA共性技术研发</p><p><a href=https://ic.seu.edu.cn/shilongxing/main.psp>时龙兴</a>:</p><ul><li>老所长</li></ul><p><a href=https://ic.seu.edu.cn/yanhao/main.psp>闫浩</a>:</p><ul><li><a href=mailto:yanhao@seu.edu.cn>yanhao@seu.edu.cn</a></li><li>领域：智能EDA，面向先进工艺、高能效电路设计中存在的问题，应用人工智能算法辅助电路设计；先进制程/低电压下的<strong>时序</strong>分析与优化</li></ul><h2 id=华中科技大学>华中科技大学
+<a class=anchor href=#%e5%8d%8e%e4%b8%ad%e7%a7%91%e6%8a%80%e5%a4%a7%e5%ad%a6>#</a></h2><h2 id=西安电子科技大学>西安电子科技大学
+<a class=anchor href=#%e8%a5%bf%e5%ae%89%e7%94%b5%e5%ad%90%e7%a7%91%e6%8a%80%e5%a4%a7%e5%ad%a6>#</a></h2><p>在国内较早开始从事成品率分析算法的研究，并且一直在宽禁带半导体的器件建模、可靠性分析等领域有深入的研究和突出的成果</p><p>在2019年和<strong>囯微集团</strong>建立<strong>EDA研究院</strong>之后，开始进入<code>布局布线</code>和<code>原型验证</code>领域</p><h2 id=广东工业大学>广东工业大学
+<a class=anchor href=#%e5%b9%bf%e4%b8%9c%e5%b7%a5%e4%b8%9a%e5%a4%a7%e5%ad%a6>#</a></h2><p><a href=https://sme.gdut.edu.cn/info/1163/1478.htm>电子设计自动化（EDA）科研团队-广东工业大学集成电路学院</a></p><p>电子设计自动化（EDA）科研团队依托广东工业大学集成电路学院成立。面向人工智能辅助集成电路设计EDA工具开发、应用等国家重大战略与行业重大需求，以人工智能辅助EDA为研究核心，聚焦于数字集成电路设计后端工具、FPGA设计工具优化等领域的前沿基础理论和关键技术研究。团队主要开展“数据驱动机器学习的集成电路智能设计”、“人工智能方法实现集成电路的敏捷设计”、“基于传统的分析和优化技术的集成电路辅助设计”等研究</p><p><img src=/image-20241214171155300.png alt=image-20241214171155300></p><ol><li>数据驱动机器学习的集成电路智能设计</li><li>人工智能方法实现集成电路的敏捷设计</li><li>基于传统的分析和优化技术的集成电路辅助设计</li></ol><p><img src=/image-20241214171245832.png alt=image-20241214171245832></p><h2 id=国立清华大学>国立清华大学
+<a class=anchor href=#%e5%9b%bd%e7%ab%8b%e6%b8%85%e5%8d%8e%e5%a4%a7%e5%ad%a6>#</a></h2><h2 id=university-of-california>University of California
+<a class=anchor href=#university-of-california>#</a></h2><p><a href=http://eda.ee.ucla.edu/>Design Automation Laboratory</a></p><h1 id=相关企业机构>相关企业/机构
+<a class=anchor href=#%e7%9b%b8%e5%85%b3%e4%bc%81%e4%b8%9a%e6%9c%ba%e6%9e%84>#</a></h1><h2 id=华为诺亚方舟--海思>华为诺亚方舟 & 海思
+<a class=anchor href=#%e5%8d%8e%e4%b8%ba%e8%af%ba%e4%ba%9a%e6%96%b9%e8%88%9f--%e6%b5%b7%e6%80%9d>#</a></h2><p>Huawei Noah’s Ark Lab
+<a href=https://noahai4eda.github.io/>AI4EDA</a></p><p><code>CAD Contest@ICCAD 2018第一名</code>获奖者<code>香港中文大学</code>的<strong>陈劲松</strong>（Jingsong Chen，2021年博士毕业）毕业后加入<code>华为</code></p><h2 id=eda国创中心>EDA国创中心
+<a class=anchor href=#eda%e5%9b%bd%e5%88%9b%e4%b8%ad%e5%bf%83>#</a></h2><p>与东南大学
+<a href=https://ic.seu.edu.cn/2024/0509/c47774a489994/page.htm>有关联</a></p><p><a href=https://www.nctieda.com/AboutUs.html>中心介绍—国家集成电路设计自动化技术创新中心，EDA国创中心【官方网站】</a></p><p><img src=/image-20241211184948328.png alt=image-20241211184948328></p><p><img src=/image-20241214171422358.png alt=image-20241214171422358></p><h2 id=芯行纪><a href=https://www.xtimes-da.com/>芯行纪</a>
+<a class=anchor href=#%e8%8a%af%e8%a1%8c%e7%ba%aa>#</a></h2><p><img src=/image-20241214160736661.png alt=image-20241214160736661></p><h3 id=amazesys>AmazeSys
+<a class=anchor href=#amazesys>#</a></h3><p>应用于数字芯片物理设计领域的<strong>布局布线</strong>工具</p><p>包含宏单元布局规划、电源规划、布局、时钟树综合、布线、优化、寄生参数提取以及时序功耗分析等全功能模块，支持先进工艺制程下的超大规模设计，可完成数字芯片从<strong>Netlist到GDS</strong>的完整设计流程，快速达成性能、功耗、面积优化等设计目标</p><p>基于强大的<strong>机器学习引擎内核</strong>，AmazeSys具备自适应超高质量优化能力。该引擎智能提取设计本身特点进行样本训练，综合性能、功耗、面积和布线拥塞等多项关键指标，快速获取量身定制的最佳优化方案，可有效帮助用户降低调整大量工具设置的时间成本。</p><h3 id=amazefp>AmazeFP
+<a class=anchor href=#amazefp>#</a></h3><p>智能布局规划工具<strong>AmazeFP</strong>将<strong>机器学习</strong>技术与<strong>布局规划</strong>引警结合，在兼顾性能、功耗和面积(<strong>PPA</strong>)的同时，提供了高度智能的<strong>拥塞感知</strong>、便捷的数据流分析和<strong>宏单元自动整理对齐功能</strong>，有效解决当前数字芯片在后端设计阶段的布局规划节点面临的经验值需求高、手工耗时长、数据流结构分析不够深入、设计目标收敛性差等难题，助力用户在后端设计初期快速有效地获取高质量布局规划方案，减少迭代次数，从而节约大规模设计的研发成本，提速产品上市时间。</p><h3 id=amazefp-me>AmazeFP-ME
+<a class=anchor href=#amazefp-me>#</a></h3><p>作为一款EDA机器学习的工具，AmazeFP-ME在AmazeFP的基础上，能够快速探索数百倍甚至更多的庞大解空间，无需用户手动调参，同时配备优异且精准的数据、图形分析功能，可为用户提供高效便捷的设计体验</p><p>AmazeFP-ME作为AmazeFP的AI配套工具，将机器学习技术引入到AmazeFP的解空间探索中，不仅进一步显著地提升了PPA，还为用户创造全新的自动化使用体验。</p><h3 id=amazedrclite>AmazeDRCLite
+<a class=anchor href=#amazedrclite>#</a></h3><p><img src=/image-20241214162304222.png alt=image-20241214162304222></p><h3 id=云>云
+<a class=anchor href=#%e4%ba%91>#</a></h3><h2 id=华大九天>华大九天
+<a class=anchor href=#%e5%8d%8e%e5%a4%a7%e4%b9%9d%e5%a4%a9>#</a></h2><p>东南大学-华大九天-NiiCEDA联合实验室</p><h3 id=pyaether>PyAether
+<a class=anchor href=#pyaether>#</a></h3><p>Aether就是全定制电路（例如模拟、存储、射频、平板等）设计平台，包括原理图，版图，仿真环境，以及数据版本管理工具和Python接口等。</p><p><strong>Python拥有众多针对****数据科学和人工智能的强大的开源库</strong>，例如NumPy和Pandas用于数据处理，Matplotlib用于数据可视化，Scikit-Learn提供了大量的预处理方法和机器学习算法，TensorFlow和PyTorch则是深度学习领域的重要工具。这些库大大降低了开发难度，使得Python在AI领域的地位无可替代。所以无论是数据清洗和预处理，还是模型建立，例如决策树，神经网络，贝叶斯优化等，以及模型训练和测试，对模型结果的解读等，<strong>都会</strong>天然的<strong>使用Python</strong>。</p><p>所以Python的开放性生态、天然的数据挖掘、包括机器学习的人工智能（AI）以及各类算法优化包，友好的web开发，使用户可以在更开放、更强大的生态体系里开展设计。可以用它来构建电路与版图的自动化任务，快速进行数据处理和分析。例如，PyAether可以赋能IC CAD，更好得响应IC 设计和版图各种要求。</p><ul><li><a href=https://bbs.eetop.cn/thread-977456-1-1.html>10月18日深度解析 PyAether EDA 生态系统，带您探索电路设计自动化的秘籍！ - 华大九天PyAether - EETOP 创芯网论坛 (原名：电子顶级开发网) -</a></li></ul><p><img src=/image-20250112113619108.png alt=image-20250112113619108></p><p><img src=/image-20250113112132020.png alt=image-20250113112132020></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#f92672>import</span> pyAether
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>class</span> <span style=color:#a6e22e>InvLe</span>:
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>def</span> __init__(self, lib, cell, tech_lib, view<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;layout&#34;</span>, mode<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;a&#34;</span>):
+</span></span><span style=display:flex><span>        <span style=color:#e6db74>r</span><span style=color:#e6db74>&#34;&#34;&#34;InvLe init function, receive the specified layout information.
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        Parameters
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        ----------
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        lib : str
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>            Library name.
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        cell : str
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>            Cell name.
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        tech_lib : str
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>            Attach tech library name.
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        view : str
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>            View name, the default value is &#39;layout&#39;.
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        mode : str
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>            Mode for open design, the default value is &#39;a&#39;.
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        &#34;&#34;&#34;</span>
+</span></span><span style=display:flex><span>        pyAether<span style=color:#f92672>.</span>emyInitDb()
+</span></span><span style=display:flex><span>        pyAether<span style=color:#f92672>.</span>emyInitLog()
+</span></span><span style=display:flex><span>        self<span style=color:#f92672>.</span>pnt_x <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span>
+</span></span><span style=display:flex><span>        self<span style=color:#f92672>.</span>pnt_y <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span>
+</span></span><span style=display:flex><span>        self<span style=color:#f92672>.</span>namespace <span style=color:#f92672>=</span> pyAether<span style=color:#f92672>.</span>emyUnixNS()
+</span></span><span style=display:flex><span>        self<span style=color:#f92672>.</span>design <span style=color:#f92672>=</span> self<span style=color:#f92672>.</span>open_design(lib, cell, view, mode<span style=color:#f92672>=</span>mode)
+</span></span><span style=display:flex><span>        self<span style=color:#f92672>.</span>block <span style=color:#f92672>=</span> self<span style=color:#f92672>.</span>design<span style=color:#f92672>.</span>getTopBlock()
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> self<span style=color:#f92672>.</span>block <span style=color:#f92672>is</span> <span style=color:#66d9ef>None</span>:
+</span></span><span style=display:flex><span>            self<span style=color:#f92672>.</span>block <span style=color:#f92672>=</span> pyAether<span style=color:#f92672>.</span>emyBlock<span style=color:#f92672>.</span>create(self<span style=color:#f92672>.</span>design)
+</span></span><span style=display:flex><span>        self<span style=color:#f92672>.</span>uu2dbu <span style=color:#f92672>=</span> self<span style=color:#f92672>.</span>block<span style=color:#f92672>.</span>getDBUPerUU()
+</span></span><span style=display:flex><span>        oplib <span style=color:#f92672>=</span> self<span style=color:#f92672>.</span>design<span style=color:#f92672>.</span>getLib()
+</span></span><span style=display:flex><span>        tech_scl <span style=color:#f92672>=</span> pyAether<span style=color:#f92672>.</span>emyScalarName(self<span style=color:#f92672>.</span>namespace, tech_lib)
+</span></span><span style=display:flex><span>        tech <span style=color:#f92672>=</span> pyAether<span style=color:#f92672>.</span>emyTech<span style=color:#f92672>.</span>open(tech_scl)
+</span></span><span style=display:flex><span>        tech<span style=color:#f92672>.</span>attach(oplib, tech_scl)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>def</span> <span style=color:#a6e22e>open_design</span>(self, lib, cell, view, view_type<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;maskLayout&#34;</span>, mode<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;r&#34;</span>):
+</span></span><span style=display:flex><span>        <span style=color:#e6db74>r</span><span style=color:#e6db74>&#34;&#34;&#34;This function is used to open design and return an emyDesign object.
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        Parameters
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        ----------
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        lib : str
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>            Library name.
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        cell : str
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>            Cell name.
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        view : str
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>            View name.
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        view_type : str
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>            Type of view, the default value is &#39;layout&#39;.
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        mode : str
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>            Mode for open design, the default value is &#39;r&#39;.
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        Returns
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        -------
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        design : emyDesign
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>            An emyDesign object opened by given parameters.
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        &#34;&#34;&#34;</span>
+</span></span><span style=display:flex><span>        lib_scl <span style=color:#f92672>=</span> pyAether<span style=color:#f92672>.</span>emyScalarName(self<span style=color:#f92672>.</span>namespace, lib)
+</span></span><span style=display:flex><span>        cell_scl <span style=color:#f92672>=</span> pyAether<span style=color:#f92672>.</span>emyScalarName(self<span style=color:#f92672>.</span>namespace, cell)
+</span></span><span style=display:flex><span>        view_scl <span style=color:#f92672>=</span> pyAether<span style=color:#f92672>.</span>emyScalarName(self<span style=color:#f92672>.</span>namespace, view)
+</span></span><span style=display:flex><span>        reserved_view <span style=color:#f92672>=</span> pyAether<span style=color:#f92672>.</span>emyReservedViewType(view_type)
+</span></span><span style=display:flex><span>        view_type <span style=color:#f92672>=</span> pyAether<span style=color:#f92672>.</span>emyViewType<span style=color:#f92672>.</span>get(reserved_view)
+</span></span><span style=display:flex><span>        design <span style=color:#f92672>=</span> pyAether<span style=color:#f92672>.</span>emyDesign<span style=color:#f92672>.</span>open(lib_scl, cell_scl, view_scl,
+</span></span><span style=display:flex><span>                                         view_type, mode)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> design
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>def</span> <span style=color:#a6e22e>create_inst</span>(self, master_lib, master_cell, master_view, inst_name,
+</span></span><span style=display:flex><span>                    point, params, <span style=color:#f92672>**</span>kwargs):
+</span></span><span style=display:flex><span>        <span style=color:#e6db74>r</span><span style=color:#e6db74>&#34;&#34;&#34;This function creates an emyScalarInst object on specified block.
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        Parameters
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        ----------
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        master_lib : str
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>            Library name of instance.
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        master_cell : str
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>            Cell name of instance.
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        master_view : str
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>            View name of instance.
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        inst_name : str
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>            Text string of instance.
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        point : tuple
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>            Point to create an emyTransform object, such as (0, 0).
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        params: emyParamArray
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>            emyParamArray
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        kwargs
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>            Other keyword arguments,
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>            here specifies view_type, mode, view, status.
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        &#34;&#34;&#34;</span>
+</span></span><span style=display:flex><span>        view_type <span style=color:#f92672>=</span> kwargs<span style=color:#f92672>.</span>get(<span style=color:#e6db74>&#34;view_type&#34;</span>, <span style=color:#e6db74>&#34;maskLayout&#34;</span>)
+</span></span><span style=display:flex><span>        mode <span style=color:#f92672>=</span> kwargs<span style=color:#f92672>.</span>get(<span style=color:#e6db74>&#34;mode&#34;</span>, <span style=color:#e6db74>&#34;r&#34;</span>)
+</span></span><span style=display:flex><span>        view <span style=color:#f92672>=</span> kwargs<span style=color:#f92672>.</span>get(<span style=color:#e6db74>&#34;view&#34;</span>, pyAether<span style=color:#f92672>.</span>emcInheritFromTopBlock)
+</span></span><span style=display:flex><span>        status <span style=color:#f92672>=</span> kwargs<span style=color:#f92672>.</span>get(<span style=color:#e6db74>&#34;status&#34;</span>, pyAether<span style=color:#f92672>.</span>emcNonePlacementStatus)
+</span></span><span style=display:flex><span>        master <span style=color:#f92672>=</span> self<span style=color:#f92672>.</span>open_design(master_lib, master_cell, master_view,
+</span></span><span style=display:flex><span>                                  view_type, mode)
+</span></span><span style=display:flex><span>        inst_scl_name <span style=color:#f92672>=</span> pyAether<span style=color:#f92672>.</span>emyScalarName(self<span style=color:#f92672>.</span>namespace, inst_name)
+</span></span><span style=display:flex><span>        pnt_x0, pnt_y0 <span style=color:#f92672>=</span> point
+</span></span><span style=display:flex><span>        point_1 <span style=color:#f92672>=</span> pyAether<span style=color:#f92672>.</span>emyPoint(int(pnt_x0 <span style=color:#f92672>*</span> self<span style=color:#f92672>.</span>uu2dbu),
+</span></span><span style=display:flex><span>                                    int(pnt_y0 <span style=color:#f92672>*</span> self<span style=color:#f92672>.</span>uu2dbu))
+</span></span><span style=display:flex><span>        trans <span style=color:#f92672>=</span> pyAether<span style=color:#f92672>.</span>emyTransform(point_1)
+</span></span><span style=display:flex><span>        pyAether<span style=color:#f92672>.</span>emyScalarInst<span style=color:#f92672>.</span>create(self<span style=color:#f92672>.</span>block, master, inst_scl_name, trans,
+</span></span><span style=display:flex><span>                                      params, view, status)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>def</span> <span style=color:#a6e22e>create_net</span>(self, net_name, path, <span style=color:#f92672>**</span>kwargs):
+</span></span><span style=display:flex><span>        <span style=color:#e6db74>r</span><span style=color:#e6db74>&#34;&#34;&#34;This function creates an emyScalarNet object on specified block.
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        Parameters
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        ----------
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        net_name : str
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>            It specifies the net name string.
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        path : list
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>            It specifies path list.
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        kwargs
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>            Other keyword arguments,
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>            here specifies sigType, isGlobal, view.
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        Returns
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        -------
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        scl_net : emyScalarNet
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>            An emyScalarNet object created by given parameters.
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        &#34;&#34;&#34;</span>
+</span></span><span style=display:flex><span>        sig_type <span style=color:#f92672>=</span> kwargs<span style=color:#f92672>.</span>get(<span style=color:#e6db74>&#34;sigType&#34;</span>,
+</span></span><span style=display:flex><span>                              pyAether<span style=color:#f92672>.</span>emySigType(pyAether<span style=color:#f92672>.</span>emcSignalSigType))
+</span></span><span style=display:flex><span>        is_global <span style=color:#f92672>=</span> kwargs<span style=color:#f92672>.</span>get(<span style=color:#e6db74>&#34;isGlobal&#34;</span>, <span style=color:#66d9ef>False</span>)
+</span></span><span style=display:flex><span>        view <span style=color:#f92672>=</span> kwargs<span style=color:#f92672>.</span>get(
+</span></span><span style=display:flex><span>            <span style=color:#e6db74>&#34;view&#34;</span>,
+</span></span><span style=display:flex><span>            pyAether<span style=color:#f92672>.</span>emyBlockDomainVisibility(pyAether<span style=color:#f92672>.</span>emcInheritFromTopBlock))
+</span></span><span style=display:flex><span>        net <span style=color:#f92672>=</span> pyAether<span style=color:#f92672>.</span>emyScalarName(self<span style=color:#f92672>.</span>namespace, net_name)
+</span></span><span style=display:flex><span>        scl_net <span style=color:#f92672>=</span> pyAether<span style=color:#f92672>.</span>emyScalarNet<span style=color:#f92672>.</span>create(self<span style=color:#f92672>.</span>block, net, sig_type,
+</span></span><span style=display:flex><span>                                               is_global, view)
+</span></span><span style=display:flex><span>        path<span style=color:#f92672>.</span>addToNet(scl_net)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> scl_net
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>def</span> <span style=color:#a6e22e>create_path</span>(self, layer, purpose, width, start_point, end_point):
+</span></span><span style=display:flex><span>        <span style=color:#e6db74>r</span><span style=color:#e6db74>&#34;&#34;&#34;This function creates an emyScalarNet object on specified block.
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        Parameters
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        ----------
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        layer : str
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>            It specifies the layer name string.
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        purpose : str
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>            It specifies the purpose name string.
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        width : float
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>            Define the width of the path.
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        start_point : tuple
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>            Path start point, such as (0, 0).
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        end_point : tuple
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>            Path end point, such as (1, 1).
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        Returns
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        -------
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        path : emyPath
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>            A path object created by given parameters.
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        &#34;&#34;&#34;</span>
+</span></span><span style=display:flex><span>        (sta_x0, sta_y0), (end_x0, end_y0) <span style=color:#f92672>=</span> start_point, end_point
+</span></span><span style=display:flex><span>        sta_pnt <span style=color:#f92672>=</span> pyAether<span style=color:#f92672>.</span>emyPoint(
+</span></span><span style=display:flex><span>            int(self<span style=color:#f92672>.</span>pnt_x <span style=color:#f92672>*</span> self<span style=color:#f92672>.</span>uu2dbu) <span style=color:#f92672>+</span> int(sta_x0 <span style=color:#f92672>*</span> self<span style=color:#f92672>.</span>uu2dbu),
+</span></span><span style=display:flex><span>            int(self<span style=color:#f92672>.</span>pnt_y <span style=color:#f92672>*</span> self<span style=color:#f92672>.</span>uu2dbu) <span style=color:#f92672>+</span> int(sta_y0 <span style=color:#f92672>*</span> self<span style=color:#f92672>.</span>uu2dbu))
+</span></span><span style=display:flex><span>        end_pnt <span style=color:#f92672>=</span> pyAether<span style=color:#f92672>.</span>emyPoint(
+</span></span><span style=display:flex><span>            int(self<span style=color:#f92672>.</span>pnt_x <span style=color:#f92672>*</span> self<span style=color:#f92672>.</span>uu2dbu) <span style=color:#f92672>+</span> int(end_x0 <span style=color:#f92672>*</span> self<span style=color:#f92672>.</span>uu2dbu),
+</span></span><span style=display:flex><span>            int(self<span style=color:#f92672>.</span>pnt_y <span style=color:#f92672>*</span> self<span style=color:#f92672>.</span>uu2dbu) <span style=color:#f92672>+</span> int(end_y0 <span style=color:#f92672>*</span> self<span style=color:#f92672>.</span>uu2dbu))
+</span></span><span style=display:flex><span>        points <span style=color:#f92672>=</span> [sta_pnt, end_pnt]
+</span></span><span style=display:flex><span>        layernum <span style=color:#f92672>=</span> pyAether<span style=color:#f92672>.</span>emyGetLayerNumByName(self<span style=color:#f92672>.</span>design, layer)
+</span></span><span style=display:flex><span>        purposenum <span style=color:#f92672>=</span> pyAether<span style=color:#f92672>.</span>emyGetPurposeNumByName(self<span style=color:#f92672>.</span>design, purpose)
+</span></span><span style=display:flex><span>        wid <span style=color:#f92672>=</span> int(width <span style=color:#f92672>*</span> self<span style=color:#f92672>.</span>uu2dbu)
+</span></span><span style=display:flex><span>        path <span style=color:#f92672>=</span> pyAether<span style=color:#f92672>.</span>emyPath<span style=color:#f92672>.</span>create(self<span style=color:#f92672>.</span>block, layernum, purposenum, wid,
+</span></span><span style=display:flex><span>                                       points)
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> path
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>def</span> <span style=color:#a6e22e>create_gr</span>(self, centerLine, templateName, <span style=color:#f92672>**</span>kwargs):
+</span></span><span style=display:flex><span>        <span style=color:#e6db74>r</span><span style=color:#e6db74>&#34;&#34;&#34;This function creates an emyScalarNet object on specified block.
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        Parameters
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        ----------
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        centerLine : emyPointArrayF
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>            Set the drawing route of the guard ring.
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        templateName : str
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>            Set the template name of the guard ring.
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        kwargs
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>            Other keyword arguments,
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>            here specifies type, justify, offset, topLayer, stackMode, maxContPattern,
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>            isBodyMode, bodyWidth, contRow, contSpaceX, contSpaceY, contSizeX, contSizeY,
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>            bIsChamfer, chamferAmount, metalSameBody, stackSameMetal, cornerContact.
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        Returns
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        -------
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        rect_nwgr : emyRect
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>            Build nwGuardRings.
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        &#34;&#34;&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        type <span style=color:#f92672>=</span> kwargs<span style=color:#f92672>.</span>get(<span style=color:#e6db74>&#34;type&#34;</span>, <span style=color:#e6db74>&#34;Polygon&#34;</span>)
+</span></span><span style=display:flex><span>        justify <span style=color:#f92672>=</span> kwargs<span style=color:#f92672>.</span>get(<span style=color:#e6db74>&#34;justify&#34;</span>, <span style=color:#e6db74>&#34;Center&#34;</span>)
+</span></span><span style=display:flex><span>        offset <span style=color:#f92672>=</span> kwargs<span style=color:#f92672>.</span>get(<span style=color:#e6db74>&#34;offset&#34;</span>, <span style=color:#ae81ff>0</span>)
+</span></span><span style=display:flex><span>        topLayer <span style=color:#f92672>=</span> kwargs<span style=color:#f92672>.</span>get(<span style=color:#e6db74>&#34;topLayer&#34;</span>, <span style=color:#66d9ef>None</span>)
+</span></span><span style=display:flex><span>        stackMode <span style=color:#f92672>=</span> kwargs<span style=color:#f92672>.</span>get(<span style=color:#e6db74>&#34;stackMode&#34;</span>, <span style=color:#66d9ef>False</span>)
+</span></span><span style=display:flex><span>        maxContPattern <span style=color:#f92672>=</span> kwargs<span style=color:#f92672>.</span>get(<span style=color:#e6db74>&#34;maxContPattern&#34;</span>, <span style=color:#66d9ef>False</span>)
+</span></span><span style=display:flex><span>        isBodyMode <span style=color:#f92672>=</span> kwargs<span style=color:#f92672>.</span>get(<span style=color:#e6db74>&#34;isBodyMode&#34;</span>, <span style=color:#66d9ef>True</span>)
+</span></span><span style=display:flex><span>        bodyWidth <span style=color:#f92672>=</span> kwargs<span style=color:#f92672>.</span>get(<span style=color:#e6db74>&#34;bodyWidth&#34;</span>, <span style=color:#ae81ff>0.5</span>)
+</span></span><span style=display:flex><span>        contRow <span style=color:#f92672>=</span> kwargs<span style=color:#f92672>.</span>get(<span style=color:#e6db74>&#34;contRow&#34;</span>, <span style=color:#ae81ff>0</span>)
+</span></span><span style=display:flex><span>        contSpaceX <span style=color:#f92672>=</span> kwargs<span style=color:#f92672>.</span>get(<span style=color:#e6db74>&#34;contSpaceX&#34;</span>, <span style=color:#ae81ff>0</span>)
+</span></span><span style=display:flex><span>        contSpaceY <span style=color:#f92672>=</span> kwargs<span style=color:#f92672>.</span>get(<span style=color:#e6db74>&#34;contSpaceY&#34;</span>, <span style=color:#ae81ff>0</span>)
+</span></span><span style=display:flex><span>        contSizeX <span style=color:#f92672>=</span> kwargs<span style=color:#f92672>.</span>get(<span style=color:#e6db74>&#34;contSizeX&#34;</span>, <span style=color:#ae81ff>0</span>)
+</span></span><span style=display:flex><span>        contSizeY <span style=color:#f92672>=</span> kwargs<span style=color:#f92672>.</span>get(<span style=color:#e6db74>&#34;contSizeY&#34;</span>, <span style=color:#ae81ff>0</span>)
+</span></span><span style=display:flex><span>        bIsChamfer <span style=color:#f92672>=</span> kwargs<span style=color:#f92672>.</span>get(<span style=color:#e6db74>&#34;bIsChamfer&#34;</span>, <span style=color:#66d9ef>False</span>)
+</span></span><span style=display:flex><span>        chamferAmount <span style=color:#f92672>=</span> kwargs<span style=color:#f92672>.</span>get(<span style=color:#e6db74>&#34;chamferAmount &#34;</span>, <span style=color:#ae81ff>0</span>)
+</span></span><span style=display:flex><span>        metalSameBody <span style=color:#f92672>=</span> kwargs<span style=color:#f92672>.</span>get(<span style=color:#e6db74>&#34;metalSameBody&#34;</span>, <span style=color:#66d9ef>False</span>)
+</span></span><span style=display:flex><span>        stackSameMetal <span style=color:#f92672>=</span> kwargs<span style=color:#f92672>.</span>get(<span style=color:#e6db74>&#34;stackSameMetal&#34;</span>, <span style=color:#66d9ef>False</span>)
+</span></span><span style=display:flex><span>        cornerContact <span style=color:#f92672>=</span> kwargs<span style=color:#f92672>.</span>get(<span style=color:#e6db74>&#34;cornerContact&#34;</span>, <span style=color:#66d9ef>True</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        pyAether<span style=color:#f92672>.</span>aeCrtGuardring(self<span style=color:#f92672>.</span>design,
+</span></span><span style=display:flex><span>                                centerLine,
+</span></span><span style=display:flex><span>                                templateName,
+</span></span><span style=display:flex><span>                                type<span style=color:#f92672>=</span>type,
+</span></span><span style=display:flex><span>                                justify<span style=color:#f92672>=</span>justify,
+</span></span><span style=display:flex><span>                                offset<span style=color:#f92672>=</span>offset,
+</span></span><span style=display:flex><span>                                stackMode<span style=color:#f92672>=</span>stackMode,
+</span></span><span style=display:flex><span>                                maxContPattern<span style=color:#f92672>=</span>maxContPattern,
+</span></span><span style=display:flex><span>                                isBodyMode<span style=color:#f92672>=</span>isBodyMode,
+</span></span><span style=display:flex><span>                                contRow<span style=color:#f92672>=</span>contRow,
+</span></span><span style=display:flex><span>                                contSpaceX<span style=color:#f92672>=</span>contSpaceX,
+</span></span><span style=display:flex><span>                                topLayer<span style=color:#f92672>=</span>topLayer,
+</span></span><span style=display:flex><span>                                contSpaceY<span style=color:#f92672>=</span>contSpaceY,
+</span></span><span style=display:flex><span>                                contSizeX<span style=color:#f92672>=</span>contSizeX,
+</span></span><span style=display:flex><span>                                contSizeY<span style=color:#f92672>=</span>contSizeY,
+</span></span><span style=display:flex><span>                                bIsChamfer<span style=color:#f92672>=</span>bIsChamfer,
+</span></span><span style=display:flex><span>                                chamferAmount<span style=color:#f92672>=</span>chamferAmount,
+</span></span><span style=display:flex><span>                                metalSameBody<span style=color:#f92672>=</span>metalSameBody,
+</span></span><span style=display:flex><span>                                stackSameMetal<span style=color:#f92672>=</span>stackSameMetal,
+</span></span><span style=display:flex><span>                                cornerContact<span style=color:#f92672>=</span>cornerContact,
+</span></span><span style=display:flex><span>                                bodyWidth<span style=color:#f92672>=</span>bodyWidth)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>def</span> <span style=color:#a6e22e>close</span>(self):
+</span></span><span style=display:flex><span>        <span style=color:#e6db74>r</span><span style=color:#e6db74>&#34;&#34;&#34;This function save and close the emyDesign object which is opened.
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        &#34;&#34;&#34;</span>
+</span></span><span style=display:flex><span>        self<span style=color:#f92672>.</span>design<span style=color:#f92672>.</span>save()
+</span></span><span style=display:flex><span>        self<span style=color:#f92672>.</span>design<span style=color:#f92672>.</span>close()
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>def</span> <span style=color:#a6e22e>create</span>(self, x_0, y_0):
+</span></span><span style=display:flex><span>        <span style=color:#e6db74>r</span><span style=color:#e6db74>&#34;&#34;&#34;This function creates an inverter.
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        &#34;&#34;&#34;</span>
+</span></span><span style=display:flex><span>        self<span style=color:#f92672>.</span>pnt_x <span style=color:#f92672>=</span> x_0
+</span></span><span style=display:flex><span>        self<span style=color:#f92672>.</span>pnt_y <span style=color:#f92672>=</span> y_0
+</span></span><span style=display:flex><span>        <span style=color:#75715e># Create scalar instances</span>
+</span></span><span style=display:flex><span>        params_p18 <span style=color:#f92672>=</span> pyAether<span style=color:#f92672>.</span>emyParamArray()
+</span></span><span style=display:flex><span>        params_p18<span style=color:#f92672>.</span>append(pyAether<span style=color:#f92672>.</span>emyParam(<span style=color:#e6db74>&#39;Single_Width&#39;</span>, <span style=color:#e6db74>&#39;1u&#39;</span>))
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        self<span style=color:#f92672>.</span>create_inst(<span style=color:#e6db74>&#34;reference_pdk&#34;</span>, <span style=color:#e6db74>&#34;p18&#34;</span>, <span style=color:#e6db74>&#34;layout&#34;</span>, <span style=color:#e6db74>&#34;M0&#34;</span>, (<span style=color:#ae81ff>0.43</span>, <span style=color:#ae81ff>3.15</span>),
+</span></span><span style=display:flex><span>                         params_p18)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e># pyAether.emyArray()</span>
+</span></span><span style=display:flex><span>        params_n18 <span style=color:#f92672>=</span> pyAether<span style=color:#f92672>.</span>emyParamArray()
+</span></span><span style=display:flex><span>        params_n18<span style=color:#f92672>.</span>append(pyAether<span style=color:#f92672>.</span>emyParam(<span style=color:#e6db74>&#39;Single_Width&#39;</span>, <span style=color:#e6db74>&#39;600n&#39;</span>))
+</span></span><span style=display:flex><span>        params_n18<span style=color:#f92672>.</span>append(pyAether<span style=color:#f92672>.</span>emyParam(<span style=color:#e6db74>&#39;SD_Metal_Width&#39;</span>, <span style=color:#e6db74>&#39;370n&#39;</span>))
+</span></span><span style=display:flex><span>        self<span style=color:#f92672>.</span>create_inst(<span style=color:#e6db74>&#34;reference_pdk&#34;</span>, <span style=color:#e6db74>&#34;n18&#34;</span>, <span style=color:#e6db74>&#34;layout&#34;</span>, <span style=color:#e6db74>&#34;M1&#34;</span>, (<span style=color:#ae81ff>0.29</span>, <span style=color:#ae81ff>1.17</span>),
+</span></span><span style=display:flex><span>                         params_n18)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e># Create path</span>
+</span></span><span style=display:flex><span>        path1 <span style=color:#f92672>=</span> self<span style=color:#f92672>.</span>create_path(<span style=color:#e6db74>&#34;GT&#34;</span>, <span style=color:#e6db74>&#34;drawing&#34;</span>, <span style=color:#ae81ff>0.18</span>, (<span style=color:#ae81ff>1.0</span>, <span style=color:#ae81ff>3.15</span>),
+</span></span><span style=display:flex><span>                                 (<span style=color:#ae81ff>1.0</span>, <span style=color:#ae81ff>1.77</span>))
+</span></span><span style=display:flex><span>        path2 <span style=color:#f92672>=</span> self<span style=color:#f92672>.</span>create_path(<span style=color:#e6db74>&#34;M1&#34;</span>, <span style=color:#e6db74>&#34;drawing&#34;</span>, <span style=color:#ae81ff>0.23</span>, (<span style=color:#ae81ff>1.36</span>, <span style=color:#ae81ff>3.47</span>),
+</span></span><span style=display:flex><span>                                 (<span style=color:#ae81ff>1.36</span>, <span style=color:#ae81ff>1.21</span>))
+</span></span><span style=display:flex><span>        path3 <span style=color:#f92672>=</span> self<span style=color:#f92672>.</span>create_path(<span style=color:#e6db74>&#34;M1&#34;</span>, <span style=color:#e6db74>&#34;drawing&#34;</span>, <span style=color:#ae81ff>0.23</span>, (<span style=color:#ae81ff>0.64</span>, <span style=color:#ae81ff>1.21</span>),
+</span></span><span style=display:flex><span>                                 (<span style=color:#ae81ff>0.64</span>, <span style=color:#ae81ff>0.18</span>))
+</span></span><span style=display:flex><span>        path4 <span style=color:#f92672>=</span> self<span style=color:#f92672>.</span>create_path(<span style=color:#e6db74>&#34;M1&#34;</span>, <span style=color:#e6db74>&#34;drawing&#34;</span>, <span style=color:#ae81ff>0.23</span>, (<span style=color:#ae81ff>0.64</span>, <span style=color:#ae81ff>4.11</span>),
+</span></span><span style=display:flex><span>                                 (<span style=color:#ae81ff>0.64</span>, <span style=color:#ae81ff>5.14</span>))
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e># Create net</span>
+</span></span><span style=display:flex><span>        self<span style=color:#f92672>.</span>create_net(<span style=color:#e6db74>&#34;Y&#34;</span>, path1)
+</span></span><span style=display:flex><span>        self<span style=color:#f92672>.</span>create_net(<span style=color:#e6db74>&#34;A&#34;</span>, path2)
+</span></span><span style=display:flex><span>        self<span style=color:#f92672>.</span>create_net(<span style=color:#e6db74>&#34;vss&#34;</span>, path3)
+</span></span><span style=display:flex><span>        self<span style=color:#f92672>.</span>create_net(<span style=color:#e6db74>&#34;vdd&#34;</span>, path4)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e># create GR</span>
+</span></span><span style=display:flex><span>        self<span style=color:#f92672>.</span>create_gr([(<span style=color:#ae81ff>0.53</span>, <span style=color:#ae81ff>4.89</span>), (<span style=color:#ae81ff>1.47</span>, <span style=color:#ae81ff>4.89</span>)], <span style=color:#e6db74>&#34;NWGR&#34;</span>, bodyWidth<span style=color:#f92672>=</span><span style=color:#ae81ff>0.4</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e># create PGR</span>
+</span></span><span style=display:flex><span>        self<span style=color:#f92672>.</span>create_gr([(<span style=color:#ae81ff>0.52</span>, <span style=color:#ae81ff>0.41</span>), (<span style=color:#ae81ff>1.48</span>, <span style=color:#ae81ff>0.41</span>)], <span style=color:#e6db74>&#34;PGR&#34;</span>, bodyWidth<span style=color:#f92672>=</span><span style=color:#ae81ff>0.4</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>if</span> __name__ <span style=color:#f92672>==</span> <span style=color:#e6db74>&#39;__main__&#39;</span>:
+</span></span><span style=display:flex><span>    example <span style=color:#f92672>=</span> InvLe(<span style=color:#e6db74>&#34;lib01&#34;</span>, <span style=color:#e6db74>&#34;test&#34;</span>, <span style=color:#e6db74>&#34;reference_pdk&#34;</span>, <span style=color:#e6db74>&#34;layout&#34;</span>, mode<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;w&#34;</span>)
+</span></span><span style=display:flex><span>    example<span style=color:#f92672>.</span>create(<span style=color:#ae81ff>0</span>, <span style=color:#ae81ff>0</span>)
+</span></span><span style=display:flex><span>    example<span style=color:#f92672>.</span>close()
+</span></span></code></pre></div><h2 id=概伦电子>概伦电子
+<a class=anchor href=#%e6%a6%82%e4%bc%a6%e7%94%b5%e5%ad%90>#</a></h2><p>收购了Entasys</p><p><img src=/image-20241223162717895.png alt=image-20241223162717895></p><h2 id=鸿芯微纳>鸿芯微纳
+<a class=anchor href=#%e9%b8%bf%e8%8a%af%e5%be%ae%e7%ba%b3>#</a></h2><p><img src=/image-20250105132642028.png alt=image-20250105132642028></p><p><img src=/image-20250105132734272.png alt=image-20250105132734272></p><h2 id=华芯巨数>华芯巨数
+<a class=anchor href=#%e5%8d%8e%e8%8a%af%e5%b7%a8%e6%95%b0>#</a></h2><p>浙江</p><p><img src=/image-20250105132135256.png alt=image-20250105132135256></p><p><img src=/image-20250105132149726.png alt=image-20250105132149726></p><h2 id=嘉立创>嘉立创
+<a class=anchor href=#%e5%98%89%e7%ab%8b%e5%88%9b>#</a></h2><p>PCB</p><h1 id=相关竞赛>相关竞赛
+<a class=anchor href=#%e7%9b%b8%e5%85%b3%e7%ab%9e%e8%b5%9b>#</a></h1><h2 id=cadathloniccad>CADathlon@ICCAD
+<a class=anchor href=#cadathloniccad>#</a></h2><p><a href=https://2024.iccad.com/cadathlon-iccad-2024>CADathlon@ICCAD 2024 | ICCAD 2024</a></p><ul><li>EDA领域的**“奥林匹克运动会”<strong>，始于</strong>2002年**</li><li><strong>in-person</strong> event, <strong>all-day programming</strong> competition, <strong>9 hours</strong>, two-person teams, information about the problems and relevant research papers will be released online one week before the competition.</li><li>一般在10月份举办</li><li>six problems<ul><li>Circuit Design & Analysis</li><li><strong>Physical Design</strong> & Design for Manufacturability</li><li>Logic & High-Level Synthesis</li><li>System Design & Analysis</li><li>Functional Verification & Testing</li><li>Future technologies (Bio-EDA, Security, AI, etc.)</li></ul></li></ul><h2 id=contestispd>Contest@ISPD
+<a class=anchor href=#contestispd>#</a></h2><p><a href="https://ispd.cc/ispd2025/index.php?page=contests">International Symposium on Physical Design (ISPD)</a></p><ul><li>于<strong>2005年</strong>首次举办</li><li>Contest@ISPD作为<strong>ISPD研讨会</strong>的一部分，是全球三大顶尖国<strong>际物理设计</strong>学术竞赛之一，由全球研究计算机科学的权威学会<strong>ACM</strong>（Association for Computing Machinery）所举办</li><li>每年<strong>12月份</strong>由业界一流公司（IBM、Intel、Xilinx等）公布学术竞赛题目，<strong>3月份</strong>提交研发成果和软件系统，由业界公司负责提供测试电路，并测试参赛队伍所提交的软件系统，最后于3月底或4月初<strong>在年度ACM ISPD会议上公布竞赛结果</strong>。</li></ul><table><thead><tr><th></th><th style=text-align:center>题目</th><th style=text-align:center>First Place</th></tr></thead><tbody><tr><td>2015</td><td style=text-align:center>Blockage-Aware Detailed Routing-Driven <strong>Placement</strong> Contest</td><td style=text-align:center>NTUPlacerDR</td></tr></tbody></table><h2 id=cad-contesticcad>CAD Contest@ICCAD
+<a class=anchor href=#cad-contesticcad>#</a></h2><ul><li>始于 2012年</li><li>覆盖了EDA前端（front-end）和后端（back-end）</li><li>由<strong>IEEE CEDA、ACM SIGDA</strong>和工业界<strong>Cadence、Synopsys</strong>等共同赞助</li><li><strong>Each year</strong> the organizing committee announce <strong>three challenging problems</strong> in different topic, can participate in one or more problems</li></ul><p>Blockage-Aware Detailed Routing-Driven Placement Contest</p><p><img src=/image-20241214172612304.png alt=image-20241214172612304></p><h3 id=历年相关赛题>历年相关赛题
+<a class=anchor href=#%e5%8e%86%e5%b9%b4%e7%9b%b8%e5%85%b3%e8%b5%9b%e9%a2%98>#</a></h3><table><thead><tr><th></th><th style=text-align:center>题目</th><th>Sponsor</th></tr></thead><tbody><tr><td>2024-C</td><td style=text-align:center>Scalable Logic <strong>Gate Sizing</strong> Using <strong>ML</strong> Techniques and <strong>GPU Acceleration</strong></td><td>Nvidia</td></tr><tr><td></td><td style=text-align:center></td><td></td></tr><tr><td></td><td style=text-align:center></td><td></td></tr><tr><td>2011</td><td style=text-align:center><strong>Routability-driven Placement</strong> Contest and Benchmark Suite</td><td></td></tr><tr><td></td><td style=text-align:center></td><td></td></tr></tbody></table><h2 id=侠客岛>侠客岛
+<a class=anchor href=#%e4%be%a0%e5%ae%a2%e5%b2%9b>#</a></h2><h2 id=eda精英挑战赛>EDA精英挑战赛
+<a class=anchor href=#eda%e7%b2%be%e8%8b%b1%e6%8c%91%e6%88%98%e8%b5%9b>#</a></h2><h2 id=tau-contest>TAU Contest
+<a class=anchor href=#tau-contest>#</a></h2><p><a href=https://sites.google.com/view/tau-contest-2021/home>Tau 2021 Contest</a></p><ul><li>数字电路<strong>时序分析</strong>竞赛（TAU）</li><li>始于<strong>2011年</strong>，是由<strong>国际计算机协会ACM</strong>所举办的专业赛事</li><li>一般由<strong>IBM、Cadence、Synopsys、TMSC</strong>等国际顶尖公司参与命题</li><li>好像到21年就没了。。。</li></ul><h2 id=programming-contestiwls><a href=https://www.iwls.org/contest/>Programming Contest@IWLS</a>
+<a class=anchor href=#programming-contestiwls>#</a></h2><p><a href=https://www.iwls.org/contest/>IWLS Contest</a></p><ul><li>始于2017年</li><li>是由IEEE/ACM International Workshop on Logic & Synthesis（IWLS）举办</li><li>由业界一流公司（Synopsys、Xilinx、Google等）公布竞赛题目</li><li>以<strong>逻辑综合（Logic Synthesis）和工具研发</strong>为竞赛主题</li></ul><h2 id=全国大学生集成电路创新创业大赛的华大九天赛道>“全国大学生集成电路创新创业大赛”的华大九天赛道
+<a class=anchor href=#%e5%85%a8%e5%9b%bd%e5%a4%a7%e5%ad%a6%e7%94%9f%e9%9b%86%e6%88%90%e7%94%b5%e8%b7%af%e5%88%9b%e6%96%b0%e5%88%9b%e4%b8%9a%e5%a4%a7%e8%b5%9b%e7%9a%84%e5%8d%8e%e5%a4%a7%e4%b9%9d%e5%a4%a9%e8%b5%9b%e9%81%93>#</a></h2><p><img src=/image-20241214193431391.png alt=image-20241214193431391></p><p><a href=http://univ.ciciec.com/>全国大学生集成电路创新创业大赛</a></p><p><a href="http://univ.ciciec.com/nd.jsp?id=733#_jcp=1">第八届集创赛杯赛题目——华大九天杯 - 全国大学生集成电路创新创业大赛</a></p><p><img src=/image-20241214203159713.png alt=image-20241214203159713></p><p><img src=/image-20241214203523404.png alt=image-20241214203523404></p><h2 id=llm4hwdesign-contest>LLM4HWDesign Contest
+<a class=anchor href=#llm4hwdesign-contest>#</a></h2><p>2024年ICCAD新设立<strong>LLM</strong> for <strong>Hardware</strong> Design Contest</p><p>LLM4HW Design竞赛旨在为硬件代码生成构建大规模、高质量的Verilog代码生成数据集。在基于LLM的硬件代码生成中引发一场类似ImageNet的革命。为了实现这一目标，LLM4HWDesign竞赛鼓励参与者收集数据样本，并开发创新的数据清理和标记技术，以有效提高硬件代码生成数据集的规模和质量，为推进LLM辅助硬件设计工作流程建立关键基础设施。</p><h2 id=dac-system-design-contest><a href=https://pku-sec-lab.github.io/dac-sdc-2024/><strong>DAC System Design Contest</strong> </a><a class=anchor href=#dac-system-design-contest>#</a></h2><p><strong>DAC 2012 Routability-Driven Placement Contest and Benchmark Suite</strong></p><p><img src=/image-20241220204933457.png alt=image-20241220204933457></p><h2 id=参考-1>参考
+<a class=anchor href=#%e5%8f%82%e8%80%83-1>#</a></h2><ul><li><a href=https://www.163.com/dy/article/GQS44UUR0531PW97.html>盘点全球顶级EDA竞赛及中国大陆获奖情况|清华大学|福州大学|iccad|上海交通大学|eda_网易订阅</a></li></ul><h1 id=相关pdk>相关PDK
+<a class=anchor href=#%e7%9b%b8%e5%85%b3pdk>#</a></h1></article><footer class=book-footer><div class="flex flex-wrap justify-between"><div><a class="flex align-center" href=https://github.com/alex-shpak/hugo-book/commit/558fe9e6a91fcab8fceb5cf8e0e72df4b2de59b9 title='最后修改者 pxhg02 | 二月 26, 2025' target=_blank rel=noopener><img src=/svg/calendar.svg class=book-icon alt>
+<span>二月 26, 2025</span></a></div><div><a class="flex align-center" href=https://github.com/alex-shpak/hugo-book/edit/main/exampleSite/content.zh/docs/Digtal/Digtal/flow/EDA4PR.md target=_blank rel=noopener><img src=/svg/edit.svg class=book-icon alt>
+<span>编辑本页</span></a></div></div><script>(function(){function e(e){const t=window.getSelection(),n=document.createRange();n.selectNodeContents(e),t.removeAllRanges(),t.addRange(n)}document.querySelectorAll("pre code").forEach(t=>{t.addEventListener("click",function(){if(window.getSelection().toString())return;e(t.parentElement),navigator.clipboard&&navigator.clipboard.writeText(t.parentElement.textContent)})})})()</script></footer><div class=book-comments></div><label for=menu-control class="hidden book-menu-overlay"></label></div><aside class=book-toc><div class=book-toc-content><nav id=TableOfContents><ul><li><a href=#研究背景>研究背景</a></li><li><a href=#难点>难点</a></li><li><a href=#研究方向>研究方向</a><ul><li><a href=#digtal>Digtal</a></li></ul></li><li><a href=#相关数据集>相关数据集</a><ul><li><a href=#only-rtl>only rtl</a><ul><li><a href=#home--opencores><a href=https://opencores.org/>Home :: OpenCores</a></a></li><li><a href=#iwls-2005-benchmarks><a href=https://iwls.org/iwls2005/benchmarks.html>IWLS 2005 Benchmarks</a></a></li><li><a href=#openlane-examples-examples-from-the-openlane-repository><a href=https://github.com/klasnordmark/openlane-examples>openlane-examples: Examples from the Openlane repository</a></a></li></ul></li><li><a href=#global-route>Global route</a><ul><li><a href=#ispd-2007>ISPD-2007</a></li><li><a href=#ispd-2008>ISPD-2008</a></li><li><a href=#iccad-2019>ICCAD-2019</a></li><li><a href=#ispd-2024>ISPD-2024</a></li><li><a href=#ispd-2025>ISPD-2025</a></li></ul></li><li><a href=#detail-route>Detail Route</a><ul><li><a href=#ispd-20182019>ISPD-2018/2019</a></li></ul></li><li><a href=#congestiondrcir-droptiming>congestion/DRC/IR drop/timing</a></li></ul></li><li><a href=#相关会议期刊>相关会议/期刊</a><ul><li><a href=#会议>会议</a></li><li><a href=#期刊>期刊</a></li><li><a href=#参考>参考</a></li></ul></li><li><a href=#相关科研实验室>相关科研实验室</a><ul><li><a href=#清华>清华</a></li><li><a href=#北大-无锡eda研究院>北大-无锡EDA研究院</a></li><li><a href=#复旦>复旦</a></li><li><a href=#北航>北航</a></li><li><a href=#港中文-eda-center>港中文-EDA Center</a></li><li><a href=#中科大>中科大</a></li><li><a href=#福大>福大</a></li><li><a href=#上海交大>上海交大</a></li><li><a href=#东南大学-国家asic工程中心>东南大学-国家ASIC工程中心</a></li><li><a href=#华中科技大学>华中科技大学</a></li><li><a href=#西安电子科技大学>西安电子科技大学</a></li><li><a href=#广东工业大学>广东工业大学</a></li><li><a href=#国立清华大学>国立清华大学</a></li><li><a href=#university-of-california>University of California</a></li></ul></li><li><a href=#相关企业机构>相关企业/机构</a><ul><li><a href=#华为诺亚方舟--海思>华为诺亚方舟 & 海思</a></li><li><a href=#eda国创中心>EDA国创中心</a></li><li><a href=#芯行纪><a href=https://www.xtimes-da.com/>芯行纪</a></a><ul><li><a href=#amazesys>AmazeSys</a></li><li><a href=#amazefp>AmazeFP</a></li><li><a href=#amazefp-me>AmazeFP-ME</a></li><li><a href=#amazedrclite>AmazeDRCLite</a></li><li><a href=#云>云</a></li></ul></li><li><a href=#华大九天>华大九天</a><ul><li><a href=#pyaether>PyAether</a></li></ul></li><li><a href=#概伦电子>概伦电子</a></li><li><a href=#鸿芯微纳>鸿芯微纳</a></li><li><a href=#华芯巨数>华芯巨数</a></li><li><a href=#嘉立创>嘉立创</a></li></ul></li><li><a href=#相关竞赛>相关竞赛</a><ul><li><a href=#cadathloniccad>CADathlon@ICCAD</a></li><li><a href=#contestispd>Contest@ISPD</a></li><li><a href=#cad-contesticcad>CAD Contest@ICCAD</a><ul><li><a href=#历年相关赛题>历年相关赛题</a></li></ul></li><li><a href=#侠客岛>侠客岛</a></li><li><a href=#eda精英挑战赛>EDA精英挑战赛</a></li><li><a href=#tau-contest>TAU Contest</a></li><li><a href=#programming-contestiwls><a href=https://www.iwls.org/contest/>Programming Contest@IWLS</a></a></li><li><a href=#全国大学生集成电路创新创业大赛的华大九天赛道>“全国大学生集成电路创新创业大赛”的华大九天赛道</a></li><li><a href=#llm4hwdesign-contest>LLM4HWDesign Contest</a></li><li><a href=#dac-system-design-contest><a href=https://pku-sec-lab.github.io/dac-sdc-2024/><strong>DAC System Design Contest</strong></a></a></li><li><a href=#参考-1>参考</a></li></ul></li><li><a href=#相关pdk>相关PDK</a></li></ul></nav></div></aside></main></body></html>
